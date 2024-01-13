@@ -1,6 +1,10 @@
+import store from "@/app/store";
+import { setHover } from "../Redux/features/hoverSlice";
 import { getCurrentResizingNode } from "../Resize/resize";
+import { setResizingDirection } from "../Redux/features/resizeSlice";
 
-export const mouseCorsourChange = (event,elements,setHover,setResizingDirection) => {
+export const mouseCorsourChange = (event,elements) => {
+  
     for (var i = elements.length - 1; i >= 0; i--) {
       const element = elements[i];
       const { x1, y1, x2, y2, type } = element;
@@ -19,10 +23,10 @@ export const mouseCorsourChange = (event,elements,setHover,setResizingDirection)
           if (event.clientX > minX - 10 && event.clientX < maxX + 10 && event.clientY > minY - 10 && event.clientY < maxY + 10) {
 
             
-          console.log(document.body.style.cursor);
+   
           const onResizeNode = getCurrentResizingNode(event,element);
             if(onResizeNode[0] === 1 ) {
-              console.log("working");
+        
               resizerFound = onResizeNode;
               
             }
@@ -67,20 +71,23 @@ export const mouseCorsourChange = (event,elements,setHover,setResizingDirection)
       if(resizerFound != null) {
         
         document.body.style.cursor = resizerFound[1];
-        setHover('resize');
-        setResizingDirection(resizerFound[2]);
 
+        store.dispatch(setHover("resize"));
+        store.dispatch(setResizingDirection(resizerFound[2]));
+       
         break;
       }
 
       if (elementFound) {
 
         document.body.style.cursor = 'move';
-        setHover("present");
+        store.dispatch(setHover("present"));
+       
         break;
 
       } else {
-        setHover("none");
+        store.dispatch(setHover("none"));
+     
         document.body.style.cursor = 'default';
       }
 

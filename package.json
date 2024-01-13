@@ -9,11 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.0.1",
     "global": "^4.4.0",
     "next": "14.0.4",
     "perfect-freehand": "^1.2.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-redux": "^9.0.4",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",

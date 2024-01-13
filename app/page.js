@@ -1,22 +1,25 @@
 
 'use client';
 
-
-import Topbar from '@/components/TopBar/Topbar';
 import App from '@/components/app';
 
-;
+import { Provider } from 'react-redux';
+import store from './store';
+
+
 
 export default function Home() {
 
 
 
   return (
-    <main className="">
-
+    <main>
+      <Provider store = {store}>
       <App>
 
       </App>
+      </Provider>
+    
     </main>
   )
 }

@@ -1,8 +1,12 @@
 import { distance } from "@/utils/common";
 import { addElement } from "../ElementManipulation/Element";
+import store from "@/app/store";
 
 
-export const resizeElement = (event,selectedElement,resizeDirection,roughCanvasRef) => {
+export const resizeElement = (event) => {
+  
+const selectedElement = store.getState().selectedElement.value;
+const resizeDirection = store.getState().resizeDirection.value;
 
     const cx = event.clientX;
     const cy = event.clientY;
@@ -17,7 +21,7 @@ export const resizeElement = (event,selectedElement,resizeDirection,roughCanvasR
          y1, 
          cx, 
          y2,
-         type,roughCanvasRef);
+         type);
    
       default:
         break;  
