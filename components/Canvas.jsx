@@ -12,10 +12,7 @@ import {setCanvas} from './Redux/features/canvasSlice'
 import { setAction } from './Redux/features/actionSlice';
 import { setSelectedElement } from './Redux/features/selectedElementSlice';
 // import { setCache } from './Redux/features/cacheSlice';
-import store from '@/app/store';
-import { RoughCanvas } from 'roughjs/bin/canvas';
 import { ShapeCache } from './Redux/ShapeCache';
-import { setH } from './Redux/features/timeSlice';
 
 
 
@@ -30,12 +27,8 @@ const Canvas = () => {
   const action = useSelector(state => state.action.value);
   const selectedElement = useSelector(state => state.selectedElement.value);
   const newH = useSelector(state => state.time.value);
-
-  // const [h, setH] = useState(0);
-  // const [w, setW] = useState(0);
-
-  let height = 0;
-  let width = 0;  
+  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(0);
 
   // dispatcher
   const dispatch = useDispatch();
@@ -60,11 +53,6 @@ const Canvas = () => {
       canvas.width = scalingRect.width * dpr;
       canvas.height = scalingRect.height * dpr;
 
-     
-     
-            height = window.innerHeight;
-            width = window.innerWidth;
-            console.log(height);
   
       ctx?.scale(dpr, dpr);
   
@@ -74,12 +62,7 @@ const Canvas = () => {
       dispatch(setCanvas(rough.canvas(canvas)));
     }
   }, []);
-  
-//   console.log(height);
-// // dispatch(setH(height));
-// console.log(newH);
-  // setH(height);
-  // setW(width);
+
 
   useLayoutEffect(() => {
     const canvas = document.getElementById('canvas');
@@ -197,13 +180,20 @@ const Canvas = () => {
 
   }
 
+  useEffect(() => {
+    setHeight(() => window.innerHeight)
+    setWidth(() => window.innerWidth)
+    console.log(height);
+    console.log(width)
+  }, [ height, width])
 
   return (
 
     <canvas
       id='canvas'
-      height={window.innerHeight}
-      width={window.innerWidth}
+      height={height}
+      width={width}
+      style={{height: height, width: width}}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
