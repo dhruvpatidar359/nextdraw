@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react'
 import Canvas from './Canvas'
 import Topbar from './TopBar/Topbar'

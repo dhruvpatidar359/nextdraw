@@ -16,7 +16,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-redux": "^9.0.4",
-    "redux": "^5.0.1"
+    "redux": "^5.0.1",
+    "roughjs": "^4.6.6"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",

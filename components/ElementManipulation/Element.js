@@ -119,18 +119,17 @@ export const getElementBelow = (event) => {
   }
 
   export const adjustingElement = () => {
-
+    
   }
 
   export const updateElement = (id,x1,y1,x2,y2,type) => {
 
     const elements = store.getState().elements.value;
     const updatedElement = addElement(id, x1, y1,x2,y2 , type);
-  
-
     const tempNewArray = [...elements];
+
     tempNewArray[id] = updatedElement;
-    // console.log(tempNewArray);
+  
     store.dispatch(setElement(tempNewArray));
     
     

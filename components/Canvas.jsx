@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import rough from 'roughjs/bundled/rough.esm';
@@ -12,6 +11,13 @@ import { setElement } from './Redux/features/elementSlice';
 import {setCanvas} from './Redux/features/canvasSlice'
 import { setAction } from './Redux/features/actionSlice';
 import { setSelectedElement } from './Redux/features/selectedElementSlice';
+// import { setCache } from './Redux/features/cacheSlice';
+import store from '@/app/store';
+import { RoughCanvas } from 'roughjs/bin/canvas';
+import { ShapeCache } from './Redux/ShapeCache';
+import { setH } from './Redux/features/timeSlice';
+
+
 
 
 const Canvas = () => {
@@ -23,6 +29,13 @@ const Canvas = () => {
   const hover = useSelector(state => state.hover.value);
   const action = useSelector(state => state.action.value);
   const selectedElement = useSelector(state => state.selectedElement.value);
+  const newH = useSelector(state => state.time.value);
+
+  // const [h, setH] = useState(0);
+  // const [w, setW] = useState(0);
+
+  let height = 0;
+  let width = 0;  
 
   // dispatcher
   const dispatch = useDispatch();
@@ -35,27 +48,38 @@ const Canvas = () => {
 
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+  
+      const dpr = window.devicePixelRatio;
+      const scalingRect = canvas.getBoundingClientRect();
+  
 
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+      
+      canvas.width = scalingRect.width * dpr;
+      canvas.height = scalingRect.height * dpr;
 
-    const dpr = window.devicePixelRatio;
-    const scalingRect = canvas.getBoundingClientRect();
-
-    canvas.width = scalingRect.width * dpr;
-    canvas.height = scalingRect.height * dpr;
-
-    ctx?.scale(dpr, dpr);
-
-    canvas.style.width = `${scalingRect.width}px`;
- 
-    canvas.style.height = `${scalingRect.height}px`;
-
-    dispatch(setCanvas(rough.canvas(canvas)));
-    
-
+     
+     
+            height = window.innerHeight;
+            width = window.innerWidth;
+            console.log(height);
+  
+      ctx?.scale(dpr, dpr);
+  
+      canvas.style.width = `${scalingRect.width}px`;
+      canvas.style.height = `${scalingRect.height}px`;
+  
+      dispatch(setCanvas(rough.canvas(canvas)));
+    }
   }, []);
-
+  
+//   console.log(height);
+// // dispatch(setH(height));
+// console.log(newH);
+  // setH(height);
+  // setW(width);
 
   useLayoutEffect(() => {
     const canvas = document.getElementById('canvas');
@@ -64,8 +88,21 @@ const Canvas = () => {
     // Clear the canvas before drawing elements
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    elements.forEach(({ x1,y1,x2,y2,type }) => {
-      roughCanvasRef.draw(getElementObject(x1,y1,x2,y2,type));
+    elements.forEach((element,index) => {
+      // console.log(element);
+      // console.log(ShapeCache.cache);
+      if(ShapeCache.cache.has(element)) {
+
+        // console.log("getting from the cachce" + index);
+        roughCanvasRef.draw(ShapeCache.cache.get(element));
+        
+      } else {
+        const { x1,y1,x2,y2,type } = element;
+        roughCanvasRef.draw(getElementObject(x1,y1,x2,y2,type));
+      }
+    
+
+     
     });
   }, [elements]);
 
@@ -99,6 +136,7 @@ const Canvas = () => {
       dispatch(setAction("drawing"));
       const newElement = addElement(elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool);
       dispatch(setElement([...elements, newElement]));
+      dispatch(setSelectedElement(newElement));
      
 
 
@@ -107,6 +145,16 @@ const Canvas = () => {
   };
 
   const handleMouseUp = (event) => {
+
+    if (tool !== "selection" && action === "drawing") {
+    const key =  selectedElement;
+    const   { x1,y1,x2,y2,type } =key ;
+    const shape = getElementObject(x1,y1,x2,y2,type);
+     ShapeCache.cache.set(key,shape);
+    }
+
+    
+
     dispatch(setAction("none"));
     dispatch(setSelectedElement(null));
   }
@@ -134,6 +182,8 @@ const Canvas = () => {
         const tempNewArray = [...elements];
         tempNewArray[id] = updatedElement;
         dispatch(setElement(tempNewArray));
+
+
         
       }
 

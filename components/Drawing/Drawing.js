@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addElement } from "../ElementManipulation/Element";
 import { setElement } from "../Redux/features/elementSlice";
 import store from "@/app/store";
+import { setSelectedElement } from "../Redux/features/selectedElementSlice";
 
 
 
@@ -19,5 +20,6 @@ export const draw = (event) => {
     const updatedElement = addElement(index, x1, y1, event.clientX, event.clientY, type);
     tempNewArray[index] = updatedElement;
     store.dispatch(setElement(tempNewArray));
+    store.dispatch(setSelectedElement(updatedElement));
 
 }
