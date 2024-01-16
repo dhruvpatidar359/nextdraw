@@ -3,7 +3,7 @@ import {  updateElement } from "../ElementManipulation/Element";
 
 export const move = (event) => {
     const selectedElement = store.getState().selectedElement.value;
-    
+   
     const { id, x1, x2, y1, y2, type, offSetX, offSetY } = selectedElement;
 
         const width = x2 - x1;

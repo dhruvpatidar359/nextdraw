@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import rough from 'roughjs/bundled/rough.esm';
 import {resizeElement} from './Resize/resize';
 import { addElement, getElementBelow, getElementObject } from './ElementManipulation/Element';
@@ -10,14 +10,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setElement } from './Redux/features/elementSlice';
 import {setCanvas} from './Redux/features/canvasSlice'
 import { setAction } from './Redux/features/actionSlice';
-import { setSelectedElement } from './Redux/features/selectedElementSlice';
-// import { setCache } from './Redux/features/cacheSlice';
+import {  setNotModifiedValue, setSelectedElement } from './Redux/features/selectedElementSlice';
 import { ShapeCache } from './Redux/ShapeCache';
+import { setOldElement } from './Redux/features/oldSelectedElementSlice';
 
 
 
 
 const Canvas = () => {
+
 
   // selectors 
   const tool = useSelector(state => state.tool.value);
@@ -26,9 +27,14 @@ const Canvas = () => {
   const hover = useSelector(state => state.hover.value);
   const action = useSelector(state => state.action.value);
   const selectedElement = useSelector(state => state.selectedElement.value);
-  const newH = useSelector(state => state.time.value);
+  const oldElement  = useSelector(state => state.oldElement.value);
+  const notModifiedSelectedElement = useSelector(state => state.selectedElement.notModifiedSelectedElement);
+ 
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
+
+  const [sheight, setSHeight] = useState(0);
+  const [swidth, setSWidth] = useState(0);
 
   // dispatcher
   const dispatch = useDispatch();
@@ -48,11 +54,10 @@ const Canvas = () => {
       const dpr = window.devicePixelRatio;
       const scalingRect = canvas.getBoundingClientRect();
   
-
-      
       canvas.width = scalingRect.width * dpr;
       canvas.height = scalingRect.height * dpr;
 
+     
   
       ctx?.scale(dpr, dpr);
   
@@ -61,7 +66,7 @@ const Canvas = () => {
   
       dispatch(setCanvas(rough.canvas(canvas)));
     }
-  }, []);
+  }, [height]);
 
 
   useLayoutEffect(() => {
@@ -76,16 +81,14 @@ const Canvas = () => {
       // console.log(ShapeCache.cache);
       if(ShapeCache.cache.has(element)) {
 
-        // console.log("getting from the cachce" + index);
+        console.log("getting from the cachce" + index);
         roughCanvasRef.draw(ShapeCache.cache.get(element));
         
       } else {
         const { x1,y1,x2,y2,type } = element;
         roughCanvasRef.draw(getElementObject(x1,y1,x2,y2,type));
       }
-    
-
-     
+    // console.log(ShapeCache.cache);
     });
   }, [elements]);
 
@@ -100,15 +103,20 @@ const Canvas = () => {
         if(ele != null) {
           const offSetX = event.clientX - ele.x1;
           const offSetY = event.clientY - ele.y1;
+          dispatch(setNotModifiedValue(ele));
+          dispatch(setOldElement(ele));
           dispatch(setSelectedElement({ ...ele, offSetX, offSetY }));
+        
+        
           
+         
         }
        
         
       if (hover === 'present') {
 
         dispatch(setAction("moving"));
-
+     
       } else if (hover === 'resize') {
 
         dispatch(setAction("resizing"));
@@ -119,6 +127,7 @@ const Canvas = () => {
       dispatch(setAction("drawing"));
       const newElement = addElement(elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool);
       dispatch(setElement([...elements, newElement]));
+      dispatch(setNotModifiedValue(newElement));
       dispatch(setSelectedElement(newElement));
      
 
@@ -129,45 +138,71 @@ const Canvas = () => {
 
   const handleMouseUp = (event) => {
 
-    if (tool !== "selection" && action === "drawing") {
+    if (action === "drawing") {
+
+
+// console.log(selectedElement);
     const key =  selectedElement;
     const   { x1,y1,x2,y2,type } =key ;
     const shape = getElementObject(x1,y1,x2,y2,type);
-     ShapeCache.cache.set(key,shape);
-    }
 
-    
+  
+      // console.log(oldSelectedElement);
+      // if(ShapeCache.cache.has(oldSelectedElement)) {
+      //   console.log("ha bhai ha");
+      // }
+
+     ShapeCache.cache.set(key,shape);
+    } else if(tool === 'selection') {
+        if(action === 'moving') {
+       
+console.log("null ha bhai");
+console.log(notModifiedSelectedElement);
+console.log(oldElement);
+          if(ShapeCache.cache.has(oldElement)){
+            console.log(
+              'Ha bhai'
+            );
+            ShapeCache.cache.delete(oldElement);
+            console.log("ker deya delete🔥");
+          }
+          const newElement = elements[selectedElement.id];
+          const {x1,x2,y1,y2,type} = newElement;
+          const shape = getElementObject(x1,y1,x2,y2,type);
+          ShapeCache.cache.set(newElement,shape);
+
+      console.log(ShapeCache.cache);
+          
+          
+        }
+    }
 
     dispatch(setAction("none"));
     dispatch(setSelectedElement(null));
+    dispatch(setNotModifiedValue(null));
+  
   }
 
  
-
-
-  
-
-
 
   const handleMouseMove = (event) => {
     if (tool === 'selection') {
       mouseCorsourChange(event,elements,setResizingDirection);
 
       if (action === 'moving') {
-
+       
+         
+       
         move(event);
 
       } else if (action === 'resizing') {
 
-    
         const updatedElement = resizeElement(event);
         const {id} = updatedElement;
         const tempNewArray = [...elements];
         tempNewArray[id] = updatedElement;
         dispatch(setElement(tempNewArray));
 
-
-        
       }
 
     } else {
@@ -181,16 +216,16 @@ const Canvas = () => {
   }
 
   useEffect(() => {
+ 
     setHeight(() => window.innerHeight)
     setWidth(() => window.innerWidth)
-    console.log(height);
-    console.log(width)
   }, [ height, width])
 
   return (
 
     <canvas
       id='canvas'
+
       height={height}
       width={width}
       style={{height: height, width: width}}

@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from "react-redux";
+
 import { addElement } from "../ElementManipulation/Element";
 import { setElement } from "../Redux/features/elementSlice";
 import store from "@/app/store";
@@ -21,5 +21,6 @@ export const draw = (event) => {
     tempNewArray[index] = updatedElement;
     store.dispatch(setElement(tempNewArray));
     store.dispatch(setSelectedElement(updatedElement));
+
 
 }

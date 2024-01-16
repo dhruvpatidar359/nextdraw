@@ -1,9 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setElement } from "../Redux/features/elementSlice";
 import store from "@/app/store";
-
-
-
+import { setOldSelectedElement, setSelectedElement } from "../Redux/features/selectedElementSlice";
 
 
 
@@ -126,6 +124,7 @@ export const getElementBelow = (event) => {
 
     const elements = store.getState().elements.value;
     const updatedElement = addElement(id, x1, y1,x2,y2 , type);
+   
     const tempNewArray = [...elements];
 
     tempNewArray[id] = updatedElement;
@@ -133,4 +132,25 @@ export const getElementBelow = (event) => {
     store.dispatch(setElement(tempNewArray));
     
     
+    
+    
+    
   } 
+
+
+  export const adjustElementCoordinates = element => {
+    const { type, x1, y1, x2, y2 } = element;
+    if (type === "rectangle") {
+      const minX = Math.min(x1, x2);
+      const maxX = Math.max(x1, x2);
+      const minY = Math.min(y1, y2);
+      const maxY = Math.max(y1, y2);
+      return { x1: minX, y1: minY, x2: maxX, y2: maxY };
+    } else {
+      if (x1 < x2 || (x1 === x2 && y1 < y2)) {
+        return { x1, y1, x2, y2 };
+      } else {
+        return { x1: x2, y1: y2, x2: x1, y2: y1 };
+      }
+    }
+  };
