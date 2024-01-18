@@ -82,23 +82,22 @@ export const getElementBelow = (event) => {
 
         case "line":
 
-          if (event.clientX > minX - 10 &&
-            event.clientX < maxX + 10 &&
-            event.clientY > minY - 10 &&
-            event.clientY < maxY + 10) {
-
+        
             const total_length = Math.sqrt((Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2)));
             const initial = Math.sqrt((Math.pow(y1 - event.clientY, 2) + Math.pow(x1 - event.clientX, 2)));
             const final = Math.sqrt((Math.pow(y2 - event.clientY, 2) + Math.pow(x2 - event.clientX, 2)));
 
             const diff = Math.abs(total_length - (initial + final));
 
-
-            if (diff < 1) {
+            // console.log("here i am ");
+            // console.log(diff);
+            // console.log(element.id);
+            if (diff < 5) {
               found = true;
+              // console.log(element.id);
             }
 
-          }
+          
           break;
 
         default:
@@ -125,8 +124,7 @@ export const getElementBelow = (event) => {
     const tempNewArray = [...elements];
 
     tempNewArray[id] = updatedElement;
-    // console.log("dispathc ker deya");
-    // console.log(updatedElement);
+   
     
     store.dispatch(setElement(tempNewArray));
     

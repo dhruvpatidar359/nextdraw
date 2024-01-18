@@ -14,6 +14,7 @@ import {  setNotModifiedValue, setSelectedElement } from './Redux/features/selec
 import { ShapeCache } from './Redux/ShapeCache';
 import { setOldElement } from './Redux/features/oldSelectedElementSlice';
 import store from '@/app/store';
+import { setResizingDirection } from './Redux/features/resizeSlice';
 
 
 
@@ -29,6 +30,7 @@ const Canvas = () => {
   const action = useSelector(state => state.action.value);
   const selectedElement = useSelector(state => state.selectedElement.value);
   const oldElement  = useSelector(state => state.oldElement.value);
+  
  
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
@@ -41,7 +43,7 @@ const Canvas = () => {
 
   
   const [resizingNode, setResizingNode] = useState(null);
-  const [resizeDirection,setResizingDirection] = useState(null);
+
 
   
 
@@ -81,7 +83,7 @@ const Canvas = () => {
       // console.log(ShapeCache.cache);
       if(ShapeCache.cache.has(element)) {
 
-        console.log("getting from the cachce" + index);
+        // console.log("getting from the cachce" + index);
         roughCanvasRef.draw(ShapeCache.cache.get(element));
         
       } else {
@@ -107,7 +109,7 @@ const Canvas = () => {
           dispatch(setOldElement(ele));
           dispatch(setSelectedElement({ ...ele, offSetX, offSetY }));
         
-        
+        console.log(ele.id);
           
          
         }
@@ -118,7 +120,7 @@ const Canvas = () => {
         dispatch(setAction("moving"));
      
       } else if (hover === 'resize') {
-
+        
         dispatch(setAction("resizing"));
       }
 
@@ -135,8 +137,7 @@ const Canvas = () => {
   };
 
   const handleMouseUp = (event) => {
-    console.log(selectedElement);
-    console.log(ShapeCache.cache);
+    
     if (action === "drawing") {
 
 
@@ -166,7 +167,7 @@ const Canvas = () => {
 
           if(ShapeCache.cache.has(oldElement)){
             ShapeCache.cache.delete(oldElement);
-            console.log("ker deya delete🔥");
+            // console.log("ker deya delete move🔥");
           }
 
           const newElement = elements[selectedElement.id];
@@ -181,7 +182,7 @@ const Canvas = () => {
 
             if(ShapeCache.cache.has(oldElement)) {
               ShapeCache.cache.delete(oldElement);
-              console.log("🔥Ker deya delete resize se");
+              // console.log("🔥Ker deya delete resize se");
             }
 
           const element = elements[selectedElement.id];
@@ -200,7 +201,7 @@ const Canvas = () => {
           const  { x1,y1,x2,y2,type } = key ;
           const shape = getElementObject(x1,y1,x2,y2,type);
           ShapeCache.cache.set(key,shape);
-          console.log(ShapeCache.cache);
+          // console.log(ShapeCache.cache);
           
 
 
@@ -210,6 +211,7 @@ const Canvas = () => {
     dispatch(setAction("none"));
     dispatch(setSelectedElement(null));
     dispatch(setNotModifiedValue(null));
+    dispatch(setResizingDirection(null));
   
   }
 
@@ -217,19 +219,17 @@ const Canvas = () => {
 
   const handleMouseMove = (event) => {
     if (tool === 'selection') {
-      mouseCorsourChange(event,elements,setResizingDirection);
+      mouseCorsourChange(event,elements);
 
       if (action === 'moving') {
        
         move(event);
 
       } else if (action === 'resizing') {
-        console.log(selectedElement);
-        const updatedElement = resizeElement(event);
-        const {id} = updatedElement;
-        const tempNewArray = [...elements];
-        tempNewArray[id] = updatedElement;
-        dispatch(setElement(tempNewArray));
+      // console.log(selectedElement);
+        const {id,x1,y1,x2,y2,type} = resizeElement(event);
+        updateElement(id,x1,y1,x2,y2,type);
+    
 
       }
 
