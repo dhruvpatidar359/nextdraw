@@ -2,17 +2,18 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import rough from 'roughjs/bundled/rough.esm';
 import {resizeElement} from './Resize/resize';
-import { addElement, getElementBelow, getElementObject } from './ElementManipulation/Element';
+import { addElement, adjustElementCoordinates, getElementBelow, getElementObject, updateElement } from './ElementManipulation/Element';
 import { mouseCorsourChange } from './Mouse/mouse';
 import { move } from './Move/move';
 import { draw } from './Drawing/Drawing';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { setElement } from './Redux/features/elementSlice';
 import {setCanvas} from './Redux/features/canvasSlice'
 import { setAction } from './Redux/features/actionSlice';
 import {  setNotModifiedValue, setSelectedElement } from './Redux/features/selectedElementSlice';
 import { ShapeCache } from './Redux/ShapeCache';
 import { setOldElement } from './Redux/features/oldSelectedElementSlice';
+import store from '@/app/store';
 
 
 
@@ -22,19 +23,16 @@ const Canvas = () => {
 
   // selectors 
   const tool = useSelector(state => state.tool.value);
-  const elements = useSelector(state => state.elements.value);
+  const elements = useSelector(state => state.elements.value,shallowEqual);
   const roughCanvasRef = useSelector(state => state.canvas.value);
   const hover = useSelector(state => state.hover.value);
   const action = useSelector(state => state.action.value);
   const selectedElement = useSelector(state => state.selectedElement.value);
   const oldElement  = useSelector(state => state.oldElement.value);
-  const notModifiedSelectedElement = useSelector(state => state.selectedElement.notModifiedSelectedElement);
  
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
 
-  const [sheight, setSHeight] = useState(0);
-  const [swidth, setSWidth] = useState(0);
 
   // dispatcher
   const dispatch = useDispatch();
@@ -44,6 +42,8 @@ const Canvas = () => {
   
   const [resizingNode, setResizingNode] = useState(null);
   const [resizeDirection,setResizingDirection] = useState(null);
+
+  
 
 
   useEffect(() => {
@@ -130,50 +130,80 @@ const Canvas = () => {
       dispatch(setNotModifiedValue(newElement));
       dispatch(setSelectedElement(newElement));
      
-
-
     }
 
   };
 
   const handleMouseUp = (event) => {
-
+    console.log(selectedElement);
+    console.log(ShapeCache.cache);
     if (action === "drawing") {
 
 
-// console.log(selectedElement);
-    const key =  selectedElement;
-    const   { x1,y1,x2,y2,type } =key ;
-    const shape = getElementObject(x1,y1,x2,y2,type);
 
-  
-      // console.log(oldSelectedElement);
-      // if(ShapeCache.cache.has(oldSelectedElement)) {
-      //   console.log("ha bhai ha");
-      // }
+    
+    // adjusting the coordinates in-case
+      const element = elements[elements.length - 1];  
+      const adjustedElement = adjustElementCoordinates(element)
 
+      if(adjustedElement != false) {
+        const {id,x1,x2,y1,y2,type} = adjustedElement;
+        updateElement(id,x1,y1,x2,y2,type);
+      }
+      
+      const currentStateElement = store.getState().elements.value;
+        
+      const key =  currentStateElement[currentStateElement.length - 1];
+     
+      const  { x1,y1,x2,y2,type } = key ;
+      const shape = getElementObject(x1,y1,x2,y2,type);
+
+ 
      ShapeCache.cache.set(key,shape);
     } else if(tool === 'selection') {
         if(action === 'moving') {
        
-console.log("null ha bhai");
-console.log(notModifiedSelectedElement);
-console.log(oldElement);
+
           if(ShapeCache.cache.has(oldElement)){
-            console.log(
-              'Ha bhai'
-            );
             ShapeCache.cache.delete(oldElement);
             console.log("ker deya delete🔥");
           }
+
           const newElement = elements[selectedElement.id];
           const {x1,x2,y1,y2,type} = newElement;
           const shape = getElementObject(x1,y1,x2,y2,type);
           ShapeCache.cache.set(newElement,shape);
 
-      console.log(ShapeCache.cache);
+      
           
           
+        } else if(action === 'resizing') {
+
+            if(ShapeCache.cache.has(oldElement)) {
+              ShapeCache.cache.delete(oldElement);
+              console.log("🔥Ker deya delete resize se");
+            }
+
+          const element = elements[selectedElement.id];
+          const adjustedElement = adjustElementCoordinates(element);
+
+          if(adjustedElement != false) {
+            const {id,x1,x2,y1,y2,type} = adjustedElement;
+            updateElement(id,x1,y1,x2,y2,type);
+           
+          }
+
+          const currentStateElement = store.getState().elements.value;
+        
+          const key =  currentStateElement[currentStateElement.length - 1];
+         
+          const  { x1,y1,x2,y2,type } = key ;
+          const shape = getElementObject(x1,y1,x2,y2,type);
+          ShapeCache.cache.set(key,shape);
+          console.log(ShapeCache.cache);
+          
+
+
         }
     }
 
@@ -183,7 +213,7 @@ console.log(oldElement);
   
   }
 
- 
+
 
   const handleMouseMove = (event) => {
     if (tool === 'selection') {
@@ -191,12 +221,10 @@ console.log(oldElement);
 
       if (action === 'moving') {
        
-         
-       
         move(event);
 
       } else if (action === 'resizing') {
-
+        console.log(selectedElement);
         const updatedElement = resizeElement(event);
         const {id} = updatedElement;
         const tempNewArray = [...elements];
@@ -216,7 +244,6 @@ console.log(oldElement);
   }
 
   useEffect(() => {
- 
     setHeight(() => window.innerHeight)
     setWidth(() => window.innerWidth)
   }, [ height, width])

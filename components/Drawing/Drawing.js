@@ -19,6 +19,8 @@ export const draw = (event) => {
 
     const updatedElement = addElement(index, x1, y1, event.clientX, event.clientY, type);
     tempNewArray[index] = updatedElement;
+
+    // kept separate so that i can set the selectedElement separately from the updateElement
     store.dispatch(setElement(tempNewArray));
     store.dispatch(setSelectedElement(updatedElement));
 

@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setElement } from "../Redux/features/elementSlice";
 import store from "@/app/store";
-import { setOldSelectedElement, setSelectedElement } from "../Redux/features/selectedElementSlice";
 
 
 
@@ -116,10 +115,8 @@ export const getElementBelow = (event) => {
     }
   }
 
-  export const adjustingElement = () => {
-    
-  }
-
+  
+  // updates the old element with new one having new props or any change
   export const updateElement = (id,x1,y1,x2,y2,type) => {
 
     const elements = store.getState().elements.value;
@@ -128,7 +125,9 @@ export const getElementBelow = (event) => {
     const tempNewArray = [...elements];
 
     tempNewArray[id] = updatedElement;
-  
+    // console.log("dispathc ker deya");
+    // console.log(updatedElement);
+    
     store.dispatch(setElement(tempNewArray));
     
     
@@ -139,18 +138,18 @@ export const getElementBelow = (event) => {
 
 
   export const adjustElementCoordinates = element => {
-    const { type, x1, y1, x2, y2 } = element;
-    if (type === "rectangle") {
+    const {id, type, x1, y1, x2, y2 } = element;
+    if (type === "rect") {
       const minX = Math.min(x1, x2);
       const maxX = Math.max(x1, x2);
       const minY = Math.min(y1, y2);
       const maxY = Math.max(y1, y2);
-      return { x1: minX, y1: minY, x2: maxX, y2: maxY };
+      return {id, x1: minX, y1: minY, x2: maxX, y2: maxY ,type};
     } else {
       if (x1 < x2 || (x1 === x2 && y1 < y2)) {
-        return { x1, y1, x2, y2 };
+        return false;
       } else {
-        return { x1: x2, y1: y2, x2: x1, y2: y1 };
+        return {id, x1: x2, y1: y2, x2: x1, y2: y1 ,type};
       }
     }
   };
