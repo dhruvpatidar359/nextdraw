@@ -15,7 +15,11 @@ export default function Home() {
   return (
     <main>
       <Provider store = {store}>
+
+
       <App>
+
+
 
       </App>
       </Provider>

@@ -6,7 +6,7 @@ import { setResizingDirection } from "../Redux/features/resizeSlice";
 
 
 export const mouseCorsourChange = (event,elements) => {
-  
+    
     for (var i = elements.length - 1; i >= 0; i--) {
       const element = elements[i];
       const { x1, y1, x2, y2, type } = element;
@@ -42,10 +42,6 @@ export const mouseCorsourChange = (event,elements) => {
         case "line":
 
 
-         
-
-
-
             const total_length = Math.sqrt((Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2)));
             const initial = Math.sqrt((Math.pow(y1 - event.clientY, 2) + Math.pow(x1 - event.clientX, 2)));
             const final = Math.sqrt((Math.pow(y2 - event.clientY, 2) + Math.pow(x2 - event.clientX, 2)));
@@ -53,7 +49,8 @@ export const mouseCorsourChange = (event,elements) => {
             const diff = Math.abs(total_length - (initial + final));
 
             
-console.log(diff);
+// console.log(diff);
+// console.log(document.body.style.cursor);
             
           const onResizeNode = getCurrentResizingNode(event,element);
        
@@ -65,7 +62,7 @@ console.log(diff);
 
             if (diff < 5) {
               elementFound = true;
-              // console.log(element.id);
+             
             }
 
 
@@ -79,11 +76,11 @@ console.log(diff);
 
       }
 
-
+      // console.log(elementFound);
       if(resizerFound != null && elementFound == true) {
         
         document.body.style.cursor = resizerFound[1];
-        // console.log(element);
+      
         store.dispatch(setHover("resize"));
        if(store.getState().resizeDirection.value == null && store.getState().selectedElement.value != null) {
         store.dispatch(setResizingDirection(resizerFound[2]));
@@ -96,19 +93,23 @@ console.log(diff);
         break;
       }
 
-      if (elementFound) {
-
+      if (elementFound && store.getState().selectedElement.value == null) {
+        console.log("working");
         document.body.style.cursor = 'move';
         store.dispatch(setHover("present"));
        
         break;
 
       } else {
-        store.dispatch(setHover("none"));
-     
-        document.body.style.cursor = 'default';
+        if(store.getState().selectedElement.value == null) {
+          store.dispatch(setHover("none"));
+          document.body.style.cursor = `url('defaultCursor.svg'), auto`;
+        }
+       
+        // document.body.style.cursor = 'default';
       }
 
     }
+   
 
   }

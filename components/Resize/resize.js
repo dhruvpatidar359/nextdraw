@@ -8,6 +8,8 @@ export const resizeElement = (event) => {
 const selectedElement = store.getState().selectedElement.value;
 const resizeDirection = store.getState().resizeDirection.value;
 
+// console.log(selectedElement);
+
     const cx = event.clientX;
     const cy = event.clientY;
    

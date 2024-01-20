@@ -39,12 +39,7 @@ const Canvas = () => {
   // dispatcher
   const dispatch = useDispatch();
   
-
-
   
-  const [resizingNode, setResizingNode] = useState(null);
-
-
   
 
 
@@ -78,19 +73,43 @@ const Canvas = () => {
     // Clear the canvas before drawing elements
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    elements.forEach((element,index) => {
-      // console.log(element);
-      // console.log(ShapeCache.cache);
+    elements.forEach((element) => {
+    
+      const {x1,y1,x2,y2,id,type} = element;
+
       if(ShapeCache.cache.has(element)) {
 
-        // console.log("getting from the cachce" + index);
         roughCanvasRef.draw(ShapeCache.cache.get(element));
-        
       } else {
         const { x1,y1,x2,y2,type } = element;
         roughCanvasRef.draw(getElementObject(x1,y1,x2,y2,type));
       }
-    // console.log(ShapeCache.cache);
+      
+      if(type != 'line') {
+        if(selectedElement != null && selectedElement.id === id ) {
+        let  minX = Math.min(x1,x2);
+        let  maxX = Math.max(x1,x2);
+         let  minY = Math.min(y1,y2);
+         let  maxY = Math.max(y1,y2);
+      
+          ctx.strokeStyle = "black";
+          ctx.strokeRect(minX-8,minY-8,maxX-minX + 16,maxY-minY + 16);
+          ctx.fillStyle = 'black';
+          ctx.beginPath();
+          ctx.roundRect(minX-12,minY-12, 10, 10, 3);
+          ctx.roundRect(maxX + 2,maxY + 2, 10, 10, 3);
+          ctx.roundRect(maxX + 2,minY - 12, 10, 10, 3);
+          ctx.roundRect(minX - 12,maxY + 2, 10, 10, 3);
+          
+       
+          ctx.fill();
+          ctx.stroke();
+        }
+       
+      }
+
+   
+   
     });
   }, [elements]);
 
@@ -218,6 +237,7 @@ const Canvas = () => {
 
 
   const handleMouseMove = (event) => {
+  
     if (tool === 'selection') {
       mouseCorsourChange(event,elements);
 
@@ -242,6 +262,11 @@ const Canvas = () => {
     }
 
   }
+
+  useEffect(() => {
+    document.body.style.cursor = `url('defaultCursor.svg'), auto`;
+  }, [])
+  
 
   useEffect(() => {
     setHeight(() => window.innerHeight)
