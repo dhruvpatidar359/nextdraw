@@ -4,7 +4,7 @@ export const selectedElementSlice = createSlice({
     name:'selectedElement',
     initialState : {
         value : null,
-        notModifiedValue : null
+       
         
     },
 
@@ -12,14 +12,11 @@ export const selectedElementSlice = createSlice({
         setSelectedElement :(state,action) => {
             state.value = action.payload;
         }
-,
-        setNotModifiedValue :(state,action) => {
-            state.value = action.payload;
-        }
+
 
     }
 })
 
 
-export const {setSelectedElement,setNotModifiedValue} = selectedElementSlice.actions;
+export const {setSelectedElement} = selectedElementSlice.actions;
 export default selectedElementSlice.reducer;

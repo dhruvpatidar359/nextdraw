@@ -4,21 +4,21 @@ import store from "@/app/store";
 
 
 
-export function addElement(id, x1, y1, x2, y2, type) {
+export function addElement(id, x1, y1, x2, y2, type,isSelected) {
   
     switch (type) {
       case 'rect':
        
-        return { id, x1, x2, y1, y2, type };
+        return { id, x1, x2, y1, y2, type ,isSelected};
 
 
       case 'line':
       
-        return { id, x1, x2, y1, y2, type };
+        return { id, x1, x2, y1, y2, type ,isSelected};
 
       default:
       
-        return { id, x1, x2, y1, y2, type };
+        return { id, x1, x2, y1, y2, type ,isSelected};
 
     }
 
@@ -116,10 +116,10 @@ export const getElementBelow = (event) => {
 
   
   // updates the old element with new one having new props or any change
-  export const updateElement = (id,x1,y1,x2,y2,type) => {
+  export const updateElement = (id,x1,y1,x2,y2,type,isSelected) => {
 
     const elements = store.getState().elements.value;
-    const updatedElement = addElement(id, x1, y1,x2,y2 , type);
+    const updatedElement = addElement(id, x1, y1,x2,y2 , type,isSelected);
    
     const tempNewArray = [...elements];
 

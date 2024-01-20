@@ -6,6 +6,8 @@ import { setResizingDirection } from "../Redux/features/resizeSlice";
 
 
 export const mouseCorsourChange = (event,elements) => {
+
+  
     
     for (var i = elements.length - 1; i >= 0; i--) {
       const element = elements[i];
@@ -77,36 +79,43 @@ export const mouseCorsourChange = (event,elements) => {
       }
 
       // console.log(elementFound);
-      if(resizerFound != null && elementFound == true) {
-        
-        document.body.style.cursor = resizerFound[1];
+      
+      if(resizerFound != null && elementFound == true && store.getState().selectedElement.value != null ) {
+
+        // keeping the action as it is so that mouse cursor remains same all the time
+        // same applies for other
+        if(store.getState().action.value === 'none') {
+          document.body.style.cursor = resizerFound[1];
+        }
+    
       
         store.dispatch(setHover("resize"));
-       if(store.getState().resizeDirection.value == null && store.getState().selectedElement.value != null) {
-        store.dispatch(setResizingDirection(resizerFound[2]));
-       }
+          if(store.getState().resizeDirection.value == null && store.getState().selectedElement.value != null && store.getState().action.value != 'none') {
+            store.dispatch(setResizingDirection(resizerFound[2]));
+          }
     
-       
-        
-       
-       
         break;
       }
 
-      if (elementFound && store.getState().selectedElement.value == null) {
-        console.log("working");
-        document.body.style.cursor = 'move';
+      if (elementFound) {
+        if(store.getState().action.value === 'none') {
+          document.body.style.cursor = 'move';
+        }
+        
         store.dispatch(setHover("present"));
        
         break;
 
       } else {
-        if(store.getState().selectedElement.value == null) {
+        
           store.dispatch(setHover("none"));
-          document.body.style.cursor = `url('defaultCursor.svg'), auto`;
-        }
+          if(store.getState().action.value === 'none') {
+            document.body.style.cursor = `url('defaultCursor.svg'), auto`;
+          }
        
-        // document.body.style.cursor = 'default';
+        
+       
+       
       }
 
     }

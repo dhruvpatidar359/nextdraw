@@ -82,40 +82,40 @@ return  {id : id,
       const { x1, x2, y1, y2 ,type} = element;
 
   if(type === 'rect') {
-    if (distance(x1, y1, cx, cy) < 10) {
+    if (distance(x1, y1, cx, cy) < 12) {
       // top left
       
       console.log("top left");
       return [1,"se-resize",1];
 
-    } else if (distance(x2, y1, cx, cy) < 10) {
+    } else if (distance(x2, y1, cx, cy) < 12) {
       // top right
       console.log("top right");
       return [1,"sw-resize",3];
 
-    } else if (distance(x1, y2, cx, cy) < 10) {
+    } else if (distance(x1, y2, cx, cy) < 12) {
       // bottom left
       console.log("bottom left"); 
       return [1,"ne-resize",7];
 
-    } else if (distance(x2, y2, cx, cy) < 10) {
+    } else if (distance(x2, y2, cx, cy) < 12) {
       // bottom right
       console.log("bottom right"); 
       return [1,"nw-resize",5];
 
-    } else if (distance(x1, y1 + (y2 - y1) / 2, cx, cy) < 10) {
+    } else if (distance(x1, y1 + (y2 - y1) / 2, cx, cy) < 12) {
       // left mid
       console.log("left mid"); 
       return [1,"ew-resize",8];
-    } else if (distance(x2,y1 +  (y2 - y1) / 2, cx, cy) < 10) {
+    } else if (distance(x2,y1 +  (y2 - y1) / 2, cx, cy) < 12) {
       // right mid
       console.log("right mid"); 
       return [1,"ew-resize",4];
-    } else if (distance(x1 + (x2 - x1) / 2, y1, cx, cy) < 10) {
+    } else if (distance(x1 + (x2 - x1) / 2, y1, cx, cy) < 12) {
       // top mid
       console.log("top mid");
       return [1,"n-resize",2];
-    } else if (distance(x1 + (x2 - x1) / 2, y2, cx, cy) < 10) {
+    } else if (distance(x1 + (x2 - x1) / 2, y2, cx, cy) < 12) {
       // bottom mid
       console.log("bottom mid"); 
       return [1,"s-resize",6];
