@@ -34,7 +34,7 @@ const Canvas = () => {
   const selectedElement = useSelector(state => state.selectedElement.value);
   const oldElement  = useSelector(state => state.oldElement.value);
   
- 
+  // useState for local height and width of canvas
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
 
@@ -45,7 +45,6 @@ const Canvas = () => {
   
   useEffect(() => {
     
-  console.log(tool);
       if(tool === 'rect' || tool === 'line') {
         document.body.style.cursor = 'crosshair';
 
@@ -78,8 +77,6 @@ const Canvas = () => {
       canvas.width = scalingRect.width * dpr;
       canvas.height = scalingRect.height * dpr;
 
-     
-  
       ctx?.scale(dpr, dpr);
   
       canvas.style.width = `${scalingRect.width}px`;
@@ -99,7 +96,7 @@ const Canvas = () => {
 
     elements.forEach((element) => {
     
-      const {x1,y1,x2,y2,id,type,isSelected} = element;
+      const {x1,y1,x2,y2,id,type} = element;
 
       if(ShapeCache.cache.has(element)) {
 
@@ -124,15 +121,20 @@ const Canvas = () => {
      
         const ele = getElementBelow(event);
         if(ele != null) {
+
+          if(selectedElement != null) {
+            const {id,x1,y1,x2,y2,type} = elements[selectedElement.id];
+            updateElement(id,x1,y1,x2,y2,type,false);
+            dispatch(setSelectedElement(null));
+          }
+
           const {id,x1,y1,x2,y2,type} = ele;
           const offSetX = event.clientX - ele.x1;
           const offSetY = event.clientY - ele.y1;
 
-          
+
           dispatch(setOldElement(ele));
           dispatch(setSelectedElement({ ...ele, offSetX, offSetY }));
-
-          // console.log(ele);
 
           updateElement(id,x1,y1,x2,y2,type,true);
         } else {
@@ -143,8 +145,7 @@ const Canvas = () => {
           }
       
         }
-       
-        
+           
       if (hover === 'present') {
 
         dispatch(setAction("moving"));
@@ -169,9 +170,6 @@ const Canvas = () => {
   const handleMouseUp = (event) => {
     
     if (action === "drawing") {
-
-
-
     
     // adjusting the coordinates in-case
       const element = elements[elements.length - 1];  
@@ -233,8 +231,6 @@ const Canvas = () => {
           const shape = getElementObject(x1,y1,x2,y2,type);
           ShapeCache.cache.set(key,shape);
           // console.log(ShapeCache.cache);
-          
-
 
         }
     }
@@ -248,8 +244,6 @@ const Canvas = () => {
 
 
   const handleMouseMove = (event) => {
-  
-    // console.log(store.getState().selectedElement.value);
 
     if (tool === 'selection') {
       mouseCorsourChange(event,elements);
@@ -259,8 +253,7 @@ const Canvas = () => {
         move(event);
 
       } else if (action === 'resizing') {
-      // console.log(selectedElement);
-      // console.log(action);
+        
         const {id,x1,y1,x2,y2,type} = resizeElement(event);
         updateElement(id,x1,y1,x2,y2,type,true);
     

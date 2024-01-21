@@ -145,7 +145,7 @@ export const getElementBelow = (event) => {
       return {id, x1: minX, y1: minY, x2: maxX, y2: maxY ,type};
     } else {
       if (x1 < x2 || (x1 === x2 && y1 < y2)) {
-        return false;
+        return {id, x1, y1, x2, y2,type};
       } else {
         return {id, x1: x2, y1: y2, x2: x1, y2: y1 ,type};
       }
