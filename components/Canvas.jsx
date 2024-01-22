@@ -110,7 +110,7 @@ const Canvas = () => {
       const {x1,y1,x2,y2,id,type} = element;
 
       if(ShapeCache.cache.has(element)) {
-        console.log(`using cache ${index1}`);
+        // console.log(`using cache ${index1}`);
         roughCanvasRef.draw(ShapeCache.cache.get(element));
       } else {
        
@@ -128,7 +128,7 @@ const Canvas = () => {
 
 
   const handleMouseDown = (event) => {
-
+   
     if (tool === "selection") {
      
 
@@ -154,6 +154,7 @@ const Canvas = () => {
           if(dupState === true) {
             if(changed === true) {
               dispatch(setElement([elements]));
+              setChanged(false);
             } else {
               dispatch(setElement([elements,true]));
             }
@@ -186,7 +187,8 @@ const Canvas = () => {
           }
       
         }
-           
+        console.log(dupState);
+    console.log(changed);    
       if (hover === 'present') {
 
         dispatch(setAction("moving"));
@@ -212,12 +214,14 @@ const Canvas = () => {
           dispatch(setElement([[...elements, newElement]]));
         } else {
           dispatch(setElement([[...elements, newElement],true]));
+          setChanged(true);
         }
        
         setDupState(false);
       }
       
-     
+      console.log(dupState);
+    console.log(changed);
       dispatch(setOldElement(newElement));
       dispatch(setSelectedElement(newElement));
       dispatch(setSelectedElementSource("drawing"));
@@ -256,7 +260,7 @@ const Canvas = () => {
 // console.log(ShapeCache.cache);
           if(ShapeCache.cache.has(oldElement)){
             ShapeCache.cache.delete(oldElement);
-            console.log("ker deya delete move🔥");
+            // console.log("ker deya delete move🔥");
           }
 
           const newElement = elements[selectedElement.id];
@@ -271,7 +275,7 @@ const Canvas = () => {
 
             if(ShapeCache.cache.has(oldElement)) {
               ShapeCache.cache.delete(oldElement);
-              console.log("🔥Ker deya delete resize se");
+              // console.log("🔥Ker deya delete resize se");
             }
 
           const element = elements[selectedElement.id];
@@ -312,6 +316,7 @@ const Canvas = () => {
       mouseCorsourChange(event,elements);
 
       if (action === 'moving') {
+        console.log("movingsadfgfdsa");
         setChanged(true);
         move(event);
 

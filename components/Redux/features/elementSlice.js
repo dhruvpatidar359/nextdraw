@@ -50,7 +50,7 @@ export const elementSlice = createSlice({
                     if(!set.has(e)) {
                     
                         if(ShapeCache.cache.has(e)) {
-                            console.log("we are deleteing elements");
+                            // console.log("we are deleteing elements");
                             ShapeCache.cache.delete(e);
                         }
                        
@@ -60,7 +60,7 @@ export const elementSlice = createSlice({
                
                 state.value = [...updatedState,newState];
                 state.index = state.index + 1;
-                console.log(ShapeCache.cache);
+                // console.log(ShapeCache.cache);
 
                 
 
