@@ -9,7 +9,7 @@ export const move = (event) => {
         const width = x2 - x1;
         const height = y2 - y1;
 
-        updateElement(id, event.clientX - offSetX, event.clientY - offSetY, event.clientX - offSetX + width, event.clientY - offSetY + height, type,true);
+        updateElement(id, event.clientX - offSetX, event.clientY - offSetY, event.clientX - offSetX + width, event.clientY - offSetY + height, type);
        
 
 }

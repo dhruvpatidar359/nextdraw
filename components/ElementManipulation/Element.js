@@ -4,21 +4,21 @@ import store from "@/app/store";
 
 
 
-export function addElement(id, x1, y1, x2, y2, type,isSelected) {
+export function addElement(id, x1, y1, x2, y2, type) {
   
     switch (type) {
       case 'rect':
        
-        return { id, x1, x2, y1, y2, type ,isSelected};
+        return { id, x1, x2, y1, y2, type };
 
 
       case 'line':
       
-        return { id, x1, x2, y1, y2, type ,isSelected};
+        return { id, x1, x2, y1, y2, type };
 
       default:
       
-        return { id, x1, x2, y1, y2, type ,isSelected};
+        return { id, x1, x2, y1, y2, type};
 
     }
 
@@ -58,7 +58,8 @@ export const getElementObject = (x1,y1,x2,y2,type)=>{
 
 
 export const getElementBelow = (event) => {
-  const elements = store.getState().elements.value;
+  const histIndex = store.getState().elements.index;
+  const elements = store.getState().elements.value[histIndex];
 
     for (var i = elements.length - 1; i >= 0; i--) {
       const element = elements[i];
@@ -116,17 +117,18 @@ export const getElementBelow = (event) => {
 
   
   // updates the old element with new one having new props or any change
-  export const updateElement = (id,x1,y1,x2,y2,type,isSelected) => {
+  export const updateElement = (id,x1,y1,x2,y2,type) => {
 
-    const elements = store.getState().elements.value;
-    const updatedElement = addElement(id, x1, y1,x2,y2 , type,isSelected);
+    const histIndex = store.getState().elements.index;
+    const elements = store.getState().elements.value[histIndex];
+    const updatedElement = addElement(id, x1, y1,x2,y2 , type);
    
     const tempNewArray = [...elements];
 
     tempNewArray[id] = updatedElement;
    
     
-    store.dispatch(setElement(tempNewArray));
+    store.dispatch(setElement([tempNewArray,true]));
     
     
     

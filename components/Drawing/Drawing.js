@@ -9,8 +9,8 @@ import { setSelectedElement } from "../Redux/features/selectedElementSlice";
 
 
 export const draw = (event) => {
-
-    const elements = store.getState().elements.value;
+    const histIndex = store.getState().elements.index;
+    const elements = store.getState().elements.value[histIndex];
     const roughCanvasRef = store.getState().canvas.value;
 
     const index = elements.length - 1;
@@ -21,7 +21,7 @@ export const draw = (event) => {
     tempNewArray[index] = updatedElement;
 
     // kept separate so that i can set the selectedElement separately from the updateElement
-    store.dispatch(setElement(tempNewArray));
+    store.dispatch(setElement([tempNewArray,true]));
     store.dispatch(setSelectedElement(updatedElement));
 
 

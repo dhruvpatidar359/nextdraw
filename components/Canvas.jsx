@@ -24,10 +24,11 @@ import { drawBounds } from './ElementManipulation/Bounds';
 
 const Canvas = () => {
 
-
+  // console.log(ShapeCache.cache);
   // selectors 
   const tool = useSelector(state => state.tool.value);
-  const elements = useSelector(state => state.elements.value,shallowEqual);
+  const index = useSelector(state => state.elements.index);
+  const elements = useSelector(state => state.elements.value[index],shallowEqual);
   const roughCanvasRef = useSelector(state => state.canvas.value);
   const hover = useSelector(state => state.hover.value);
   const action = useSelector(state => state.action.value);
@@ -41,26 +42,32 @@ const Canvas = () => {
 
   // dispatcher
   const dispatch = useDispatch();
+
+
   
   
   useEffect(() => {
-    
+   
       if(tool === 'rect' || tool === 'line') {
+        // console.log("changed");
         document.body.style.cursor = 'crosshair';
 
-        const selectedElement = store.getState().selectedElement.value;
-        const elements = store.getState().elements.value;
+        
         console.log(selectedElement);
         if(selectedElement != null) {
-            const {id,x1,y1,x2,y2,type} = elements[selectedElement.id];
-            updateElement(id,x1,y1,x2,y2,type,false);
+          console.log(selectedElement.type);
+            // const {id,x1,y1,x2,y2,type} = elements[selectedElement.id];
+            // updateElement(id,x1,y1,x2,y2,type);
             dispatch(setSelectedElement(null));
         }
 
        
     } else {
+      // console.log("defualt");
         document.body.style.cursor = `url('defaultCursor.svg'), auto`;
+        
     }
+    // console.log(document.body.style.cursor);
    
   }, [tool])
   
@@ -94,23 +101,24 @@ const Canvas = () => {
     // Clear the canvas before drawing elements
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    elements.forEach((element) => {
+    elements.forEach((element,index1) => {
     
       const {x1,y1,x2,y2,id,type} = element;
 
       if(ShapeCache.cache.has(element)) {
-
+        console.log(`using cache ${index1}`);
         roughCanvasRef.draw(ShapeCache.cache.get(element));
       } else {
        
         roughCanvasRef.draw(getElementObject(x1,y1,x2,y2,type));
       }
-      
+      // console.log("redering");
+      // console.log(selectedElement);
       drawBounds(ctx,element,selectedElement);
-
+      // console.log(ShapeCache.cache);
   
     });
-  }, [elements]);
+  }, [elements,selectedElement]);
 
 
 
@@ -118,13 +126,17 @@ const Canvas = () => {
 
     if (tool === "selection") {
      
-     
+
         const ele = getElementBelow(event);
         if(ele != null) {
 
+
+          
           if(selectedElement != null) {
-            const {id,x1,y1,x2,y2,type} = elements[selectedElement.id];
-            updateElement(id,x1,y1,x2,y2,type,false);
+          
+            // const {id,x1,y1,x2,y2,type} = elements[selectedElement.id];
+            // updateElement(id,x1,y1,x2,y2,type);
+
             dispatch(setSelectedElement(null));
           }
 
@@ -132,15 +144,16 @@ const Canvas = () => {
           const offSetX = event.clientX - ele.x1;
           const offSetY = event.clientY - ele.y1;
 
-
+          dispatch(setElement([elements]));
+          
           dispatch(setOldElement(ele));
           dispatch(setSelectedElement({ ...ele, offSetX, offSetY }));
 
-          updateElement(id,x1,y1,x2,y2,type,true);
+          updateElement(id,x1,y1,x2,y2,type);
         } else {
           if(selectedElement != null) {
-            const {id,x1,y1,x2,y2,type} = elements[selectedElement.id];
-            updateElement(id,x1,y1,x2,y2,type,false);
+            // const {id,x1,y1,x2,y2,type} = elements[selectedElement.id];
+            // updateElement(id,x1,y1,x2,y2,type);
             dispatch(setSelectedElement(null));
           }
       
@@ -156,11 +169,15 @@ const Canvas = () => {
       }
 
     } else {
+      // we are drawing
 
+      
       dispatch(setAction("drawing"));
+
       const newElement = addElement(elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool);
-      dispatch(setElement([...elements, newElement]));
-     
+      
+      dispatch(setElement([[...elements, newElement]]));
+      dispatch(setOldElement(newElement));
       dispatch(setSelectedElement(newElement));
      
     }
@@ -177,26 +194,27 @@ const Canvas = () => {
 
       if(adjustedElement != false) {
         const {id,x1,x2,y1,y2,type} = adjustedElement;
-        updateElement(id,x1,y1,x2,y2,type,true);
+        updateElement(id,x1,y1,x2,y2,type);
       }
       
-      const currentStateElement = store.getState().elements.value;
+      const currentStateElement = store.getState().elements.value[index];
         
       const key =  currentStateElement[currentStateElement.length - 1];
      
       const  { x1,y1,x2,y2,type } = key ;
       const shape = getElementObject(x1,y1,x2,y2,type);
 
- 
+     console.log(key);
      ShapeCache.cache.set(key,shape);
      dispatch(changeTool("selection"));
     } else if(tool === 'selection') {
         if(action === 'moving') {
        
-
+console.log(oldElement);
+console.log(ShapeCache.cache);
           if(ShapeCache.cache.has(oldElement)){
             ShapeCache.cache.delete(oldElement);
-            // console.log("ker deya delete move🔥");
+            console.log("ker deya delete move🔥");
           }
 
           const newElement = elements[selectedElement.id];
@@ -211,7 +229,7 @@ const Canvas = () => {
 
             if(ShapeCache.cache.has(oldElement)) {
               ShapeCache.cache.delete(oldElement);
-              // console.log("🔥Ker deya delete resize se");
+              console.log("🔥Ker deya delete resize se");
             }
 
           const element = elements[selectedElement.id];
@@ -219,18 +237,21 @@ const Canvas = () => {
 
           if(adjustedElement != false) {
             const {id,x1,x2,y1,y2,type} = adjustedElement;
-            updateElement(id,x1,y1,x2,y2,type,true);
+            updateElement(id,x1,y1,x2,y2,type);
            
           }
 
-          const currentStateElement = store.getState().elements.value;
+          const currentStateElement = store.getState().elements.value[index];
         
-          const key =  currentStateElement[currentStateElement.length - 1];
+          const key =  currentStateElement[selectedElement.id];
          
           const  { x1,y1,x2,y2,type } = key ;
           const shape = getElementObject(x1,y1,x2,y2,type);
+          // console.log("adding");
+          console.log(key);
           ShapeCache.cache.set(key,shape);
-          // console.log(ShapeCache.cache);
+         
+
 
         }
     }
@@ -253,9 +274,9 @@ const Canvas = () => {
         move(event);
 
       } else if (action === 'resizing') {
-        
+
         const {id,x1,y1,x2,y2,type} = resizeElement(event);
-        updateElement(id,x1,y1,x2,y2,type,true);
+        updateElement(id,x1,y1,x2,y2,type);
     
 
       }

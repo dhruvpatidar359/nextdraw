@@ -3,12 +3,12 @@
 
 export const drawBounds = (Canvas2DContext,element,selectedElement) => {
 
-    const {x1,y1,x2,y2,id,type,isSelected} = element;
+    const {x1,y1,x2,y2,id,type} = element;
     let  minX = Math.min(x1,x2);
     let  maxX = Math.max(x1,x2);
     let  minY = Math.min(y1,y2);
     let  maxY = Math.max(y1,y2);
-    if(type != 'line' && isSelected === true) {
+    if(type == 'rect') {
         if(selectedElement != null && selectedElement.id === id ) {
         
           Canvas2DContext.strokeStyle = "black";
@@ -27,7 +27,9 @@ export const drawBounds = (Canvas2DContext,element,selectedElement) => {
           Canvas2DContext.stroke();
         }
        
-      } else if (type === 'line' && isSelected === true) {
+      } else if (type === 'line') {
+
+        if(selectedElement != null && selectedElement.id === id ) {
         Canvas2DContext.strokeStyle = 'black';
         Canvas2DContext.fillStyle = 'black';
       
@@ -48,6 +50,6 @@ export const drawBounds = (Canvas2DContext,element,selectedElement) => {
         Canvas2DContext.fill();
         Canvas2DContext.stroke();
       }
-      
+    }
 }
 
