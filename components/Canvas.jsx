@@ -7,10 +7,10 @@ import { mouseCorsourChange } from './Mouse/mouse';
 import { move } from './Move/move';
 import { draw } from './Drawing/Drawing';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { setElement } from './Redux/features/elementSlice';
+import { setElement, setIndex } from './Redux/features/elementSlice';
 import {setCanvas} from './Redux/features/canvasSlice'
 import { setAction } from './Redux/features/actionSlice';
-import {   setSelectedElement } from './Redux/features/selectedElementSlice';
+import {   setSelectedElement, setSelectedElementSource } from './Redux/features/selectedElementSlice';
 import { ShapeCache } from './Redux/ShapeCache';
 import { setOldElement } from './Redux/features/oldSelectedElementSlice';
 import store from '@/app/store';
@@ -28,16 +28,20 @@ const Canvas = () => {
   // selectors 
   const tool = useSelector(state => state.tool.value);
   const index = useSelector(state => state.elements.index);
+  const history = useSelector(state => state.elements.value,shallowEqual);
   const elements = useSelector(state => state.elements.value[index],shallowEqual);
   const roughCanvasRef = useSelector(state => state.canvas.value);
   const hover = useSelector(state => state.hover.value);
   const action = useSelector(state => state.action.value);
   const selectedElement = useSelector(state => state.selectedElement.value);
+  const selectedElementSource = useSelector(state => state.selectedElement.source);
   const oldElement  = useSelector(state => state.oldElement.value);
   
   // useState for local height and width of canvas
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
+  const [changed , setChanged] = useState(false);
+  const [dupState , setDupState] = useState(false);
 
 
   // dispatcher
@@ -53,9 +57,9 @@ const Canvas = () => {
         document.body.style.cursor = 'crosshair';
 
         
-        console.log(selectedElement);
+        // console.log(selectedElement);
         if(selectedElement != null) {
-          console.log(selectedElement.type);
+          // console.log(selectedElement.type);
             // const {id,x1,y1,x2,y2,type} = elements[selectedElement.id];
             // updateElement(id,x1,y1,x2,y2,type);
             dispatch(setSelectedElement(null));
@@ -115,9 +119,10 @@ const Canvas = () => {
       // console.log("redering");
       // console.log(selectedElement);
       drawBounds(ctx,element,selectedElement);
-      // console.log(ShapeCache.cache);
+      
   
     });
+    // console.log(ShapeCache.cache);
   }, [elements,selectedElement]);
 
 
@@ -129,14 +134,15 @@ const Canvas = () => {
 
         const ele = getElementBelow(event);
         if(ele != null) {
-
-
           
           if(selectedElement != null) {
-          
-            // const {id,x1,y1,x2,y2,type} = elements[selectedElement.id];
-            // updateElement(id,x1,y1,x2,y2,type);
-
+            // console.log(history);
+            // if(selectedElementSource != 'drawing') {
+            //   const copy = [...elements];
+            //   dispatch(setIndex());
+            //   dispatch(setElement([copy]));
+            // }
+            dispatch(setSelectedElementSource('none'));
             dispatch(setSelectedElement(null));
           }
 
@@ -144,8 +150,22 @@ const Canvas = () => {
           const offSetX = event.clientX - ele.x1;
           const offSetY = event.clientY - ele.y1;
 
-          dispatch(setElement([elements]));
-          
+
+          if(dupState === true) {
+            if(changed === true) {
+              dispatch(setElement([elements]));
+            } else {
+              dispatch(setElement([elements,true]));
+            }
+          } else {
+            dispatch(setElement([elements]));
+            setDupState(true);
+            setChanged(false);
+          }
+         
+        
+        
+        
           dispatch(setOldElement(ele));
           dispatch(setSelectedElement({ ...ele, offSetX, offSetY }));
 
@@ -154,6 +174,14 @@ const Canvas = () => {
           if(selectedElement != null) {
             // const {id,x1,y1,x2,y2,type} = elements[selectedElement.id];
             // updateElement(id,x1,y1,x2,y2,type);
+            // dispatch(setElement(history[index-1]));
+            // console.log(history);
+            // if(selectedElementSource != 'drawing') {
+            //   const copy = [...elements];
+            //   dispatch(setIndex());
+            //   dispatch(setElement([copy]));
+            // }
+            dispatch(setSelectedElementSource('none'));
             dispatch(setSelectedElement(null));
           }
       
@@ -172,13 +200,27 @@ const Canvas = () => {
       // we are drawing
 
       
+      
       dispatch(setAction("drawing"));
 
       const newElement = addElement(elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool);
       
-      dispatch(setElement([[...elements, newElement]]));
+      if(dupState === false) {
+        dispatch(setElement([[...elements, newElement]]));
+      } else {
+        if(changed) {
+          dispatch(setElement([[...elements, newElement]]));
+        } else {
+          dispatch(setElement([[...elements, newElement],true]));
+        }
+       
+        setDupState(false);
+      }
+      
+     
       dispatch(setOldElement(newElement));
       dispatch(setSelectedElement(newElement));
+      dispatch(setSelectedElementSource("drawing"));
      
     }
 
@@ -204,14 +246,14 @@ const Canvas = () => {
       const  { x1,y1,x2,y2,type } = key ;
       const shape = getElementObject(x1,y1,x2,y2,type);
 
-     console.log(key);
+    //  console.log(key);
      ShapeCache.cache.set(key,shape);
      dispatch(changeTool("selection"));
     } else if(tool === 'selection') {
         if(action === 'moving') {
        
-console.log(oldElement);
-console.log(ShapeCache.cache);
+// console.log(oldElement);
+// console.log(ShapeCache.cache);
           if(ShapeCache.cache.has(oldElement)){
             ShapeCache.cache.delete(oldElement);
             console.log("ker deya delete move🔥");
@@ -248,7 +290,7 @@ console.log(ShapeCache.cache);
           const  { x1,y1,x2,y2,type } = key ;
           const shape = getElementObject(x1,y1,x2,y2,type);
           // console.log("adding");
-          console.log(key);
+          // console.log(key);
           ShapeCache.cache.set(key,shape);
          
 
@@ -270,11 +312,11 @@ console.log(ShapeCache.cache);
       mouseCorsourChange(event,elements);
 
       if (action === 'moving') {
-       
+        setChanged(true);
         move(event);
 
       } else if (action === 'resizing') {
-
+        setChanged(true);
         const {id,x1,y1,x2,y2,type} = resizeElement(event);
         updateElement(id,x1,y1,x2,y2,type);
     
