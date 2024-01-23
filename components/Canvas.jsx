@@ -53,7 +53,7 @@ const Canvas = () => {
   useEffect(() => {
    
       if(tool === 'rect' || tool === 'line') {
-        // console.log("changed");
+        console.log("changed");
         document.body.style.cursor = 'crosshair';
 
         
