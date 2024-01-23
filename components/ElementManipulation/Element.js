@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setElement } from "../Redux/features/elementSlice";
 import store from "@/app/store";
+import { setSelectedElement } from "../Redux/features/selectedElementSlice";
 
 
 
@@ -15,6 +16,9 @@ export function addElement(id, x1, y1, x2, y2, type) {
       case 'line':
       
         return { id, x1, x2, y1, y2, type };
+
+      case "pencil":
+        return {id,type,points:[{x : x1,y : y1}]};
 
       default:
       
@@ -44,6 +48,9 @@ export const getElementObject = (x1,y1,x2,y2,type)=>{
     case 'line':
       elementObject = root.line(x1, y1, x2, y2, { seed: 15 });
       break;
+
+    case 'pencil':
+      break;  
 
     default:
       elementObject = root.line(x1, y1, x2, y2, { seed: 15 });
@@ -121,13 +128,30 @@ export const getElementBelow = (event) => {
 
     const histIndex = store.getState().elements.index;
     const elements = store.getState().elements.value[histIndex];
-    const updatedElement = addElement(id, x1, y1,x2,y2 , type);
-   
+    const action = store.getState().action.value;
     const tempNewArray = [...elements];
 
-    tempNewArray[id] = updatedElement;
+    switch(type) {
+      case "line":
+      case "rect":
+      const updatedElement = addElement(id, x1, y1,x2,y2 , type)
+        tempNewArray[id] = updatedElement;
+        if(action === 'drawing') {
+          store.dispatch(setSelectedElement(updatedElement));
+        }
+        break;
+      case "pencil":
+        
+      tempNewArray[id] = {
+        ...tempNewArray[id],
+        points: [...tempNewArray[id].points, { x: x2, y: y2 }],
+      };
+        break;
+
+      default:
+        break;  
+    }
    
-    
     store.dispatch(setElement([tempNewArray,true]));
     
     

@@ -1,20 +1,17 @@
 
 import React, { useCallback, useEffect } from 'react'
 import ButtonComponent from './ButtonComponent';
-import { FaRedo, FaRegSquare, FaUndo } from "react-icons/fa";
+import { FaPencilAlt, FaRedo, FaRegSquare, FaUndo } from "react-icons/fa";
 import { IoRemoveOutline, IoMove } from "react-icons/io5";
 import { useDispatch } from 'react-redux';
 import { changeTool } from '../Redux/features/toolSlice';
 import { redo, undo } from '../Redux/features/elementSlice';
 
-
-
-
-
 const buttons = [
   { tooltip: 'Rectangle', icon: FaRegSquare, shortcut: '1', tool: 'rect' },
   { tooltip: 'Line', icon: IoRemoveOutline, shortcut: '2', tool: 'line' },
-  { tooltip: 'Selection', icon: IoMove, shortcut: '3', tool: 'selection' }
+  { tooltip: 'Selection', icon: IoMove, shortcut: '3', tool: 'selection' },
+  { tooltip: 'Pencil', icon: FaPencilAlt, shortcut: '4', tool: 'pencil' }
 
 ];
 
@@ -33,7 +30,11 @@ const Topbar = () => {
         dispath(changeTool("line"));
       } else if (event.key === '3') {
         dispath(changeTool("selection"));
-      } else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
+      } else if (event.key === '4') {
+        dispath(changeTool("pencil"));
+      } 
+      
+      else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
 
         dispath(redo());
 
@@ -41,8 +42,6 @@ const Topbar = () => {
 
         dispath(undo());
       }
-
-
 
 
     }
@@ -71,13 +70,13 @@ const Topbar = () => {
       <button onClick={() => dispath(undo())} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaUndo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
-          {'4'}
+          {'5'}
         </span>
       </button>
       <button onClick={() => dispath(redo())} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaRedo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
-          {'5'}
+          {'6'}
         </span>
       </button>
     </div>
