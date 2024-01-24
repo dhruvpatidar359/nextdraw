@@ -3,7 +3,7 @@ import React, { useEffect, useState, useLayoutEffect } from 'react';
 import rough from 'roughjs/bundled/rough.esm';
 import { resizeElement } from './Resize/resize';
 import { addElement, adjustElementCoordinates, getElementBelow, getElementObject, updateElement } from './ElementManipulation/Element';
-import { mouseCorsourChange } from './Mouse/mouse';
+import { mouseCursorChange } from './Mouse/mouse';
 import { move } from './Move/move';
 import { draw, drawElements } from './Drawing/Drawing';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
@@ -16,16 +16,14 @@ import { setOldElement } from './Redux/features/oldSelectedElementSlice';
 import store from '@/app/store';
 import { setResizingDirection } from './Redux/features/resizeSlice';
 import { changeTool } from './Redux/features/toolSlice';
-import { setHover } from './Redux/features/hoverSlice';
-import { drawBounds } from './ElementManipulation/Bounds';
-import getStroke from 'perfect-freehand';
+
 
 
 
 
 const Canvas = () => {
 
-  // console.log(ShapeCache.cache);
+
   // selectors 
   const tool = useSelector(state => state.tool.value);
   const index = useSelector(state => state.elements.index);
@@ -94,7 +92,7 @@ const Canvas = () => {
   }, [height]);
 
 
-  
+
 
   useLayoutEffect(() => {
     const canvas = document.getElementById('canvas');
@@ -105,8 +103,8 @@ const Canvas = () => {
 
     elements.forEach((element, index1) => {
 
-        drawElements(ctx,element,selectedElement);
-     
+      drawElements(ctx, element, selectedElement);
+
     });
     // console.log(ShapeCache.cache);
   }, [elements, selectedElement]);
@@ -123,15 +121,13 @@ const Canvas = () => {
 
         // to remove the bounds if they are on a element somewhere else
         if (selectedElement != null) {
-          
+
           dispatch(setSelectedElementSource('none'));
           dispatch(setSelectedElement(null));
 
         }
 
-        const { id, x1, y1, x2, y2, type } = ele;
-        const offSetX = event.clientX - ele.x1;
-        const offSetY = event.clientY - ele.y1;
+      
 
         // logic for the creation of extra state when we just click on the element
         if (dupState === true) {
@@ -147,23 +143,38 @@ const Canvas = () => {
           setChanged(false);
         }
 
+        const { id, x1, y1, x2, y2, type } = ele;
 
-        dispatch(setOldElement(ele));
-        dispatch(setSelectedElement({ ...ele, offSetX, offSetY }));
+        let offSetX;
+        let offSetY;
 
-        updateElement(id, x1, y1, x2, y2, type);
+        if(type === 'rect' || type ==='line') {
+          offSetX = event.clientX - ele.x1;
+          offSetY = event.clientY - ele.y1;
+          dispatch(setOldElement(ele));
+          dispatch(setSelectedElement({ ...ele, offSetX, offSetY }));
+          updateElement(id, x1, y1, x2, y2, type);
+        } else{
+      
+          offSetX = ele.points.map(point => event.clientX - point.x );
+          offSetY = ele.points.map(point => event.clientY - point.y);
+          dispatch(setOldElement(ele));
+          dispatch(setSelectedElement({ ...ele, offSetX, offSetY }));
+        }
+
+       
       } else {
 
         // to remove the bounds if they are on a element somewhere else
         if (selectedElement != null) {
-        
+
           dispatch(setSelectedElementSource('none'));
           dispatch(setSelectedElement(null));
 
         }
 
       }
-     
+
 
       if (hover === 'present') {
 
@@ -175,10 +186,10 @@ const Canvas = () => {
       }
 
     } else {
-    
 
 
-        // we are drawing (drawing area)
+
+      // we are drawing (drawing area)
       dispatch(setAction("drawing"));
 
       const newElement = addElement(elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool);
@@ -196,7 +207,7 @@ const Canvas = () => {
         setDupState(false);
       }
 
-      
+
       dispatch(setOldElement(newElement));
       dispatch(setSelectedElement(newElement));
       dispatch(setSelectedElementSource("drawing"));
@@ -211,39 +222,41 @@ const Canvas = () => {
 
       // adjusting the coordinates in-case
       const element = elements[elements.length - 1];
-     
+
       const adjustedElement = adjustElementCoordinates(element)
 
       if (element.type != 'pencil') {
         const { id, x1, x2, y1, y2, type } = adjustedElement;
         updateElement(id, x1, y1, x2, y2, type);
-      } 
+      }
 
-      
+
 
       const currentStateElement = store.getState().elements.value[index];
 
       const key = currentStateElement[currentStateElement.length - 1];
 
-      const { x1, y1, x2, y2, type } = key;
-      const shape = getElementObject(x1, y1, x2, y2, type);
+
+      console.log(key);
+      const shape = getElementObject(key);
 
       //  console.log(key);
       ShapeCache.cache.set(key, shape);
-      
-      dispatch(changeTool("selection"));
+      if(key.type != "pencil") {
+        dispatch(changeTool("selection"));
+      }
+     
     } else if (tool === 'selection') {
       if (action === 'moving') {
 
-       
+
         if (ShapeCache.cache.has(oldElement)) {
           ShapeCache.cache.delete(oldElement);
           // console.log("ker deya delete move🔥");
         }
 
         const newElement = elements[selectedElement.id];
-        const { x1, x2, y1, y2, type } = newElement;
-        const shape = getElementObject(x1, y1, x2, y2, type);
+        const shape = getElementObject(newElement);
         ShapeCache.cache.set(newElement, shape);
 
 
@@ -268,8 +281,8 @@ const Canvas = () => {
 
         const key = currentStateElement[selectedElement.id];
 
-        const { x1, y1, x2, y2, type } = key;
-        const shape = getElementObject(x1, y1, x2, y2, type);
+
+        const shape = getElementObject(key);
         ShapeCache.cache.set(key, shape);
 
 
@@ -287,12 +300,12 @@ const Canvas = () => {
   const handleMouseMove = (event) => {
 
     if (tool === 'selection') {
-      mouseCorsourChange(event, elements);
+      mouseCursorChange(event, elements);
 
       if (action === 'moving') {
-       
+
         setChanged(true);
-        move(event);
+        move(event,elements);
 
       } else if (action === 'resizing') {
 

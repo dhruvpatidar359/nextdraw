@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setElement } from "../Redux/features/elementSlice";
 import store from "@/app/store";
 import { setSelectedElement } from "../Redux/features/selectedElementSlice";
+import getStroke from "perfect-freehand";
+import { onLine } from "../Mouse/mouse";
 
 
 
@@ -29,7 +31,10 @@ export function addElement(id, x1, y1, x2, y2, type) {
   }
 
 
-export const getElementObject = (x1,y1,x2,y2,type)=>{
+export const getElementObject = (element)=>{
+
+  const {x1,y1,x2,y2,type,points} = element;
+
   const roughCanvasRef = store.getState().canvas.value;
   const root = roughCanvasRef.generator;
 
@@ -50,6 +55,10 @@ export const getElementObject = (x1,y1,x2,y2,type)=>{
       break;
 
     case 'pencil':
+      const outlinePoints = getStroke(element.points);
+      const pathData = getSvgPathFromStroke(outlinePoints);
+      const path = new Path2D(pathData);
+      elementObject = path;
       break;  
 
     default:
@@ -97,16 +106,31 @@ export const getElementBelow = (event) => {
 
             const diff = Math.abs(total_length - (initial + final));
 
-            // console.log("here i am ");
-            // console.log(diff);
-            // console.log(element.id);
+          
             if (diff < 5) {
               found = true;
-              // console.log(element.id);
+          
             }
 
           
           break;
+
+        case "pencil" :
+          const betweenAnyPoint  =  element.points.some((point,index) => {
+      
+            const nextPoint = element.points[index + 1];
+          
+            if(nextPoint === undefined) {
+              return;
+            }
+            return onLine(point.x,point.y,nextPoint.x,nextPoint.y,event,5)!= false;
+        
+          })
+  
+          if(betweenAnyPoint) {
+            found = true;
+          }
+          break;  
 
         default:
 
@@ -177,3 +201,33 @@ export const getElementBelow = (event) => {
       }
     }
   };
+
+  
+  const average = (a, b) => (a + b) / 2
+
+
+  function getSvgPathFromStroke(points) {
+    const len = points.length
+  
+    if (!len) {
+      return ''
+    }
+  
+    const first = points[0]
+    let result = `M${first[0].toFixed(3)},${first[1].toFixed(3)}Q`
+  
+    for (let i = 0, max = len - 1; i < max; i++) {
+      const a = points[i]
+      const b = points[i + 1]
+      result += `${a[0].toFixed(3)},${a[1].toFixed(3)} ${average(
+        a[0],
+        b[0]
+      ).toFixed(3)},${average(a[1], b[1]).toFixed(3)} `
+    }
+  
+    result += 'Z'
+  
+    return result
+  }
+
+ 
