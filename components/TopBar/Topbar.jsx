@@ -1,9 +1,9 @@
 
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ButtonComponent from './ButtonComponent';
 import { FaPencilAlt, FaRedo, FaRegSquare, FaUndo } from "react-icons/fa";
 import { IoRemoveOutline, IoMove } from "react-icons/io5";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { changeTool } from '../Redux/features/toolSlice';
 import { redo, undo } from '../Redux/features/elementSlice';
 
@@ -18,20 +18,26 @@ const buttons = [
 const Topbar = () => {
 
   const dispath = useDispatch();
-
-
+  const toolIndex = useSelector(state => state.tool.index);
+  
+// keyboard handler 
   useEffect(() => {
     const handler = (event) => {
       console.log(event.key);
-
+    
       if (event.key === '1') {
         dispath(changeTool("rect"));
+         
       } else if (event.key === '2') {
         dispath(changeTool("line"));
+      
       } else if (event.key === '3') {
         dispath(changeTool("selection"));
+        
       } else if (event.key === '4') {
+      
         dispath(changeTool("pencil"));
+     
       } 
       
       else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
@@ -52,6 +58,48 @@ const Topbar = () => {
 
     return () => window.removeEventListener("keydown", handler)
   });
+
+  
+// mouse wheel handler 
+  useEffect(() => {
+    
+    onwheel = (event) => {
+      
+ console.log(toolIndex);
+      let currentTool;
+      if(event.deltaY > 100){
+        currentTool = (toolIndex + 1) % 5;
+      } else{
+        currentTool = (toolIndex - 1) === 0 ? 4 : toolIndex - 1;
+      }
+      
+      currentTool = currentTool === 0 ? 1 : currentTool;
+
+    
+      switch(currentTool) {
+        case 1:
+          dispath(changeTool("rect"));
+          break;
+
+        case 2:
+          dispath(changeTool("line"));
+          
+          break;
+        case 3 :
+          dispath(changeTool("selection"));
+          break;
+        case 4 :
+          dispath(changeTool("pencil"));
+          break;
+          
+          default:
+            break;
+
+      } 
+    };
+   
+  })
+  
 
 
 

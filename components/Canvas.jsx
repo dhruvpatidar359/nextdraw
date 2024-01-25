@@ -5,7 +5,7 @@ import { resizeElement } from './Resize/resize';
 import { addElement, adjustElementCoordinates, getElementBelow, getElementObject, updateElement } from './ElementManipulation/Element';
 import { mouseCursorChange } from './Mouse/mouse';
 import { move } from './Move/move';
-import { draw, drawElements } from './Drawing/Drawing';
+import { draw, drawElements, renderer } from './Drawing/Drawing';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { setElement, setIndex } from './Redux/features/elementSlice';
 import { setCanvas } from './Redux/features/canvasSlice'
@@ -16,6 +16,7 @@ import { setOldElement } from './Redux/features/oldSelectedElementSlice';
 import store from '@/app/store';
 import { setResizingDirection } from './Redux/features/resizeSlice';
 import { changeTool } from './Redux/features/toolSlice';
+import { drawBounds } from './ElementManipulation/Bounds';
 
 
 
@@ -41,6 +42,7 @@ const Canvas = () => {
   const [width, setWidth] = useState(0);
   const [changed, setChanged] = useState(false);
   const [dupState, setDupState] = useState(false);
+ 
 
 
   // dispatcher
@@ -51,7 +53,8 @@ const Canvas = () => {
 
   useEffect(() => {
 
-    if (tool === 'rect' || tool === 'line') {
+    if (tool === 'rect' || tool === 'line' || tool === 'pencil') {
+      
       console.log("changed");
       document.body.style.cursor = 'crosshair';
 
@@ -61,7 +64,7 @@ const Canvas = () => {
       }
 
     } else {
-
+      
       document.body.style.cursor = `url('defaultCursor.svg'), auto`;
 
     }
@@ -101,11 +104,9 @@ const Canvas = () => {
     // Clear the canvas before drawing elements
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    elements.forEach((element, index1) => {
+    // a single resource for rendering the elements
+    renderer(ctx,elements,selectedElement);
 
-      drawElements(ctx, element, selectedElement);
-
-    });
     // console.log(ShapeCache.cache);
   }, [elements, selectedElement]);
 
@@ -148,6 +149,7 @@ const Canvas = () => {
         let offSetX;
         let offSetY;
 
+
         if(type === 'rect' || type ==='line') {
           offSetX = event.clientX - ele.x1;
           offSetY = event.clientY - ele.y1;
@@ -158,8 +160,11 @@ const Canvas = () => {
       
           offSetX = ele.points.map(point => event.clientX - point.x );
           offSetY = ele.points.map(point => event.clientY - point.y);
+          const rectCoordinatesOffsetX = event.clientX - ele.x1
+          const rectCoordinatesOffsetY = event.clientY - ele.y1
+          
           dispatch(setOldElement(ele));
-          dispatch(setSelectedElement({ ...ele, offSetX, offSetY }));
+          dispatch(setSelectedElement({ ...ele, offSetX, offSetY ,rectCoordinatesOffsetX,rectCoordinatesOffsetY}));
         }
 
        
@@ -209,8 +214,13 @@ const Canvas = () => {
 
 
       dispatch(setOldElement(newElement));
-      dispatch(setSelectedElement(newElement));
-      dispatch(setSelectedElementSource("drawing"));
+
+      // we don't want the bounding box if it is a pencil and it is drawn afresh
+      if(newElement.type != 'pencil') {
+        dispatch(setSelectedElement(newElement));
+      }
+     
+      // dispatch(setSelectedElementSource("drawing"));
 
     }
 
@@ -228,6 +238,29 @@ const Canvas = () => {
       if (element.type != 'pencil') {
         const { id, x1, x2, y1, y2, type } = adjustedElement;
         updateElement(id, x1, y1, x2, y2, type);
+      } else {
+        // we are putting the max and min x and y in the element for resize 
+        let minX = element.points[0].x;
+        let minY = element.points[0].y;
+        let maxX = element.points[0].x;
+        let maxY = element.points[0].y;
+    
+        element.points.forEach(point => {
+          minX = Math.min(minX , point.x);
+          minY = Math.min(minY , point.y);
+          maxX = Math.max(maxX , point.x);
+          maxY = Math.max(maxY , point.y);
+      });
+      
+      const  tempNewArray = [...elements];
+     
+      tempNewArray[element.id] = {
+          ...tempNewArray[element.id],
+          x1 : minX,y1:minY , x2 : maxX , y2 : maxY
+        };
+       
+        store.dispatch(setElement([tempNewArray,true]));
+
       }
 
 
@@ -237,7 +270,7 @@ const Canvas = () => {
       const key = currentStateElement[currentStateElement.length - 1];
 
 
-      console.log(key);
+     
       const shape = getElementObject(key);
 
       //  console.log(key);
@@ -256,8 +289,39 @@ const Canvas = () => {
         }
 
         const newElement = elements[selectedElement.id];
-        const shape = getElementObject(newElement);
-        ShapeCache.cache.set(newElement, shape);
+     
+        const {type} = newElement;
+
+        if(type === 'pencil') {
+          let minX = newElement.points[0].x;
+          let minY = newElement.points[0].y;
+          let maxX = newElement.points[0].x;
+          let maxY = newElement.points[0].y;
+      
+          newElement.points.forEach(point => {
+            minX = Math.min(minX , point.x);
+            minY = Math.min(minY , point.y);
+            maxX = Math.max(maxX , point.x);
+            maxY = Math.max(maxY , point.y);
+        });
+        
+        const  tempNewArray = [...elements];
+       
+        tempNewArray[newElement.id] = {
+            ...tempNewArray[newElement.id],
+            x1 : minX,y1:minY , x2 : maxX , y2 : maxY
+          };
+         
+          store.dispatch(setElement([tempNewArray,true]));
+        }
+
+        
+      const currentStateElement = store.getState().elements.value[index];
+
+      const key = currentStateElement[newElement.id];
+      const shape = getElementObject(key);
+
+      ShapeCache.cache.set(key, shape);
 
 
 
@@ -275,6 +339,27 @@ const Canvas = () => {
         if (element.type != 'pencil') {
           const { id, x1, x2, y1, y2, type } = adjustedElement;
           updateElement(id, x1, y1, x2, y2, type);
+        } else {
+          let minX = element.points[0].x;
+          let minY = element.points[0].y;
+          let maxX = element.points[0].x;
+          let maxY = element.points[0].y;
+      
+          element.points.forEach(point => {
+            minX = Math.min(minX , point.x);
+            minY = Math.min(minY , point.y);
+            maxX = Math.max(maxX , point.x);
+            maxY = Math.max(maxY , point.y);
+        });
+        
+        const  tempNewArray = [...elements];
+       
+        tempNewArray[element.id] = {
+            ...tempNewArray[element.id],
+            x1 : minX,y1:minY , x2 : maxX , y2 : maxY
+          };
+         
+          store.dispatch(setElement([tempNewArray,true]));
         }
 
         const currentStateElement = store.getState().elements.value[index];

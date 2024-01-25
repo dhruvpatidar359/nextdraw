@@ -25,6 +25,11 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+
+
+    /* -webkit-user-select: none;
+    -ms-user-select: none; 
+    user-select: none;    */
 }
 
 

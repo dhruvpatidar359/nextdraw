@@ -37,6 +37,7 @@ export  const drawElements = (ctx,element,selectedElement) => {
 
     const roughCanvasRef = store.getState().canvas.value;
 
+   
 
     switch(element.type) {
       case "line":
@@ -64,7 +65,22 @@ export  const drawElements = (ctx,element,selectedElement) => {
        default:
         break; 
     }
+  }
 
-  
-    drawBounds(ctx, element, selectedElement);
+
+export const  renderer = (ctx ,elements,selectedElement) => {
+
+  let boundedElement = null;
+
+  elements.forEach((element) => {
+
+    if(selectedElement != null && selectedElement.id === element.id) {
+      boundedElement = element;
+    }
+    drawElements(ctx, element, selectedElement);
+
+  });
+
+  drawBounds(ctx,boundedElement);
+
   }

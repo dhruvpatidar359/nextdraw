@@ -67,11 +67,20 @@ export const mouseCursorChange = (event, elements) => {
           }
           return onLine(point.x,point.y,nextPoint.x,nextPoint.y,event,5)!= false;
       
-        })
+        });
+
 
         if(betweenAnyPoint) {
           elementFound = true;
         }
+       
+          const resizeNode = getCurrentResizingNode(event, element);
+          if (resizeNode[0] === 1) {
+
+            resizerFound = resizeNode;
+
+          }
+     
 
         break;  
 

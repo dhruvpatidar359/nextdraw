@@ -6,7 +6,7 @@ export const move = (event,elements) => {
     const selectedElement = store.getState().selectedElement.value;
     
    
-    const { id, x1, x2, y1, y2, type, offSetX, offSetY } = selectedElement;
+    const { id, x1, x2, y1, y2, type, offSetX, offSetY ,rectCoordinatesOffsetX , rectCoordinatesOffsetY} = selectedElement;
 
     if(type === 'rect' || type === 'line') {
         const width = x2 - x1;
@@ -32,9 +32,14 @@ export const move = (event,elements) => {
         // console.log(selectedElement.points);
         // console.log("ha bhai")
         // console.log(newPoints);
+
+        const width = x2 - x1;
+        const height = y2 - y1;
+
+
         tempNewArray[id] = {
             ...tempNewArray[id],
-            points: newPoints,
+            points: newPoints,x1 : event.clientX - rectCoordinatesOffsetX,y1 :  event.clientY - rectCoordinatesOffsetY,x2 :  event.clientX - rectCoordinatesOffsetX + width, y2 : event.clientY - rectCoordinatesOffsetY + height
           };
          
           store.dispatch(setElement([tempNewArray,true]));
