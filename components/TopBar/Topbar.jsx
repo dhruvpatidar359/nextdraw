@@ -1,18 +1,20 @@
 
-import React, { useCallback, useEffect, useState } from 'react'
-import ButtonComponent from './ButtonComponent';
-import { FaCircle, FaPencilAlt, FaRedo, FaRegSquare, FaUndo } from "react-icons/fa";
-import { IoRemoveOutline, IoMove } from "react-icons/io5";
+import { useEffect } from 'react';
+import { FaCircle, FaPencilAlt, FaRedo, FaSlash, FaSquare, FaUndo } from "react-icons/fa";
+import { FaDiamond } from "react-icons/fa6";
+import { IoMove } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux';
-import { changeTool } from '../Redux/features/toolSlice';
 import { redo, undo } from '../Redux/features/elementSlice';
+import { changeTool } from '../Redux/features/toolSlice';
+import ButtonComponent from './ButtonComponent';
 
 const buttons = [
-  { tooltip: 'Rectangle', icon: FaRegSquare, shortcut: '1', tool: 'rect' },
-  { tooltip: 'Line', icon: IoRemoveOutline, shortcut: '2', tool: 'line' },
+  { tooltip: 'Rectangle', icon: FaSquare, shortcut: '1', tool: 'rect' },
+  { tooltip: 'Line', icon: FaSlash, shortcut: '2', tool: 'line' },
   { tooltip: 'Selection', icon: IoMove, shortcut: '3', tool: 'selection' },
   { tooltip: 'Pencil', icon: FaPencilAlt, shortcut: '4', tool: 'pencil' },
-  { tooltip: 'Ellipse', icon: FaCircle, shortcut: '5', tool: 'ellipse' }
+  { tooltip: 'Ellipse', icon: FaCircle, shortcut: '5', tool: 'ellipse' },
+  { tooltip: 'Diamond', icon: FaDiamond, shortcut: '6', tool: 'diamond' }
 
 ];
 
@@ -42,6 +44,9 @@ const Topbar = () => {
       } else if(event.key === '5') {
         dispath(changeTool('ellipse'))
       }
+      else if(event.key === '6') {
+        dispath(changeTool('diamond'))
+      }
       
       else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
 
@@ -68,16 +73,20 @@ const Topbar = () => {
     
     onwheel = (event) => {
       
- console.log(toolIndex);
+ 
       let currentTool;
       if(event.deltaY > 100){
-        currentTool = (toolIndex + 1) % 6;
-      } else{
-        currentTool = (toolIndex - 1) === 0 ? 5 : toolIndex - 1;
-      }
-      
-      currentTool = currentTool === 0 ? 1 : currentTool;
 
+     
+        currentTool = (toolIndex + 1) % 7;
+      
+      } else{
+        currentTool = (toolIndex - 1) === 0 ? buttons.length : toolIndex - 1;
+      }
+
+      console.log(`before ${currentTool} ${toolIndex}`);
+      currentTool = currentTool === 0 ? 1 : currentTool;
+     
     
       switch(currentTool) {
         case 1:
@@ -98,6 +107,10 @@ const Topbar = () => {
         case 5:
           dispath(changeTool("ellipse"));
           break;
+
+        case 6:
+            dispath(changeTool("diamond"));
+            break;
           
           default:
             break;
@@ -125,13 +138,13 @@ const Topbar = () => {
       <button onClick={() => dispath(undo())} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaUndo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
-          {'6'}
+          {'7'}
         </span>
       </button>
       <button onClick={() => dispath(redo())} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaRedo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
-          {'7'}
+          {'8'}
         </span>
       </button>
     </div>

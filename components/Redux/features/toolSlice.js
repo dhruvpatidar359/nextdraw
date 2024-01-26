@@ -28,12 +28,14 @@ export const toolSlice = createSlice({
 
                 case "ellipse":
                     state.index = 5;    
+                    break;
+
+                case "diamond":
+                        state.index = 6;  
+                        break;      
             }
         }
-,
-        changeIndex : (state,action) => {
-            state.value = action.payload;
-        }
+
     }
 })
 

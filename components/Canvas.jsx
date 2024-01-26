@@ -50,7 +50,7 @@ const Canvas = () => {
 
   useEffect(() => {
 
-    if (tool === 'rect' || tool === 'line' || tool === 'pencil' || tool === 'ellipse') {
+    if (tool === 'rect' || tool === 'line' || tool === 'pencil' || tool === 'ellipse' || tool === 'diamond') {
       
       console.log("changed");
       document.body.style.cursor = 'crosshair';

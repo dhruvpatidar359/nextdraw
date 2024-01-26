@@ -1,11 +1,8 @@
 
-import { addElement, getElementObject, updateElement } from "../ElementManipulation/Element";
-import { setElement } from "../Redux/features/elementSlice";
 import store from "@/app/store";
-import { setSelectedElement } from "../Redux/features/selectedElementSlice";
-import { ShapeCache } from "../Redux/ShapeCache";
-import getStroke from "perfect-freehand";
 import { drawBounds } from "../ElementManipulation/Bounds";
+import { getElementObject, updateElement } from "../ElementManipulation/Element";
+import { ShapeCache } from "../Redux/ShapeCache";
 
 
 
@@ -36,6 +33,7 @@ export  const drawElements = (ctx,element,selectedElement) => {
       case "line":
       case "rect":
       case "ellipse":
+      case "diamond":
         if (ShapeCache.cache.has(element)) {
           console.log(`using cache ${element.id}`);
           roughCanvasRef.draw(ShapeCache.cache.get(element));
@@ -55,7 +53,7 @@ export  const drawElements = (ctx,element,selectedElement) => {
         }
      
         break;  
-      
+
        default:
         break; 
     }
