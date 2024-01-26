@@ -35,6 +35,7 @@ export  const drawElements = (ctx,element,selectedElement) => {
     switch(element.type) {
       case "line":
       case "rect":
+      case "ellipse":
         if (ShapeCache.cache.has(element)) {
           console.log(`using cache ${element.id}`);
           roughCanvasRef.draw(ShapeCache.cache.get(element));
@@ -73,6 +74,8 @@ export const  renderer = (ctx ,elements,selectedElement) => {
     drawElements(ctx, element, selectedElement);
 
   });
+  
+
 
   drawBounds(ctx,boundedElement);
 

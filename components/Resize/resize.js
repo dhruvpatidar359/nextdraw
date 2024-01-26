@@ -15,7 +15,7 @@ const resizeDirection = store.getState().resizeDirection.value;
     const cy = event.clientY;
    
     const { id, x1, x2, y1, y2, type} = selectedElement;
-if(type === 'rect') {
+if(type === 'rect' || type === 'ellipse') {
   
   switch(resizeDirection) {
      
@@ -167,7 +167,7 @@ return  {id : id,
     
 
 
-  if(type === 'rect') {
+  if(type === 'rect' || type === 'ellipse') {
     x1 -= threshold;
     y1 -= threshold;
     x2 += threshold;

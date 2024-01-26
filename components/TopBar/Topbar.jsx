@@ -1,7 +1,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import ButtonComponent from './ButtonComponent';
-import { FaPencilAlt, FaRedo, FaRegSquare, FaUndo } from "react-icons/fa";
+import { FaCircle, FaPencilAlt, FaRedo, FaRegSquare, FaUndo } from "react-icons/fa";
 import { IoRemoveOutline, IoMove } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux';
 import { changeTool } from '../Redux/features/toolSlice';
@@ -11,7 +11,8 @@ const buttons = [
   { tooltip: 'Rectangle', icon: FaRegSquare, shortcut: '1', tool: 'rect' },
   { tooltip: 'Line', icon: IoRemoveOutline, shortcut: '2', tool: 'line' },
   { tooltip: 'Selection', icon: IoMove, shortcut: '3', tool: 'selection' },
-  { tooltip: 'Pencil', icon: FaPencilAlt, shortcut: '4', tool: 'pencil' }
+  { tooltip: 'Pencil', icon: FaPencilAlt, shortcut: '4', tool: 'pencil' },
+  { tooltip: 'Ellipse', icon: FaCircle, shortcut: '5', tool: 'ellipse' }
 
 ];
 
@@ -38,7 +39,9 @@ const Topbar = () => {
       
         dispath(changeTool("pencil"));
      
-      } 
+      } else if(event.key === '5') {
+        dispath(changeTool('ellipse'))
+      }
       
       else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
 
@@ -68,9 +71,9 @@ const Topbar = () => {
  console.log(toolIndex);
       let currentTool;
       if(event.deltaY > 100){
-        currentTool = (toolIndex + 1) % 5;
+        currentTool = (toolIndex + 1) % 6;
       } else{
-        currentTool = (toolIndex - 1) === 0 ? 4 : toolIndex - 1;
+        currentTool = (toolIndex - 1) === 0 ? 5 : toolIndex - 1;
       }
       
       currentTool = currentTool === 0 ? 1 : currentTool;
@@ -90,6 +93,10 @@ const Topbar = () => {
           break;
         case 4 :
           dispath(changeTool("pencil"));
+          break;
+
+        case 5:
+          dispath(changeTool("ellipse"));
           break;
           
           default:
@@ -118,13 +125,13 @@ const Topbar = () => {
       <button onClick={() => dispath(undo())} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaUndo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
-          {'5'}
+          {'6'}
         </span>
       </button>
       <button onClick={() => dispath(redo())} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaRedo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
-          {'6'}
+          {'7'}
         </span>
       </button>
     </div>

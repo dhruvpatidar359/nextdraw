@@ -22,6 +22,10 @@ export function addElement(id, x1, y1, x2, y2, type) {
       case "pencil":
         return {id,type,points:[{x : x1,y : y1}]};
 
+
+      case "ellipse":
+        return { id, x1, x2, y1, y2, type };
+
       default:
       
         return { id, x1, x2, y1, y2, type};
@@ -42,7 +46,7 @@ export const getElementObject = (element)=>{
 
   switch (type) {
     case 'rect':
-      elementObject = root.rectangle(x1,
+      elementObject = root.rectangle (x1,
         y1,
         x2 - x1,
         y2 - y1, { seed: 15, strokeWidth: 3, fillStyle: 'solid', fill: 'grey' }
@@ -60,6 +64,19 @@ export const getElementObject = (element)=>{
       const path = new Path2D(pathData);
       elementObject = path;
       break;  
+
+
+    case 'ellipse' :
+      const centerX = x1 + (x2 - x1) / 2;
+      const centerY = y1 + (y2 - y1) / 2;
+
+      elementObject = root.ellipse(centerX,
+        centerY,
+        x2 - x1,
+        y2 - y1, { seed: 15, strokeWidth: 3, fillStyle: 'solid', fill: 'grey' }
+      );
+      break;
+
 
     default:
       elementObject = root.line(x1, y1, x2, y2, { seed: 15 });
@@ -104,6 +121,7 @@ export const getElementBelow = (event,selectedElement) => {
 
 
       switch (type) {
+        case "ellipse":
         case "rect":
 
           if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
@@ -172,12 +190,18 @@ export const getElementBelow = (event,selectedElement) => {
     switch(type) {
       case "line":
       case "rect":
+      case "ellipse":
       const updatedElement = addElement(id, x1, y1,x2,y2 , type)
         tempNewArray[id] = updatedElement;
         if(action === 'drawing') {
           store.dispatch(setSelectedElement(updatedElement));
         }
         break;
+
+       
+       
+          
+        
       case "pencil":
         
       tempNewArray[id] = {
@@ -201,7 +225,7 @@ export const getElementBelow = (event,selectedElement) => {
 
   export const adjustElementCoordinates = element => {
     const {id, type, x1, y1, x2, y2 } = element;
-    if (type === "rect") {
+    if (type === "rect" || type === 'ellipse') {
       const minX = Math.min(x1, x2);
       const maxX = Math.max(x1, x2);
       const minY = Math.min(y1, y2);

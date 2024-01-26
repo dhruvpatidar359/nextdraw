@@ -5,7 +5,7 @@ export const drawBounds = (Canvas2DContext, element) => {
 
   const { x1, y1, x2, y2, type } = element;
 
-  if (type === 'rect' || type === 'pencil') {
+  if (type === 'rect' || type === 'pencil' || type === 'ellipse') {
     // Calculate dimensions and positions
     const minX = Math.min(x1, x2);
     const minY = Math.min(y1, y2);

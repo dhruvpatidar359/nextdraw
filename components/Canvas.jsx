@@ -50,7 +50,7 @@ const Canvas = () => {
 
   useEffect(() => {
 
-    if (tool === 'rect' || tool === 'line' || tool === 'pencil') {
+    if (tool === 'rect' || tool === 'line' || tool === 'pencil' || tool === 'ellipse') {
       
       console.log("changed");
       document.body.style.cursor = 'crosshair';
@@ -102,6 +102,7 @@ const Canvas = () => {
     // a single resource for rendering the elements
     renderer(ctx,elements,selectedElement);
 
+    
    
   }, [elements, selectedElement]);
 
@@ -162,7 +163,7 @@ const Canvas = () => {
         let offSetY;
 
 
-        if(type === 'rect' || type ==='line') {
+        if(type != 'pencil') {
           offSetX = event.clientX - ele.x1;
           offSetY = event.clientY - ele.y1;
           dispatch(setOldElement(ele));

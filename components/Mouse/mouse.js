@@ -50,6 +50,7 @@ export const mouseCursorChange = (event, elements,selectedElement) => {
     }
     if(!elementFound) {
     switch (type) {
+      case "ellipse":
       case "rect":
 
         if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {

@@ -8,7 +8,7 @@ export const move = (event,elements) => {
    
     const { id, x1, x2, y1, y2, type, offSetX, offSetY ,rectCoordinatesOffsetX , rectCoordinatesOffsetY} = selectedElement;
 
-    if(type === 'rect' || type === 'line') {
+    if(type != 'pencil') {
         const width = x2 - x1;
         const height = y2 - y1;
 

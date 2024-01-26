@@ -25,6 +25,9 @@ export const toolSlice = createSlice({
                 case "pencil":
                     state.index = 4;
                     break;    
+
+                case "ellipse":
+                    state.index = 5;    
             }
         }
 ,
