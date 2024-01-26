@@ -10,7 +10,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { setElement, setIndex } from './Redux/features/elementSlice';
 import { setCanvas } from './Redux/features/canvasSlice'
 import { setAction } from './Redux/features/actionSlice';
-import { setSelectedElement, setSelectedElementSource } from './Redux/features/selectedElementSlice';
+import { setSelectedElement } from './Redux/features/selectedElementSlice';
 import { ShapeCache } from './Redux/ShapeCache';
 import { setOldElement } from './Redux/features/oldSelectedElementSlice';
 import store from '@/app/store';
@@ -28,13 +28,13 @@ const Canvas = () => {
   // selectors 
   const tool = useSelector(state => state.tool.value);
   const index = useSelector(state => state.elements.index);
-  const history = useSelector(state => state.elements.value, shallowEqual);
+ 
   const elements = useSelector(state => state.elements.value[index], shallowEqual);
-  const roughCanvasRef = useSelector(state => state.canvas.value);
+ 
   const hover = useSelector(state => state.hover.value);
   const action = useSelector(state => state.action.value);
   const selectedElement = useSelector(state => state.selectedElement.value);
-  const selectedElementSource = useSelector(state => state.selectedElement.source);
+ 
   const oldElement = useSelector(state => state.oldElement.value);
 
   // useState for local height and width of canvas
@@ -47,9 +47,6 @@ const Canvas = () => {
 
   // dispatcher
   const dispatch = useDispatch();
-
-
-
 
   useEffect(() => {
 
@@ -68,8 +65,6 @@ const Canvas = () => {
       document.body.style.cursor = `url('defaultCursor.svg'), auto`;
 
     }
-
-
   }, [tool])
 
 
@@ -107,8 +102,24 @@ const Canvas = () => {
     // a single resource for rendering the elements
     renderer(ctx,elements,selectedElement);
 
-    // console.log(ShapeCache.cache);
+   
   }, [elements, selectedElement]);
+
+  const getminMax = (element) => {
+    let minX = element.points[0].x;
+    let minY = element.points[0].y;
+    let maxX = element.points[0].x;
+    let maxY = element.points[0].y;
+
+    element.points.forEach(point => {
+      minX = Math.min(minX , point.x);
+      minY = Math.min(minY , point.y);
+      maxX = Math.max(maxX , point.x);
+      maxY = Math.max(maxY , point.y);
+  });
+
+  return {minX,minY,maxX,maxY};
+  }
 
 
 
@@ -117,16 +128,17 @@ const Canvas = () => {
     if (tool === "selection") {
 
 
-      const ele = getElementBelow(event);
+      const ele = getElementBelow(event,selectedElement);
+      
       if (ele != null) {
 
         // to remove the bounds if they are on a element somewhere else
         if (selectedElement != null) {
 
-          dispatch(setSelectedElementSource('none'));
+   
           dispatch(setSelectedElement(null));
 
-        }
+      }
 
       
 
@@ -173,7 +185,7 @@ const Canvas = () => {
         // to remove the bounds if they are on a element somewhere else
         if (selectedElement != null) {
 
-          dispatch(setSelectedElementSource('none'));
+        
           dispatch(setSelectedElement(null));
 
         }
@@ -220,7 +232,7 @@ const Canvas = () => {
         dispatch(setSelectedElement(newElement));
       }
      
-      // dispatch(setSelectedElementSource("drawing"));
+   
 
     }
 
@@ -240,18 +252,13 @@ const Canvas = () => {
         updateElement(id, x1, y1, x2, y2, type);
       } else {
         // we are putting the max and min x and y in the element for resize 
-        let minX = element.points[0].x;
-        let minY = element.points[0].y;
-        let maxX = element.points[0].x;
-        let maxY = element.points[0].y;
-    
-        element.points.forEach(point => {
-          minX = Math.min(minX , point.x);
-          minY = Math.min(minY , point.y);
-          maxX = Math.max(maxX , point.x);
-          maxY = Math.max(maxY , point.y);
-      });
+
+
       
+        const {minX , minY , maxX,maxY} = getminMax(element);
+      
+    
+       
       const  tempNewArray = [...elements];
      
       tempNewArray[element.id] = {
@@ -293,17 +300,7 @@ const Canvas = () => {
         const {type} = newElement;
 
         if(type === 'pencil') {
-          let minX = newElement.points[0].x;
-          let minY = newElement.points[0].y;
-          let maxX = newElement.points[0].x;
-          let maxY = newElement.points[0].y;
-      
-          newElement.points.forEach(point => {
-            minX = Math.min(minX , point.x);
-            minY = Math.min(minY , point.y);
-            maxX = Math.max(maxX , point.x);
-            maxY = Math.max(maxY , point.y);
-        });
+          const {minX , minY , maxX,maxY} = getminMax(newElement);
         
         const  tempNewArray = [...elements];
        
@@ -340,17 +337,7 @@ const Canvas = () => {
           const { id, x1, x2, y1, y2, type } = adjustedElement;
           updateElement(id, x1, y1, x2, y2, type);
         } else {
-          let minX = element.points[0].x;
-          let minY = element.points[0].y;
-          let maxX = element.points[0].x;
-          let maxY = element.points[0].y;
-      
-          element.points.forEach(point => {
-            minX = Math.min(minX , point.x);
-            minY = Math.min(minY , point.y);
-            maxX = Math.max(maxX , point.x);
-            maxY = Math.max(maxY , point.y);
-        });
+          const {minX , minY , maxX,maxY} = getminMax(element);
         
         const  tempNewArray = [...elements];
        
@@ -385,7 +372,7 @@ const Canvas = () => {
   const handleMouseMove = (event) => {
 
     if (tool === 'selection') {
-      mouseCursorChange(event, elements);
+      mouseCursorChange(event, elements,selectedElement);
 
       if (action === 'moving') {
 
@@ -395,9 +382,15 @@ const Canvas = () => {
       } else if (action === 'resizing') {
 
         setChanged(true);
-        const { id, x1, y1, x2, y2, type } = resizeElement(event);
-        updateElement(id, x1, y1, x2, y2, type);
-
+        if(selectedElement.type === 'pencil') {
+          resizeElement(event,elements);
+        } else {
+          const { id, x1, y1, x2, y2, type } = resizeElement(event,elements);
+          if(type != 'pencil') {
+            updateElement(id, x1, y1, x2, y2, type);
+          }
+        }
+       
 
       }
 

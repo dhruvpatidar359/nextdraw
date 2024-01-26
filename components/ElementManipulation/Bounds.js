@@ -1,78 +1,69 @@
-// this file consist of the surrounding bounds around the shapes 
-// for proper manipulation
-
-export const drawBounds = (Canvas2DContext,element) => {
-
-
-  if(element === null) {
+export const drawBounds = (Canvas2DContext, element) => {
+  if (element === null) {
     return;
   }
-    const {x1,y1,x2,y2,type} = element;
-    let  minX = Math.min(x1,x2);
-    let  maxX = Math.max(x1,x2);
-    let  minY = Math.min(y1,y2);
-    let  maxY = Math.max(y1,y2);
-    if(type === 'rect') {
-        
-        
-          Canvas2DContext.strokeStyle = "black";
-          Canvas2DContext.strokeRect(minX-8,minY-8,maxX-minX + 16,maxY-minY + 16);
-          Canvas2DContext.fillStyle = 'black';
-          Canvas2DContext.beginPath();
-          Canvas2DContext.roundRect(minX-12,minY-12, 10, 10, 3);
-          Canvas2DContext.roundRect(maxX + 2,maxY + 2, 10, 10, 3);
-          Canvas2DContext.roundRect(maxX + 2,minY - 12, 10, 10, 3);
-          Canvas2DContext.roundRect(minX - 12,maxY + 2, 10, 10, 3);
-          Canvas2DContext.roundRect(minX -12 ,minY-12 + (maxY + 2-(minY-12)) / 2,10,10,3);
-          Canvas2DContext.roundRect(maxX + 2,minY-12 + (maxY + 2-(minY-12)) / 2,10,10,3);
-          Canvas2DContext.roundRect(minX -4 + (maxX - minX) / 2,minY - 12,10,10,3);
-          Canvas2DContext.roundRect(minX -4 + (maxX - minX) / 2,maxY + 2,10,10,3);
-          Canvas2DContext.fill();
-          Canvas2DContext.stroke();
-        
-       
-      } else if (type === 'line') {
 
-     
-        Canvas2DContext.strokeStyle = 'black';
-        Canvas2DContext.fillStyle = 'black';
-      
-        // Set the dimensions of the rounded rectangle
-        const rectWidth = 10;
-        const rectHeight = 10;
-        const cornerRadius = 5;
-      
-        // Draw the first rounded rectangle centered around (x1, y1)
-        Canvas2DContext.beginPath();
-        Canvas2DContext.roundRect(x1 - rectWidth / 2, y1 - rectHeight / 2, rectWidth, rectHeight, cornerRadius);
-        Canvas2DContext.fill();
-        Canvas2DContext.stroke();
-      
-        // Draw the second rounded rectangle centered around (x2, y2)
-        Canvas2DContext.beginPath();
-        Canvas2DContext.roundRect(x2 - rectWidth / 2, y2 - rectHeight / 2, rectWidth, rectHeight, cornerRadius);
-        Canvas2DContext.fill();
-        Canvas2DContext.stroke();
-      
-    } else if(type === 'pencil') {
-      
-    
-        
-        Canvas2DContext.strokeStyle = "black";
-        Canvas2DContext.strokeRect(minX-8,minY-8,maxX-minX + 16,maxY-minY + 16);
-        Canvas2DContext.fillStyle = 'black';
-        Canvas2DContext.beginPath();
-        Canvas2DContext.roundRect(minX-12,minY-12, 10, 10, 3);
-        Canvas2DContext.roundRect(maxX + 2,maxY + 2, 10, 10, 3);
-        Canvas2DContext.roundRect(maxX + 2,minY - 12, 10, 10, 3);
-        Canvas2DContext.roundRect(minX - 12,maxY + 2, 10, 10, 3);
-        Canvas2DContext.roundRect(minX -12 ,minY-12 + (maxY + 2-(minY-12)) / 2,10,10,3);
-        Canvas2DContext.roundRect(maxX + 2,minY-12 + (maxY + 2-(minY-12)) / 2,10,10,3);
-        Canvas2DContext.roundRect(minX -4 + (maxX - minX) / 2,minY - 12,10,10,3);
-        Canvas2DContext.roundRect(minX -4 + (maxX - minX) / 2,maxY + 2,10,10,3);
-        Canvas2DContext.fill();
-        Canvas2DContext.stroke();
-      
-    }
-}
+  const { x1, y1, x2, y2, type } = element;
 
+  if (type === 'rect' || type === 'pencil') {
+    // Calculate dimensions and positions
+    const minX = Math.min(x1, x2);
+    const minY = Math.min(y1, y2);
+    const maxX = Math.max(x1, x2);
+    const maxY = Math.max(y1, y2);
+
+    // Calculate padding for the bounding box
+    const paddingX = 6;
+    const paddingY = 6;
+
+    // Draw the bounding box
+    Canvas2DContext.strokeStyle = '#27ae60'; // Change the color to a nice green, you can use any valid color code
+    Canvas2DContext.lineWidth = 2; // Change the line width if needed
+    Canvas2DContext.strokeRect(minX - paddingX, minY - paddingY, maxX - minX + 2 * paddingX, maxY - minY + 2 * paddingY);
+
+    // Draw handles at corners with curved rectangles
+    drawCurvyRectHandle(Canvas2DContext, minX - paddingX, minY - paddingY); // Top-left
+    drawCurvyRectHandle(Canvas2DContext, maxX + paddingX, minY - paddingY); // Top-right
+    drawCurvyRectHandle(Canvas2DContext, minX - paddingX, maxY + paddingY); // Bottom-left
+    drawCurvyRectHandle(Canvas2DContext, maxX + paddingX, maxY + paddingY); // Bottom-right
+
+    // Draw handles at midpoints
+    const midX = (minX + maxX) / 2;
+    const midY = (minY + maxY) / 2;
+
+    drawCurvyRectHandle(Canvas2DContext, midX, minY - paddingY); // Top-middle
+    drawCurvyRectHandle(Canvas2DContext, midX, maxY + paddingY); // Bottom-middle
+    drawCurvyRectHandle(Canvas2DContext, minX - paddingX, midY); // Left-middle
+    drawCurvyRectHandle(Canvas2DContext, maxX + paddingX, midY); // Right-middle
+  } else if (type === 'line') {
+    // Draw bounding boxes for line endpoints
+    drawCurvyRectHandle(Canvas2DContext, x1, y1);
+    drawCurvyRectHandle(Canvas2DContext, x2, y2);
+  }
+};
+
+// Helper function to draw a curved rectangle handle at a specific position
+const drawCurvyRectHandle = (context, x, y) => {
+  const handleSize = 10;
+  const borderRadius = 3;
+  const borderSize = 2;
+
+  // Draw the curved rectangle
+  context.fillStyle = '#27ae60'; // Use the same color as the bounding box
+  context.beginPath();
+  context.moveTo(x - handleSize / 2 + borderRadius, y - handleSize / 2);
+  context.lineTo(x + handleSize / 2 - borderRadius, y - handleSize / 2);
+  context.arcTo(x + handleSize / 2, y - handleSize / 2, x + handleSize / 2, y + handleSize / 2, borderRadius);
+  context.lineTo(x + handleSize / 2, y + handleSize / 2 - borderRadius);
+  context.arcTo(x + handleSize / 2, y + handleSize / 2, x - handleSize / 2, y + handleSize / 2, borderRadius);
+  context.lineTo(x - handleSize / 2 + borderRadius, y + handleSize / 2);
+  context.arcTo(x - handleSize / 2, y + handleSize / 2, x - handleSize / 2, y - handleSize / 2, borderRadius);
+  context.lineTo(x - handleSize / 2, y - handleSize / 2 + borderRadius);
+  context.arcTo(x - handleSize / 2, y - handleSize / 2, x + handleSize / 2, y - handleSize / 2, borderRadius);
+  context.fill();
+
+  // Draw border for the curved rectangle
+  context.strokeStyle = '#2c3e50'; // Use a different color for the border
+  context.lineWidth = borderSize;
+  context.stroke();
+};

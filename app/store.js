@@ -1,5 +1,5 @@
 import actionSlice from '@/components/Redux/features/actionSlice';
-import cacheSlice from '@/components/Redux/features/cacheSlice';
+
 import canvasSlice from '@/components/Redux/features/canvasSlice';
 import elementSlice from '@/components/Redux/features/elementSlice'
 import hoverSlice from '@/components/Redux/features/hoverSlice';

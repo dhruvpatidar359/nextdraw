@@ -70,13 +70,10 @@ export const getElementObject = (element)=>{
 
 }
   
-
-
-
-export const getElementBelow = (event) => {
+export const getElementBelow = (event,selectedElement) => {
   const histIndex = store.getState().elements.index;
   const elements = store.getState().elements.value[histIndex];
-
+  
     for (var i = elements.length - 1; i >= 0; i--) {
       const element = elements[i];
       const { x1, y1, x2, y2, type } = element;
@@ -89,10 +86,27 @@ export const getElementBelow = (event) => {
       let found = false;
 
 
+      if(selectedElement != null && selectedElement.type != 'line') {
+
+        const { x1, y1, x2, y2 } = elements[selectedElement.id];
+    
+          const minX = Math.min(x1, x2);
+          const maxX = Math.max(x1, x2);
+          const minY = Math.min(y1, y2);
+          const maxY = Math.max(y1, y2);
+    
+        if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
+          return elements[selectedElement.id];
+        }
+
+       
+      }
+
+
       switch (type) {
         case "rect":
 
-          if (event.clientX > minX - 10 && event.clientX < maxX + 10 && event.clientY > minY - 10 && event.clientY < maxY + 10) {
+          if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
             found = true;
           }
           break;
@@ -125,7 +139,7 @@ export const getElementBelow = (event) => {
             }
             return onLine(point.x,point.y,nextPoint.x,nextPoint.y,event,5)!= false;
         
-          })
+          });
   
           if(betweenAnyPoint) {
             found = true;

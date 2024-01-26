@@ -17,9 +17,6 @@ export const move = (event,elements) => {
 
     
         const newPoints = [];
-
-      
-
         selectedElement.points.forEach((_,index) => {
             
             newPoints.push({x : event.clientX - selectedElement.offSetX[index]
@@ -29,9 +26,7 @@ export const move = (event,elements) => {
         });
 
       const  tempNewArray = [...elements];
-        // console.log(selectedElement.points);
-        // console.log("ha bhai")
-        // console.log(newPoints);
+      
 
         const width = x2 - x1;
         const height = y2 - y1;

@@ -5,8 +5,7 @@ import { setResizingDirection } from "../Redux/features/resizeSlice";
 
 
 
-export const mouseCursorChange = (event, elements) => {
-
+export const mouseCursorChange = (event, elements,selectedElement) => {
 
 
   for (var i = elements.length - 1; i >= 0; i--) {
@@ -21,10 +20,39 @@ export const mouseCursorChange = (event, elements) => {
     let elementFound = false;
     let resizerFound = null;
 
+    // using this so that if there is selected element then only for
+    // that we will be seeing the handlers not for others 
+    let selectedElementCase = false;
+
+
+    if(selectedElement != null && selectedElement.type != 'line') {
+
+      const { x1, y1, x2, y2 } = elements[selectedElement.id];
+  
+        const minX = Math.min(x1, x2);
+        const maxX = Math.max(x1, x2);
+        const minY = Math.min(y1, y2);
+        const maxY = Math.max(y1, y2);
+  
+      if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
+       
+        const onResizeNode = getCurrentResizingNode(event, elements[selectedElement.id]);
+        if (onResizeNode[0] === 1) {
+
+          resizerFound = onResizeNode;
+          selectedElementCase = true;
+
+        }
+        elementFound = true;
+
+      }
+     
+    }
+    if(!elementFound) {
     switch (type) {
       case "rect":
 
-        if (event.clientX > minX - 10 && event.clientX < maxX + 10 && event.clientY > minY - 10 && event.clientY < maxY + 10) {
+        if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
 
           const onResizeNode = getCurrentResizingNode(event, element);
           if (onResizeNode[0] === 1) {
@@ -39,7 +67,7 @@ export const mouseCursorChange = (event, elements) => {
         break;
       case "line":
 
-        const betweenPoint = onLine(x1,y1,x2,y2,event,5);
+        const betweenPoint = onLine(x1, y1, x2, y2, event, 5);
         const onResizeNode = getCurrentResizingNode(event, element);
 
         if (onResizeNode[0] === 1) {
@@ -48,66 +76,76 @@ export const mouseCursorChange = (event, elements) => {
 
         }
 
-        if(betweenPoint) {
+        if (betweenPoint) {
           elementFound = true;
         }
-       
+
 
         break;
 
       case "pencil":
 
         // console.log(element.points);
-      const betweenAnyPoint  =  element.points.some((point,index) => {
-      
+        const betweenAnyPoint = element.points.some((point, index) => {
+
           const nextPoint = element.points[index + 1];
-        
-          if(nextPoint === undefined) {
+
+          if (nextPoint === undefined) {
             return;
           }
-          return onLine(point.x,point.y,nextPoint.x,nextPoint.y,event,5)!= false;
-      
+          return onLine(point.x, point.y, nextPoint.x, nextPoint.y, event, 8) != false;
+
         });
 
 
-        if(betweenAnyPoint) {
+        if (betweenAnyPoint) {
           elementFound = true;
         }
-       
-          const resizeNode = getCurrentResizingNode(event, element);
-          if (resizeNode[0] === 1) {
 
-            resizerFound = resizeNode;
+        const resizeNode = getCurrentResizingNode(event, element);
+        if (resizeNode[0] === 1) {
 
-          }
-     
+          resizerFound = resizeNode;
 
-        break;  
+        }
+
+
+        break;
 
       default:
 
         break;
 
     }
+  }
 
     // console.log(elementFound);
 
-    if (resizerFound != null && elementFound == true && store.getState().selectedElement.value != null) {
+    if (resizerFound != null && elementFound === true && store.getState().selectedElement.value != null 
+&& (selectedElementCase === true || type === 'line')
+     
+    ) {
 
       // keeping the action as it is so that mouse cursor remains same all the time
       // same applies for other
+    
       if (store.getState().action.value === 'none') {
         document.body.style.cursor = resizerFound[1];
       }
 
 
       store.dispatch(setHover("resize"));
-      if (store.getState().resizeDirection.value == null && store.getState().selectedElement.value != null && store.getState().action.value != 'none') {
+      if (store.getState().resizeDirection.value === null && store.getState().selectedElement.value != null
+       && store.getState().action.value != 'none'
+       &&  (selectedElementCase === true || type === 'line')
+      ) {
         store.dispatch(setResizingDirection(resizerFound[2]));
       }
 
       break;
     }
+
+
 
     if (elementFound) {
       if (store.getState().action.value === 'none') {
@@ -124,10 +162,6 @@ export const mouseCursorChange = (event, elements) => {
       if (store.getState().action.value === 'none') {
         document.body.style.cursor = `url('defaultCursor.svg'), auto`;
       }
-
-
-
-
     }
 
   }
@@ -136,18 +170,18 @@ export const mouseCursorChange = (event, elements) => {
 }
 
 
-export const onLine = (x1,y1,x2,y2,event,distance = 5) => {
+export const onLine = (x1, y1, x2, y2, event, distance = 5) => {
   const total_length = Math.sqrt((Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2)));
-        const initial = Math.sqrt((Math.pow(y1 - event.clientY, 2) + Math.pow(x1 - event.clientX, 2)));
-        const final = Math.sqrt((Math.pow(y2 - event.clientY, 2) + Math.pow(x2 - event.clientX, 2)));
+  const initial = Math.sqrt((Math.pow(y1 - event.clientY, 2) + Math.pow(x1 - event.clientX, 2)));
+  const final = Math.sqrt((Math.pow(y2 - event.clientY, 2) + Math.pow(x2 - event.clientX, 2)));
 
-        const diff = Math.abs(total_length - (initial + final));
+  const diff = Math.abs(total_length - (initial + final));
 
-        if (diff < distance) {
-          return true;
-        } else {
-          return false;
-        }
-        
+  if (diff < distance) {
+    return true;
+  } else {
+    return false;
+  }
+
 
 }

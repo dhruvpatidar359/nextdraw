@@ -1,27 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const selectedElementSlice = createSlice({
-    name:'selectedElement',
-    initialState : {
-        value : null,
-        source : 'drawing'
-       
-        
+    name: 'selectedElement',
+    initialState: {
+        value: null,
+
     },
 
-    reducers : {
-        setSelectedElement :(state,action) => {
+    reducers: {
+        setSelectedElement: (state, action) => {
             state.value = action.payload;
         }
-,
-        setSelectedElementSource :(state,action) => {
-            state.source = action.payload;
-        }
-
 
     }
 })
 
 
-export const {setSelectedElement,setSelectedElementSource} = selectedElementSlice.actions;
+export const { setSelectedElement } = selectedElementSlice.actions;
 export default selectedElementSlice.reducer;
