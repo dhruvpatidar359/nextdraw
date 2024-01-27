@@ -21,7 +21,7 @@ const buttons = [
 
 const Topbar = () => {
 
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const toolIndex = useSelector(state => state.tool.index);
   
 // keyboard handler 
@@ -30,32 +30,32 @@ const Topbar = () => {
       console.log(event.key);
     
       if (event.key === '1') {
-        dispath(changeTool("rect"));
+        dispatch(changeTool("rect"));
          
       } else if (event.key === '2') {
-        dispath(changeTool("line"));
+        dispatch(changeTool("line"));
       
       } else if (event.key === '3') {
-        dispath(changeTool("selection"));
+        dispatch(changeTool("selection"));
         
       } else if (event.key === '4') {
       
-        dispath(changeTool("pencil"));
+        dispatch(changeTool("pencil"));
      
       } else if(event.key === '5') {
-        dispath(changeTool('ellipse'))
+        dispatch(changeTool('ellipse'))
       }
       else if(event.key === '6') {
-        dispath(changeTool('diamond'))
+        dispatch(changeTool('diamond'))
       }
       
       else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
-        dispath(setSelectedElement(null));
-        dispath(redo());
+        dispatch(setSelectedElement(null));
+        dispatch(redo());
 
       } else if (event.ctrlKey && (event.key === 'z' || event.key === 'Z')) {
-        dispath(setSelectedElement(null));
-        dispath(undo());
+        dispatch(setSelectedElement(null));
+        dispatch(undo());
       }
 
 
@@ -70,56 +70,51 @@ const Topbar = () => {
 
   
 // mouse wheel handler 
-  useEffect(() => {
-    
-    onwheel = (event) => {
-      
- 
-      let currentTool;
-      if(event.deltaY > 100){
+useEffect(() => {
+  const handleWheel = (event) => {
+    let currentTool;
+    console.log(event.deltaY);
+    if (event.deltaY > 100) {
+      currentTool = (toolIndex + 1) % 7;
+    } else {
+      currentTool = (toolIndex - 1) === 0 ? buttons.length : toolIndex - 1;
+    }
 
-     
-        currentTool = (toolIndex + 1) % 7;
-      
-      } else{
-        currentTool = (toolIndex - 1) === 0 ? buttons.length : toolIndex - 1;
-      }
+    console.log(`before ${currentTool} ${toolIndex}`);
+    currentTool = currentTool === 0 ? 1 : currentTool;
 
-      console.log(`before ${currentTool} ${toolIndex}`);
-      currentTool = currentTool === 0 ? 1 : currentTool;
-     
-    
-      switch(currentTool) {
-        case 1:
-          dispath(changeTool("rect"));
-          break;
+    switch (currentTool) {
+      case 1:
+        dispatch(changeTool("rect"));
+        break;
+      case 2:
+        dispatch(changeTool("line"));
+        break;
+      case 3:
+        dispatch(changeTool("selection"));
+        break;
+      case 4:
+        dispatch(changeTool("pencil"));
+        break;
+      case 5:
+        dispatch(changeTool("ellipse"));
+        break;
+      case 6:
+        dispatch(changeTool("diamond"));
+        break;
+      default:
+        break;
+    }
+  };
 
-        case 2:
-          dispath(changeTool("line"));
-          
-          break;
-        case 3 :
-          dispath(changeTool("selection"));
-          break;
-        case 4 :
-          dispath(changeTool("pencil"));
-          break;
+  document.addEventListener('wheel', handleWheel);
 
-        case 5:
-          dispath(changeTool("ellipse"));
-          break;
+  // Cleanup the event listener on component unmount
+  return () => {
+    document.removeEventListener('wheel', handleWheel);
+  };
+}, [toolIndex]);
 
-        case 6:
-            dispath(changeTool("diamond"));
-            break;
-          
-          default:
-            break;
-
-      } 
-    };
-   
-  })
   
 
 
@@ -130,7 +125,7 @@ const Topbar = () => {
       {buttons.map((button, index) =>
 
       (
-        <div key={index} onClick={() => dispath(changeTool(buttons[index].tool))}>  <ButtonComponent button={button} /> </div>
+        <div key={index} onClick={() => dispatch(changeTool(buttons[index].tool))}>  <ButtonComponent button={button} /> </div>
 
       )
 
@@ -138,8 +133,8 @@ const Topbar = () => {
 
       <button onClick={() =>{ 
         
-        dispath(setSelectedElement(null));
-        dispath(undo());}} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
+        dispatch(setSelectedElement(null));
+        dispatch(undo());}} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaUndo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
           {'7'}
@@ -147,8 +142,8 @@ const Topbar = () => {
       </button>
       <button onClick={() => {
         
-        dispath(setSelectedElement(null));
-        dispath(redo())}} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
+        dispatch(setSelectedElement(null));
+        dispatch(redo())}} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaRedo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
           {'8'}
