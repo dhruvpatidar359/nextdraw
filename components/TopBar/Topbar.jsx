@@ -74,7 +74,7 @@ useEffect(() => {
   const handleWheel = (event) => {
     let currentTool;
     console.log(event.deltaY);
-    if (event.deltaY > 100) {
+    if (event.deltaY > 0) {
       currentTool = (toolIndex + 1) % 7;
     } else {
       currentTool = (toolIndex - 1) === 0 ? buttons.length : toolIndex - 1;
