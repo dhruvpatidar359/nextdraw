@@ -68,6 +68,7 @@ export const elementSlice = createSlice({
         },
         undo :(state,action) => {
             if(state.index > 0) {
+                
                 state.index = state.index - 1;
             }
         

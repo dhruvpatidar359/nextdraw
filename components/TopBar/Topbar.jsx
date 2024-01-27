@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { redo, undo } from '../Redux/features/elementSlice';
 import { changeTool } from '../Redux/features/toolSlice';
 import ButtonComponent from './ButtonComponent';
+import { setSelectedElement } from '../Redux/features/selectedElementSlice';
 
 const buttons = [
   { tooltip: 'Rectangle', icon: FaSquare, shortcut: '1', tool: 'rect' },
@@ -49,11 +50,11 @@ const Topbar = () => {
       }
       
       else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
-
+        dispath(setSelectedElement(null));
         dispath(redo());
 
       } else if (event.ctrlKey && (event.key === 'z' || event.key === 'Z')) {
-
+        dispath(setSelectedElement(null));
         dispath(undo());
       }
 
@@ -135,13 +136,19 @@ const Topbar = () => {
 
       )}
 
-      <button onClick={() => dispath(undo())} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
+      <button onClick={() =>{ 
+        
+        dispath(setSelectedElement(null));
+        dispath(undo());}} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaUndo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
           {'7'}
         </span>
       </button>
-      <button onClick={() => dispath(redo())} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
+      <button onClick={() => {
+        
+        dispath(setSelectedElement(null));
+        dispath(redo())}} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaRedo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
           {'8'}
