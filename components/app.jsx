@@ -1,7 +1,8 @@
 "use client"
-import React, { useState } from 'react'
-import Canvas from './Canvas'
-import Topbar from './TopBar/Topbar'
+import React from 'react';
+import Canvas from './Canvas';
+import Topbar from './TopBar/Topbar';
+
 
 const app = () => {
 

@@ -164,9 +164,6 @@ return  {id : id,
     if (element != null) {
       let { x1, x2, y1, y2 ,type} = element;
       
-    
-
-
   if(type === 'rect' || type === 'ellipse' || type === 'diamond') {
     x1 -= threshold;
     y1 -= threshold;
@@ -274,7 +271,7 @@ return  {id : id,
     }
   }
 } 
-     
+  
       return [0];
     }
   }

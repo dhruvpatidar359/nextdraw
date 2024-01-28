@@ -4,9 +4,15 @@ export const drawBounds = (Canvas2DContext, element) => {
   }
 
   const { x1, y1, x2, y2, type } = element;
+  if(x1 === x2 && y1 === y2 && type === 'text') {
+    return;
+  }
 
-  if (type === 'rect' || type === 'pencil' || type === 'ellipse' || type === 'diamond') {
+  if (type === 'rect' || type === 'pencil' || type === 'ellipse' || type === 'diamond' || type === 'text') {
     // Calculate dimensions and positions
+
+    
+
     const minX = Math.min(x1, x2);
     const minY = Math.min(y1, y2);
     const maxX = Math.max(x1, x2);

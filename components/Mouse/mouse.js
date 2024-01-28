@@ -50,8 +50,10 @@ export const mouseCursorChange = (event, elements,selectedElement) => {
     }
     if(!elementFound) {
     switch (type) {
+      
       case "ellipse":
-        case "diamond":
+      case "diamond":
+      case "text":
       case "rect":
 
         if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
@@ -123,8 +125,10 @@ export const mouseCursorChange = (event, elements,selectedElement) => {
 
     // console.log(elementFound);
 
-    if (resizerFound != null && elementFound === true && store.getState().selectedElement.value != null 
-&& (selectedElementCase === true || type === 'line')
+    if (resizerFound != null && 
+      elementFound === true && 
+      store.getState().selectedElement.value != null &&
+      (selectedElementCase === true || type === 'line')
      
     ) {
 
@@ -137,9 +141,10 @@ export const mouseCursorChange = (event, elements,selectedElement) => {
 
 
       store.dispatch(setHover("resize"));
-      if (store.getState().resizeDirection.value === null && store.getState().selectedElement.value != null
-       && store.getState().action.value != 'none'
-       &&  (selectedElementCase === true || type === 'line')
+      if (store.getState().resizeDirection.value === null &&
+         store.getState().selectedElement.value != null &&
+         store.getState().action.value != 'none'&& 
+         (selectedElementCase === true || type === 'line')
       ) {
         store.dispatch(setResizingDirection(resizerFound[2]));
       }
@@ -181,9 +186,8 @@ export const onLine = (x1, y1, x2, y2, event, distance = 5) => {
 
   if (diff < distance) {
     return true;
-  } else {
-    return false;
-  }
-
-
+  } 
+  
+  return false;
+  
 }

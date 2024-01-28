@@ -22,6 +22,10 @@ export function addElement(id, x1, y1, x2, y2, type) {
     case "pencil":
       return { id, type, points: [{ x: x1, y: y1 }] };
 
+    case "text":
+    
+      return {id,type,x1,y1,x2  ,y2,text : ""};  
+
     default:
 
       return { id, x1, x2, y1, y2, type };
@@ -84,8 +88,6 @@ export const getElementObject = (element) => {
     elementObject = root.polygon([top,left,bottom,right],{seed : 17});
         
       break;  
-
-
     default:
       elementObject = root.line(x1, y1, x2, y2, { seed: 6 });
       break;
@@ -131,7 +133,8 @@ export const getElementBelow = (event, selectedElement) => {
     switch (type) {
       case "ellipse":
       case "rect":
-        case "diamond":
+      case "diamond":
+      case "text":
 
         if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
           found = true;
@@ -189,7 +192,7 @@ export const getElementBelow = (event, selectedElement) => {
 
 
 // updates the old element with new one having new props or any change
-export const updateElement = (id, x1, y1, x2, y2, type) => {
+export const updateElement = (id, x1, y1, x2, y2, type,options) => {
 
   const histIndex = store.getState().elements.index;
   const elements = store.getState().elements.value[histIndex];
@@ -200,17 +203,14 @@ export const updateElement = (id, x1, y1, x2, y2, type) => {
     case "line":
     case "rect":
     case "ellipse":
-      case "diamond":
+    case "diamond":
+
       const updatedElement = addElement(id, x1, y1, x2, y2, type)
       tempNewArray[id] = updatedElement;
       if (action === 'drawing') {
         store.dispatch(setSelectedElement(updatedElement));
       }
       break;
-
-
-
-
 
     case "pencil":
 
@@ -219,6 +219,15 @@ export const updateElement = (id, x1, y1, x2, y2, type) => {
         points: [...tempNewArray[id].points, { x: x2, y: y2 }],
       };
       break;
+
+
+      case "text":
+
+      const textWidth =x1 +  document.getElementById("canvas").getContext('2d').measureText(options.text).width
+      const textHeight =y1 +  24;
+      
+        tempNewArray[id] = {...addElement(id,x1,y1,textWidth,textHeight,type),text : options.text}
+        break;
 
     default:
       break;

@@ -22,7 +22,7 @@ export const draw = (event) => {
 
 }
 
-
+// the main function that is responsilbe for rendering
 export  const drawElements = (ctx,element,selectedElement) => {
 
     const roughCanvasRef = store.getState().canvas.value;
@@ -52,7 +52,16 @@ export  const drawElements = (ctx,element,selectedElement) => {
           ctx.fill(getElementObject(element));
         }
      
-        break;  
+        break; 
+        
+        
+        case "text":
+         
+          ctx.textBaseline = "top";
+          ctx.font="24px Virgil";
+          ctx.fillText(element.text, element.x1 ,  element.y1);
+
+          break;
 
        default:
         break; 

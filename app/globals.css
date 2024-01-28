@@ -35,3 +35,18 @@ body {
 
 
 
+@font-face {
+  font-family: 'Virgil';
+ 
+ src: local('Virgil'), url(../public/fonts/Virgil.woff2) format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+::-webkit-resizer {
+  display: none;
+}
+
+
+
+
