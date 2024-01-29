@@ -59,7 +59,8 @@ export  const drawElements = (ctx,element,selectedElement) => {
          
           ctx.textBaseline = "top";
           ctx.font="24px Virgil";
-          ctx.fillText(element.text, element.x1 ,  element.y1);
+          console.log(element.text);
+          ctx.fillText(element.text, element.x1 ,  element.y1 + 5);
 
           break;
 

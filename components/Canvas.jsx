@@ -307,7 +307,7 @@ const Canvas = () => {
 
   const handleMouseUp = (event) => {
 
-
+      
 
     if (action === "drawing") {
 
@@ -495,11 +495,12 @@ const Canvas = () => {
 
     // Set the textarea height to auto and adjust its scrollHeight
     textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight}px`;
+    textarea.style.height = `${textarea.scrollHeight + 5}px`;
 
     // Set the textarea width to auto and adjust its scrollWidth
     textarea.style.width = 'auto';
-    textarea.style.width = `${textarea.scrollWidth}px`;
+    textarea.style.width = `${textarea.scrollWidth + 5}px`;
+    
   };
 
   return (
