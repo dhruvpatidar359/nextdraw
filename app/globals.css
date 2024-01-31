@@ -26,10 +26,14 @@ body {
     )
     rgb(var(--background-start-rgb));
 
-
-    /* -webkit-user-select: none;
+   
+    -webkit-user-select: none;
     -ms-user-select: none; 
-    user-select: none;    */
+    user-select: none;   
+}
+
+html, body {
+  overscroll-behavior-x: none;
 }
 
 

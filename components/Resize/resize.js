@@ -1,5 +1,5 @@
-import { distance } from "@/utils/common";
 import store from "@/app/store";
+import { distance } from "@/utils/common";
 import { setElement } from "../Redux/features/elementSlice";
 
 let threshold = 6;
@@ -14,7 +14,7 @@ export const resizeElement = (event, elements) => {
   const cx = event.clientX;
   const cy = event.clientY;
 
-  const { id, x1, x2, y1, y2, type } = selectedElement;
+  const { id, x1, x2, y1, y2, type ,text } = selectedElement;
   if (type === 'rect' || type === 'ellipse' || type === 'diamond') {
 
     switch (resizeDirection) {
@@ -63,7 +63,60 @@ export const resizeElement = (event, elements) => {
       default:
         break;
     }
-  } else if (type === 'line') {
+  } 
+  
+//   else  if (type === 'text') {
+// // console.log(selectedElement.text);
+//     switch (resizeDirection) {
+
+//       case 4:
+
+//         return {
+//           id: id,
+//           x1: x1,
+//           y1: y1,
+//           x2: cx - threshold,
+//           y2: y2,
+//           type: type
+       
+//         };
+
+//       case 1:
+
+//         return { id: id, x1: cx + threshold, y1: cy + threshold, x2: x2, y2: y2, type: type };
+
+//       case 2:
+//         return { id: id, x1: x1, y1: cy + threshold, x2: x2, y2: y2, type: type };
+
+//       case 3:
+//         return { id: id, x1: x1, y1: cy + threshold, x2: cx - threshold, y2: y2, type: type, text:text };
+
+//       case 5:
+//         return { id: id, x1: x1, y1: y1, x2: cx - threshold, y2: cy - threshold, type: type };
+
+//       case 6:
+//         return { id: id, x1: x1, y1: y1, x2: x2, y2: cy - threshold, type: type };
+
+//       case 7:
+//         return { id: id, x1: cx + threshold, y1: y1, x2: x2, y2: cy - threshold, type: type };
+
+//       case 8:
+
+//         return {
+//           id: id,
+//           x1: cx + threshold,
+//           y1: y1,
+//           x2: x2,
+//           y2: y2,
+//           type: type
+//         };
+
+//       default:
+//         break;
+//     }
+//   } 
+  
+  else if (type === 'line') {
     switch (resizeDirection) {
       case 1:
         return { id: id, x1: cx, y1: cy, x2: x2, y2: y2, type: type };
@@ -183,7 +236,7 @@ export const resizeElement = (event, elements) => {
         {
           const newPoints = [];
 
-          console.log(`${x2} and ${cx}`);
+         
 
           selectedElement.points.forEach((point) => {
 

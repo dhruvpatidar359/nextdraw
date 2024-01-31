@@ -1,4 +1,6 @@
-export const drawBounds = (Canvas2DContext, element) => {
+import store from "@/app/store";
+
+export const drawBounds = (Canvas2DContext, element,action) => {
   if (element === null) {
     return;
   }
@@ -8,7 +10,7 @@ export const drawBounds = (Canvas2DContext, element) => {
     return;
   }
 
-  if (type === 'rect' || type === 'pencil' || type === 'ellipse' || type === 'diamond' || type === 'text') {
+  if (type === 'rect' || type === 'pencil' || type === 'ellipse' || type === 'diamond' ) {
     // Calculate dimensions and positions
 
     
@@ -45,6 +47,31 @@ export const drawBounds = (Canvas2DContext, element) => {
     // Draw bounding boxes for line endpoints
     drawCurvyRectHandle(Canvas2DContext, x1, y1);
     drawCurvyRectHandle(Canvas2DContext, x2, y2);
+  } else if(type === 'text'&& action != 'writing') {
+    
+
+    
+    const minX = Math.min(x1, x2);
+    const minY = Math.min(y1, y2);
+    const maxX = Math.max(x1, x2);
+    const maxY = Math.max(y1, y2);
+
+    // Calculate padding for the bounding box
+    const paddingX = 6;
+    const paddingY = 6;
+
+    // Draw the bounding box
+    Canvas2DContext.strokeStyle = '#27ae60'; // Change the color to a nice green, you can use any valid color code
+    Canvas2DContext.lineWidth = 2; // Change the line width if needed
+    Canvas2DContext.strokeRect(minX - paddingX, minY - paddingY, maxX - minX + 2 * paddingX, maxY - minY + 2 * paddingY);
+
+    // Draw handles at corners with curved rectangles
+    drawCurvyRectHandle(Canvas2DContext, minX - paddingX, minY - paddingY); // Top-left
+    drawCurvyRectHandle(Canvas2DContext, maxX + paddingX, minY - paddingY); // Top-right
+    drawCurvyRectHandle(Canvas2DContext, minX - paddingX, maxY + paddingY); // Bottom-left
+    drawCurvyRectHandle(Canvas2DContext, maxX + paddingX, maxY + paddingY); // Bottom-right
+
+    
   }
 };
 

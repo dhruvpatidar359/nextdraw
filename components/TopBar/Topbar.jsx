@@ -1,14 +1,16 @@
 
+import store from '@/app/store';
 import { useEffect } from 'react';
-import {  FaCircle, FaPencilAlt, FaRedo, FaSlash, FaSquare, FaUndo } from "react-icons/fa";
-import {  FaDiamond } from "react-icons/fa6";
-import { IoMove , IoText } from "react-icons/io5";
+import { FaCircle, FaPencilAlt, FaRedo, FaSlash, FaSquare, FaUndo } from "react-icons/fa";
+import { FaDiamond } from "react-icons/fa6";
+import { IoMove, IoText } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux';
+import { updateElement } from '../ElementManipulation/Element';
+import { setAction } from '../Redux/features/actionSlice';
 import { redo, undo } from '../Redux/features/elementSlice';
+import { setSelectedElement } from '../Redux/features/selectedElementSlice';
 import { changeTool } from '../Redux/features/toolSlice';
 import ButtonComponent from './ButtonComponent';
-import { setSelectedElement } from '../Redux/features/selectedElementSlice';
-import { setAction } from '../Redux/features/actionSlice';
 
 const buttons = [
   { tooltip: 'Rectangle', icon: FaSquare, shortcut: '1', tool: 'rect' },
@@ -25,41 +27,68 @@ const Topbar = () => {
 
   const dispatch = useDispatch();
   const toolIndex = useSelector(state => state.tool.index);
+  const action = useSelector(state => state.action.value);
+  
+
+  const updateText = () => {
+    if(store.getState().action.value === 'writing') {
+      const textArea =  document.getElementById('textarea').value
+       
+      const {id,x1,y1,type,x2,y2} = store.getState().selectedElement.value;
+      console.log(textArea);
+       updateElement(id,x1,y1,x2,y2,type,{text : textArea});
+       dispatch(setAction("none"));
+       dispatch(setSelectedElement(null));
+     }
+
+  }
 
   // keyboard handler 
   useEffect(() => {
     const handler = (event) => {
       console.log(event.key);
 
-     
-
+    
       if (event.key === '1') {
+
+       
         dispatch(changeTool("rect"));
+        updateText();
+
 
       } else if (event.key === '2') {
         dispatch(changeTool("line"));
-
+        updateText();
       } else if (event.key === '3') {
         dispatch(changeTool("selection"));
-
+        updateText();
       } else if (event.key === '4') {
 
         dispatch(changeTool("pencil"));
-
+        updateText();
       } else if (event.key === '5') {
         dispatch(changeTool('ellipse'))
-      }
+        updateText();
+      }  
       else if (event.key === '6') {
         dispatch(changeTool('diamond'))
+        updateText();
       } else if (event.key === '7') {
         dispatch(changeTool('text'))
+        updateText();
       }
 
       else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
+       if(store.getState().action.value === 'writing') {
+        return;
+       }
         dispatch(setSelectedElement(null));
         dispatch(redo());
 
       } else if (event.ctrlKey && (event.key === 'z' || event.key === 'Z')) {
+        if(store.getState().action.value === 'writing') {
+          return;
+         }
         dispatch(setSelectedElement(null));
         dispatch(undo());
       }
@@ -76,58 +105,70 @@ const Topbar = () => {
 
 
   // mouse wheel handler 
-  useEffect(() => {
-    const handleWheel = (event) => {
+  // useEffect(() => {
+  //   const handleWheel = (event) => {
 
       
 
-      let currentTool;
-      console.log(event.deltaY);
-      if (event.deltaY > 0) {
-        currentTool = (toolIndex + 1) % (buttons.length + 1);
-      } else {
-        currentTool = (toolIndex - 1) === 0 ? buttons.length : toolIndex - 1;
-      }
+  //     let currentTool;
+  //     console.log(event.deltaY);
+  //     if (event.deltaY > 0) {
+  //       currentTool = (toolIndex + 1) % (buttons.length + 1);
+  //     } else {
+  //       currentTool = (toolIndex - 1) === 0 ? buttons.length : toolIndex - 1;
+  //     }
 
-      console.log(`before ${currentTool} ${toolIndex}`);
-      currentTool = currentTool === 0 ? 1 : currentTool;
+     
+  //     currentTool = currentTool === 0 ? 1 : currentTool;
 
-      switch (currentTool) {
-        case 1:
-          dispatch(changeTool("rect"));
-          break;
-        case 2:
-          dispatch(changeTool("line"));
-          break;
-        case 3:
-          dispatch(changeTool("selection"));
-          break;
-        case 4:
-          dispatch(changeTool("pencil"));
-          break;
-        case 5:
-          dispatch(changeTool("ellipse"));
-          break;
-        case 6:
-          dispatch(changeTool("diamond"));
-          break;
+    
+  //     if(store.getState().action.value === 'writing') {
+  //      const textArea =  document.getElementById('textarea').value
+        
+  //      const {id,x1,y1,type,x2,y2} = store.getState().selectedElement.value;
+   
+  //       updateElement(id,x1,y1,x2,y2,type,{text : textArea});
+  //       dispatch(setAction("none"));
+  //       dispatch(setSelectedElement(null));
+  //     }
+      
 
-        case 7:
-          dispatch(changeTool("text"));
-          break;
+  //     switch (currentTool) {
+  //       case 1:
+  //         dispatch(changeTool("rect"));
+  //         break;
+  //       case 2:
+  //         dispatch(changeTool("line"));
+  //         break;
+  //       case 3:
+  //         dispatch(changeTool("selection"));
+  //         break;
+  //       case 4:
+  //         dispatch(changeTool("pencil"));
+  //         break;
+  //       case 5:
+  //         dispatch(changeTool("ellipse"));
+  //         break;
+  //       case 6:
+  //         dispatch(changeTool("diamond"));
+  //         break;
 
-        default:
-          break;
-      }
-    };
+  //       case 7:
+  //         dispatch(changeTool("text"));
+  //         break;
 
-    document.addEventListener('wheel', handleWheel);
+  //       default:
+  //         break;
+  //     }
+  //   };
 
-    // Cleanup the event listener on component unmount
-    return () => {
-      document.removeEventListener('wheel', handleWheel);
-    };
-  }, [toolIndex]);
+  //   document.addEventListener('wheel', handleWheel);
+
+  //   // Cleanup the event listener on component unmount
+  //   return () => {
+  //     document.removeEventListener('wheel', handleWheel);
+  //   };
+  // }, [toolIndex]);
 
 
 
@@ -148,7 +189,9 @@ const Topbar = () => {
       )}
 
       <button onClick={() => {
-
+   if(store.getState().action.value === 'writing') {
+    return;
+   }
         dispatch(setSelectedElement(null));
         dispatch(undo());
       }} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
@@ -158,7 +201,9 @@ const Topbar = () => {
         </span>
       </button>
       <button onClick={() => {
-
+   if(store.getState().action.value === 'writing') {
+    return;
+   }
         dispatch(setSelectedElement(null));
         dispatch(redo())
       }} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>

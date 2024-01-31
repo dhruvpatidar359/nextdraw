@@ -1,9 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
-import { setElement } from "../Redux/features/elementSlice";
 import store from "@/app/store";
-import { setSelectedElement } from "../Redux/features/selectedElementSlice";
 import getStroke from "perfect-freehand";
 import { onLine } from "../Mouse/mouse";
+import { setElement } from "../Redux/features/elementSlice";
+import { setSelectedElement } from "../Redux/features/selectedElementSlice";
 
 
 
@@ -223,10 +222,30 @@ export const updateElement = (id, x1, y1, x2, y2, type,options) => {
 
       case "text":
 
-      const textWidth =x1 +  document.getElementById("canvas").getContext('2d').measureText(options.text).width
-      const textHeight =y1 +  24;
-      
+       const context = document.getElementById("canvas").getContext('2d');
+        context.font = '24px Virgil';
+        let textWidth = x1 ;
+        let textHeight = y1;
+
+        var txt = options.text;
+        var lines = txt.split('\n');
+        var linesLength = lines.length;
+
+        var textWidthVar = 0;
+        for( let i = 0 ; i < linesLength ;i++) {
+          const line = lines[i];
+          textWidthVar = Math.max(textWidthVar, context.measureText(line).width)
+        } 
+
+        
+        textWidth += textWidthVar;
+        textHeight = textHeight +  (linesLength) * 30;
+        
+        
+        
+        
         tempNewArray[id] = {...addElement(id,x1,y1,textWidth,textHeight,type),text : options.text}
+       
         break;
 
     default:

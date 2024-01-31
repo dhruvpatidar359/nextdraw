@@ -47,7 +47,11 @@ export const mouseCursorChange = (event, elements,selectedElement) => {
 
       }
      
+
     }
+
+  
+    
     if(!elementFound) {
     switch (type) {
       
