@@ -156,7 +156,7 @@ const Canvas = () => {
     
     const panFunction = event => {
       // console.log(event.del);
-      console.log(event.clientY);
+     
      
       setpanOffset(prevState => ({
 

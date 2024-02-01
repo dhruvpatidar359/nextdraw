@@ -46,8 +46,11 @@ const Topbar = () => {
   // keyboard handler 
   useEffect(() => {
     const handler = (event) => {
-      console.log(event.key);
-
+  
+      // when we are writing we should not listen to any changeTool
+      if(action === 'writing') {
+        return;
+      }
     
       if (event.key === '1') {
 
@@ -169,6 +172,7 @@ const Topbar = () => {
   //     document.removeEventListener('wheel', handleWheel);
   //   };
   // }, [toolIndex]);
+
 
 
 
