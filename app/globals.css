@@ -30,10 +30,12 @@ body {
     -webkit-user-select: none;
     -ms-user-select: none; 
     user-select: none;   
+    user-zoom: fixed;
 }
 
 html, body {
   overscroll-behavior-x: none;
+  user-zoom: fixed;
 }
 
 

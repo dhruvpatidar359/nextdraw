@@ -22,7 +22,6 @@ import { getminMax } from '@/utils/common';
 
 
 
-
 const Canvas = () => {
 
 
@@ -41,8 +40,11 @@ const Canvas = () => {
   const [width, setWidth] = useState(0);
   const [changed, setChanged] = useState(false);
   const [dupState, setDupState] = useState(false);
-  const [panOffset, setpanOffset] = useState({x : 0,y : 0});
+  const [panOffset, setpanOffset] = useState({ x: 0, y: 0 });
+  const [scaleOffset, setscaleOffset] = useState({ x: 0, y: 0 });
+  const [scale, setscale] = useState(1);
   const textAreaRef = useRef();
+
 
   const CLICK_INTERVAL = 500;
   let lastClick = (new Date()).getTime();
@@ -54,7 +56,7 @@ const Canvas = () => {
 
   useEffect(() => {
     const textArea = textAreaRef.current;
-  
+
     if (textArea) {
       setTimeout(function () {
         textArea.focus();
@@ -62,34 +64,34 @@ const Canvas = () => {
         handleInput();
       }, 50);
     }
-  
+
 
   }, [action, selectedElement]);
 
   // this function is called when our textarea is removed by clicking of mouse
   const handleBlur = event => {
-   
-    const {id,x1,y1,type,x2,y2} = selectedElement;
+
+    const { id, x1, y1, type, x2, y2 } = selectedElement;
     dispatch(setAction("none"));
     dispatch(setSelectedElement(null));
-    updateElement(id,x1,y1,x2,y2,type,{text : event.target.value});
+    updateElement(id, x1, y1, x2, y2, type, { text: event.target.value });
 
   }
-  
+
 
 
   useEffect(() => {
 
     if (tool === 'rect' ||
-        tool === 'line' ||
-        tool === 'pencil' ||
-        tool === 'ellipse' ||
-        tool === 'diamond' || tool === 'text') {
+      tool === 'line' ||
+      tool === 'pencil' ||
+      tool === 'ellipse' ||
+      tool === 'diamond' || tool === 'text') {
 
-     
+
       document.body.style.cursor = 'crosshair';
 
-     
+
 
       if (selectedElement != null && action != 'writing') {
 
@@ -122,14 +124,16 @@ const Canvas = () => {
       canvas.style.height = `${scalingRect.height}px`;
 
 
-    
+
 
       dispatch(setCanvas(rough.canvas(canvas)));
     }
   }, [height]);
 
-  
 
+  const onZoom = delta => {
+    setscale(prevState => Math.min(Math.max(prevState + delta, 0.1), 20));
+  }
 
   useLayoutEffect(() => {
     const canvas = document.getElementById('canvas');
@@ -139,54 +143,95 @@ const Canvas = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // a single resource for rendering the elements
-    ctx.save();
-    ctx.translate(panOffset.x,panOffset.y);
 
-    renderer(ctx, elements, selectedElement,action);
+    const scaleWidth = canvas.width * scale;
+    const scaleHeight = canvas.height * scale;
+
+    const scaleOffsetX = (scaleWidth - canvas.width) / (3);
+    const scaleOffsetY = (scaleHeight - canvas.height) / (3);
+
+    setscaleOffset({ x: scaleOffsetX, y: scaleOffsetY });
+
+    ctx.save();
+
+    ctx.translate(panOffset.x * scale - scaleOffsetX, panOffset.y * scale - scaleOffsetY);
+
+
+
+    ctx.scale(scale, scale);
+
+    renderer(ctx, elements, selectedElement, action);
 
     ctx.restore();
-   
 
 
 
-  }, [elements, selectedElement,action,panOffset]);
+
+  }, [elements, selectedElement, action, panOffset, scale]);
 
 
+  // scale and pan
   useEffect(() => {
-    
-    const panFunction = event => {
-      // console.log(event.del);
-     
-     
-      setpanOffset(prevState => ({
 
-    
+    const handler = (e) => {
+      e.preventDefault();
+      if (e.ctrlKey) {
 
-        x : prevState.x  - event.deltaX,
-        y : prevState.y - event.deltaY
+
+        onZoom(e.deltaY * -0.01);
+      } else {
+        console.log(e.deltaX);
+        setpanOffset(prevState => ({
+          x: prevState.x - e.deltaX / 2,
+          y: prevState.y - e.deltaY / 2
         }))
-    
-      
+
+      }
     }
-  
-    document.addEventListener("wheel",panFunction);
+
+    document.getElementById("canvas").addEventListener("wheel", handler, { passive: false })
+
     return () => {
-      
-    document.removeEventListener("wheel",panFunction);
+      document.getElementById("canvas").removeEventListener("wheel", handler, { passive: false })
     }
   }, [])
-  
 
 
-const modifyClient = (event) => {
-  event.clientX = event.clientX - panOffset.x;
-  event.clientY = event.clientY - panOffset.y;
-  
-}
+  // removes the default zoom behaviour
+  useEffect(() => {
+    document.addEventListener(
+      "wheel",
+      function touchHandler(e) {
+        if (e.ctrlKey) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+    return () => {
+      document.removeEventListener(
+        "wheel",
+        function touchHandler(e) {
+          if (e.ctrlKey) {
+            e.preventDefault();
+          }
+        }, { passive: false });
+    }
+  }, [])
+
+
+
+
+
+
+  const modifyClient = (event) => {
+    event.clientX = (event.clientX - panOffset.x * scale + scaleOffset.x) / scale;
+    event.clientY = (event.clientY - panOffset.y * scale + scaleOffset.y) / scale;
+
+  }
 
   const handleMouseDown = (event) => {
     modifyClient(event);
-    if(action === 'writing') {
+    if (action === 'writing') {
       return;
     }
 
@@ -194,25 +239,26 @@ const modifyClient = (event) => {
 
 
       const ele = getElementBelow(event, selectedElement);
-    
+
 
       if (ele != null) {
 
         // double click functionality for text edit
         const msNow = (new Date()).getTime()
         if ((msNow - lastClick) < CLICK_INTERVAL) {
-          
-       if(selectedElement) {
-       
-        if(selectedElement.type === 'text' &&
-        event.clientX - selectedElement.offSetX === selectedElement.x1 &&
-        event.clientY - selectedElement.offSetY === selectedElement.y1) {
-         
-          dispatch(setAction("writing"));
-          dispatch(changeTool("text"));
-          return;
-        }}
-      }
+
+          if (selectedElement) {
+
+            if (selectedElement.type === 'text' &&
+              event.clientX - selectedElement.offSetX === selectedElement.x1 &&
+              event.clientY - selectedElement.offSetY === selectedElement.y1) {
+
+              dispatch(setAction("writing"));
+              dispatch(changeTool("text"));
+              return;
+            }
+          }
+        }
 
         lastClick = msNow;
 
@@ -251,7 +297,7 @@ const modifyClient = (event) => {
           offSetY = event.clientY - ele.y1;
           dispatch(setOldElement(ele));
           dispatch(setSelectedElement({ ...ele, offSetX, offSetY }));
-          updateElement(id, x1, y1, x2, y2, type,{text : ele.text});
+          updateElement(id, x1, y1, x2, y2, type, { text: ele.text });
         } else {
 
           offSetX = ele.points.map(point => event.clientX - point.x);
@@ -276,9 +322,9 @@ const modifyClient = (event) => {
 
       }
 
-    // default behaviour 
+      // default behaviour 
       if (hover === 'present') {
-       
+
         dispatch(setAction("moving"));
 
       } else if (hover === 'resize') {
@@ -331,9 +377,9 @@ const modifyClient = (event) => {
 
   const handleMouseUp = (event) => {
     modifyClient(event);
-      if(action === 'writing') {
-        return;
-      }
+    if (action === 'writing') {
+      return;
+    }
 
     if (action === "drawing") {
 
@@ -375,7 +421,7 @@ const modifyClient = (event) => {
 
       const shape = getElementObject(key);
 
-      
+
       ShapeCache.cache.set(key, shape);
       if (key.type != "pencil") {
         dispatch(changeTool("selection"));
@@ -431,8 +477,8 @@ const modifyClient = (event) => {
         const adjustedElement = adjustElementCoordinates(element);
 
         if (element.type != 'pencil') {
-          const { id, x1, x2, y1, y2, type} = adjustedElement;
-          updateElement(id, x1, y1, x2, y2, type,{text : element.text});
+          const { id, x1, x2, y1, y2, type } = adjustedElement;
+          updateElement(id, x1, y1, x2, y2, type, { text: element.text });
         } else {
           const { minX, minY, maxX, maxY } = getminMax(element);
 
@@ -457,10 +503,10 @@ const modifyClient = (event) => {
 
 
       }
-    } else if(tool === 'text') {
+    } else if (tool === 'text') {
       dispatch(changeTool("selection"));
-    } 
-  
+    }
+
     dispatch(setAction("none"));
     dispatch(setResizingDirection(null));
 
@@ -487,15 +533,15 @@ const modifyClient = (event) => {
         if (selectedElement.type === 'pencil') {
           resizeElement(event, elements);
         } else {
-          const { id, x1, y1, x2, y2, type ,text} = resizeElement(event, elements);
+          const { id, x1, y1, x2, y2, type, text } = resizeElement(event, elements);
           if (type != 'pencil') {
-            if(type != 'text') {
+            if (type != 'text') {
               updateElement(id, x1, y1, x2, y2, type);
             } else {
-              console.log(text);
-              updateElement(id, x1, y1, x2, y2, type,{text : text});
+
+              updateElement(id, x1, y1, x2, y2, type, { text: text });
             }
-            
+
           }
         }
       }
@@ -515,6 +561,7 @@ const modifyClient = (event) => {
   }, [])
 
   useEffect(() => {
+
     setHeight(() => window.innerHeight)
     setWidth(() => window.innerWidth)
   }, [height, width])
@@ -530,26 +577,28 @@ const modifyClient = (event) => {
     // Set the textarea width to auto and adjust its scrollWidth
     textarea.style.width = 'auto';
     textarea.style.width = `${textarea.scrollWidth + 5}px`;
-    
+
   };
 
   return (
     <div>
       {(action === 'writing' && tool === 'text' && selectedElement != null) ?
-        (<textarea id='textarea' ref={textAreaRef} onInput={handleInput}  onBlur = {handleBlur} style={{ position: "fixed", top: selectedElement.y1 + panOffset.y, left: selectedElement.x1  + panOffset.x
-      
-      ,font : "24px Virgil",margin : 0,padding : 0,border : 0 ,outline : 0,resize:'auto',overflow:'hidden',
-      background:'transparent',whiteSpace:'pre'
-      , resize: 'none', maxHeight : height - selectedElement.y1 - panOffset.y,maxWidth : width -selectedElement.x1 - panOffset.x
-      
-      }} />) : null
+        (<textarea id='textarea' ref={textAreaRef} onInput={handleInput} onBlur={handleBlur} style={{
+          position: "fixed", top: (selectedElement.y1 + panOffset.y) * scale - scaleOffset.y,
+          left: (selectedElement.x1 + panOffset.x) * scale - scaleOffset.x
+
+          , font: `${24 * scale}px Virgil`, margin: 0, padding: 0, border: 0, outline: 0, resize: 'auto', overflow: 'hidden',
+          background: 'transparent', whiteSpace: 'pre'
+          , resize: 'none', maxHeight: height - (selectedElement.y1 + panOffset.y) * scale + scaleOffset.y, maxWidth: width - (selectedElement.x1 + panOffset.x) * scale + scaleOffset.x
+
+        }} />) : null
       }
 
       <canvas
         id='canvas'
         height={height}
         width={width}
-        style={{ height: height, width: width ,zIndex: 1}}
+        style={{ height: height, width: width, zIndex: 1 }}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}

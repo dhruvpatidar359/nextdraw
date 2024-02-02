@@ -65,56 +65,56 @@ export const resizeElement = (event, elements) => {
     }
   } 
   
-//   else  if (type === 'text') {
-// // console.log(selectedElement.text);
-//     switch (resizeDirection) {
+  else  if (type === 'text') {
+// console.log(selectedElement.text);
+    switch (resizeDirection) {
 
-//       case 4:
+      case 4:
 
-//         return {
-//           id: id,
-//           x1: x1,
-//           y1: y1,
-//           x2: cx - threshold,
-//           y2: y2,
-//           type: type
+        return {
+          id: id,
+          x1: x1,
+          y1: y1,
+          x2: cx - threshold,
+          y2: y2,
+          type: type
        
-//         };
+        };
 
-//       case 1:
+      case 1:
 
-//         return { id: id, x1: cx + threshold, y1: cy + threshold, x2: x2, y2: y2, type: type };
+        return { id: id, x1: cx + threshold, y1: cy + threshold, x2: x2, y2: y2, type: type };
 
-//       case 2:
-//         return { id: id, x1: x1, y1: cy + threshold, x2: x2, y2: y2, type: type };
+      case 2:
+        return { id: id, x1: x1, y1: cy + threshold, x2: x2, y2: y2, type: type };
 
-//       case 3:
-//         return { id: id, x1: x1, y1: cy + threshold, x2: cx - threshold, y2: y2, type: type, text:text };
+      case 3:
+        return { id: id, x1: x1, y1: cy + threshold, x2: cx - threshold, y2: y2, type: type, text:text };
 
-//       case 5:
-//         return { id: id, x1: x1, y1: y1, x2: cx - threshold, y2: cy - threshold, type: type };
+      case 5:
+        return { id: id, x1: x1, y1: y1, x2: cx - threshold, y2: cy - threshold, type: type };
 
-//       case 6:
-//         return { id: id, x1: x1, y1: y1, x2: x2, y2: cy - threshold, type: type };
+      case 6:
+        return { id: id, x1: x1, y1: y1, x2: x2, y2: cy - threshold, type: type };
 
-//       case 7:
-//         return { id: id, x1: cx + threshold, y1: y1, x2: x2, y2: cy - threshold, type: type };
+      case 7:
+        return { id: id, x1: cx + threshold, y1: y1, x2: x2, y2: cy - threshold, type: type };
 
-//       case 8:
+      case 8:
 
-//         return {
-//           id: id,
-//           x1: cx + threshold,
-//           y1: y1,
-//           x2: x2,
-//           y2: y2,
-//           type: type
-//         };
+        return {
+          id: id,
+          x1: cx + threshold,
+          y1: y1,
+          x2: x2,
+          y2: y2,
+          type: type
+        };
 
-//       default:
-//         break;
-//     }
-//   } 
+      default:
+        break;
+    }
+  } 
   
   else if (type === 'line') {
     switch (resizeDirection) {
@@ -411,7 +411,7 @@ export const getCurrentResizingNode = (event, element) => {
   if (element != null) {
     let { x1, x2, y1, y2, type } = element;
 
-    if (type === 'rect' || type === 'ellipse' || type === 'diamond') {
+    if (type === 'rect' || type === 'ellipse' || type === 'diamond' || type === 'text') {
       x1 -= threshold;
       y1 -= threshold;
       x2 += threshold;

@@ -18,8 +18,8 @@ export default function RootLayout({ children }) {
 
 
   return (
-    <html lang="en" className='overflow-hidden'>
-      <body className='{inter.className} '>
+    <html lang="en" className='overflow-hidden  '>
+      <body className='{inter.className}' >
         
 
         {children}</body>

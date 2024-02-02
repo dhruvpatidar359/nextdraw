@@ -35,7 +35,7 @@ const Topbar = () => {
       const textArea =  document.getElementById('textarea').value
        
       const {id,x1,y1,type,x2,y2} = store.getState().selectedElement.value;
-      console.log(textArea);
+      // console.log(textArea);
        updateElement(id,x1,y1,x2,y2,type,{text : textArea});
        dispatch(setAction("none"));
        dispatch(setSelectedElement(null));

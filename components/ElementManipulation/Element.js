@@ -240,11 +240,14 @@ export const updateElement = (id, x1, y1, x2, y2, type,options) => {
         
         textWidth += textWidthVar;
         textHeight = textHeight +  (linesLength) * 30;
-        
-        
-        
-        
-        tempNewArray[id] = {...addElement(id,x1,y1,textWidth,textHeight,type),text : options.text}
+
+        if(store.getState().action.value === 'resizing') {
+          tempNewArray[id] = {...addElement(id,x1,y2,x2,textHeight,type),text : options.text}
+        } else {
+          tempNewArray[id] = {...addElement(id,x1,y1,textWidth,textHeight,type),text : options.text}
+        }
+
+       
        
         break;
 
