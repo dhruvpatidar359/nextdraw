@@ -4,10 +4,10 @@ import { useEffect } from 'react';
 import { FaCircle, FaPencilAlt, FaRedo, FaSlash, FaSquare, FaUndo } from "react-icons/fa";
 import { FaDiamond } from "react-icons/fa6";
 import { IoMove, IoText } from "react-icons/io5";
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { updateElement } from '../ElementManipulation/Element';
 import { setAction } from '../Redux/features/actionSlice';
-import { redo, undo } from '../Redux/features/elementSlice';
+import { redo, setElement, undo } from '../Redux/features/elementSlice';
 import { setSelectedElement } from '../Redux/features/selectedElementSlice';
 import { changeTool } from '../Redux/features/toolSlice';
 import ButtonComponent from './ButtonComponent';
@@ -19,7 +19,8 @@ const buttons = [
   { tooltip: 'Pencil', icon: FaPencilAlt, shortcut: '4', tool: 'pencil' },
   { tooltip: 'Ellipse', icon: FaCircle, shortcut: '5', tool: 'ellipse' },
   { tooltip: 'Diamond', icon: FaDiamond, shortcut: '6', tool: 'diamond' },
-  { tooltip: 'Text', icon: IoText, shortcut: '7', tool: 'text' }
+  { tooltip: 'Text', icon: IoText, shortcut: '7', tool: 'text' },
+
 
 ];
 
@@ -28,33 +29,36 @@ const Topbar = () => {
   const dispatch = useDispatch();
   const toolIndex = useSelector(state => state.tool.index);
   const action = useSelector(state => state.action.value);
-  
+  const index = useSelector(state => state.elements.index);
+  const elements = useSelector(state => state.elements.value[index], shallowEqual);
+  const selectedElement = useSelector(state => state.selectedElement.value);
+
 
   const updateText = () => {
-    if(store.getState().action.value === 'writing') {
-      const textArea =  document.getElementById('textarea').value
-       
-      const {id,x1,y1,type,x2,y2} = store.getState().selectedElement.value;
+    if (store.getState().action.value === 'writing') {
+      const textArea = document.getElementById('textarea').value
+
+      const { id, x1, y1, type, x2, y2 } = store.getState().selectedElement.value;
       // console.log(textArea);
-       updateElement(id,x1,y1,x2,y2,type,{text : textArea});
-       dispatch(setAction("none"));
-       dispatch(setSelectedElement(null));
-     }
+      updateElement(id, x1, y1, x2, y2, type, { text: textArea });
+      dispatch(setAction("none"));
+      dispatch(setSelectedElement(null));
+    }
 
   }
 
   // keyboard handler 
   useEffect(() => {
     const handler = (event) => {
-  
+      console.log(event.key);
       // when we are writing we should not listen to any changeTool
-      if(action === 'writing') {
+      if (action === 'writing') {
         return;
       }
-    
+
       if (event.key === '1') {
 
-       
+
         dispatch(changeTool("rect"));
         updateText();
 
@@ -72,7 +76,7 @@ const Topbar = () => {
       } else if (event.key === '5') {
         dispatch(changeTool('ellipse'))
         updateText();
-      }  
+      }
       else if (event.key === '6') {
         dispatch(changeTool('diamond'))
         updateText();
@@ -82,18 +86,34 @@ const Topbar = () => {
       }
 
       else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
-       if(store.getState().action.value === 'writing') {
-        return;
-       }
+        if (store.getState().action.value === 'writing') {
+          return;
+        }
         dispatch(setSelectedElement(null));
         dispatch(redo());
 
       } else if (event.ctrlKey && (event.key === 'z' || event.key === 'Z')) {
-        if(store.getState().action.value === 'writing') {
+        if (store.getState().action.value === 'writing') {
           return;
-         }
+        }
         dispatch(setSelectedElement(null));
         dispatch(undo());
+      } else if (event.key === 'Delete') {
+
+        if (selectedElement != null) {
+          const elementsCopy = [...elements];
+          const updatedElements = elementsCopy
+            .filter((element) => element.id !== selectedElement.id)
+            .map((element, index) => {
+              return { ...element, id: index };
+            });
+          dispatch(setElement([updatedElements]));
+        }
+
+
+
+        dispatch(setSelectedElement(null));
+
       }
 
 
@@ -111,7 +131,7 @@ const Topbar = () => {
   // useEffect(() => {
   //   const handleWheel = (event) => {
 
-      
+
 
   //     let currentTool;
   //     console.log(event.deltaY);
@@ -121,20 +141,20 @@ const Topbar = () => {
   //       currentTool = (toolIndex - 1) === 0 ? buttons.length : toolIndex - 1;
   //     }
 
-     
+
   //     currentTool = currentTool === 0 ? 1 : currentTool;
 
-    
+
   //     if(store.getState().action.value === 'writing') {
   //      const textArea =  document.getElementById('textarea').value
-        
+
   //      const {id,x1,y1,type,x2,y2} = store.getState().selectedElement.value;
-   
+
   //       updateElement(id,x1,y1,x2,y2,type,{text : textArea});
   //       dispatch(setAction("none"));
   //       dispatch(setSelectedElement(null));
   //     }
-      
+
 
   //     switch (currentTool) {
   //       case 1:
@@ -185,17 +205,18 @@ const Topbar = () => {
 
       (
         <div key={index} onClick={() => {
-     
-          dispatch(changeTool(buttons[index].tool))}}>  <ButtonComponent button={button} /> </div>
+
+          dispatch(changeTool(buttons[index].tool))
+        }}>  <ButtonComponent button={button} /> </div>
 
       )
 
       )}
 
       <button onClick={() => {
-   if(store.getState().action.value === 'writing') {
-    return;
-   }
+        if (store.getState().action.value === 'writing') {
+          return;
+        }
         dispatch(setSelectedElement(null));
         dispatch(undo());
       }} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
@@ -205,9 +226,9 @@ const Topbar = () => {
         </span>
       </button>
       <button onClick={() => {
-   if(store.getState().action.value === 'writing') {
-    return;
-   }
+        if (store.getState().action.value === 'writing') {
+          return;
+        }
         dispatch(setSelectedElement(null));
         dispatch(redo())
       }} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>

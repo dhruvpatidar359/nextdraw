@@ -244,6 +244,10 @@ const Canvas = () => {
       if (ele != null) {
 
         // double click functionality for text edit
+
+
+        
+
         const msNow = (new Date()).getTime()
         if ((msNow - lastClick) < CLICK_INTERVAL) {
 
