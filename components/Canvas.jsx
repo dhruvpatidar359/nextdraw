@@ -10,7 +10,7 @@ import { move } from './Move/move';
 import { ShapeCache } from './Redux/ShapeCache';
 import { setAction } from './Redux/features/actionSlice';
 import { setCanvas } from './Redux/features/canvasSlice';
-import { setElement } from './Redux/features/elementSlice';
+import { setChanged, setDupState, setElement } from './Redux/features/elementSlice';
 import { setOldElement } from './Redux/features/oldSelectedElementSlice';
 import { setResizingDirection } from './Redux/features/resizeSlice';
 import { setSelectedElement } from './Redux/features/selectedElementSlice';
@@ -33,13 +33,13 @@ const Canvas = () => {
   const action = useSelector(state => state.action.value);
   const selectedElement = useSelector(state => state.selectedElement.value);
   const oldElement = useSelector(state => state.oldElement.value);
+  const changed = useSelector(state => state.elements.changed);
+  const dupState = useSelector(state => state.elements.dupState);
 
 
   // useState for local height and width of canvas
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
-  const [changed, setChanged] = useState(false);
-  const [dupState, setDupState] = useState(false);
   const [panOffset, setpanOffset] = useState({ x: 0, y: 0 });
   const [scaleOffset, setscaleOffset] = useState({ x: 0, y: 0 });
   const [scale, setscale] = useState(1);
@@ -153,19 +153,12 @@ const Canvas = () => {
     setscaleOffset({ x: scaleOffsetX, y: scaleOffsetY });
 
     ctx.save();
-
     ctx.translate(panOffset.x * scale - scaleOffsetX, panOffset.y * scale - scaleOffsetY);
-
-
-
     ctx.scale(scale, scale);
-
     renderer(ctx, elements, selectedElement, action);
-
     ctx.restore();
 
-
-
+    console.log(ShapeCache.cache);
 
   }, [elements, selectedElement, action, panOffset, scale]);
 
@@ -180,7 +173,7 @@ const Canvas = () => {
 
         onZoom(e.deltaY * -0.01);
       } else {
-        console.log(e.deltaX);
+
         setpanOffset(prevState => ({
           x: prevState.x - e.deltaX / 2,
           y: prevState.y - e.deltaY / 2
@@ -219,10 +212,6 @@ const Canvas = () => {
   }, [])
 
 
-
-
-
-
   const modifyClient = (event) => {
     event.clientX = (event.clientX - panOffset.x * scale + scaleOffset.x) / scale;
     event.clientY = (event.clientY - panOffset.y * scale + scaleOffset.y) / scale;
@@ -246,7 +235,7 @@ const Canvas = () => {
         // double click functionality for text edit
 
 
-        
+
 
         const msNow = (new Date()).getTime()
         if ((msNow - lastClick) < CLICK_INTERVAL) {
@@ -281,14 +270,16 @@ const Canvas = () => {
         if (dupState === true) {
           if (changed === true) {
             dispatch(setElement([elements]));
-            setChanged(false);
+            dispatch(setChanged(false));
+            // setChanged(false);
           } else {
             dispatch(setElement([elements, true]));
           }
         } else {
           dispatch(setElement([elements]));
-          setDupState(true);
-          setChanged(false);
+          dispatch(setDupState(true));
+          dispatch(setChanged(false));
+
         }
 
         const { id, x1, y1, x2, y2, type } = ele;
@@ -359,10 +350,12 @@ const Canvas = () => {
           dispatch(setElement([[...elements, newElement]]));
         } else {
           dispatch(setElement([[...elements, newElement], true]));
-          setChanged(true);
+
+          dispatch(setChanged(true));
+
         }
 
-        setDupState(false);
+        dispatch(setDupState(false));
       }
 
 
@@ -380,7 +373,9 @@ const Canvas = () => {
   };
 
   const handleMouseUp = (event) => {
+    // according to scale and traslation , we have to modify indexes
     modifyClient(event);
+
     if (action === 'writing') {
       return;
     }
@@ -439,7 +434,7 @@ const Canvas = () => {
 
         if (ShapeCache.cache.has(oldElement)) {
           ShapeCache.cache.delete(oldElement);
-          // console.log("ker deya delete move🔥");
+          console.log("ker deya delete move🔥");
         }
 
         const newElement = elements[selectedElement.id];
@@ -464,6 +459,7 @@ const Canvas = () => {
 
         const key = currentStateElement[newElement.id];
         const shape = getElementObject(key);
+
 
         ShapeCache.cache.set(key, shape);
 
@@ -527,13 +523,15 @@ const Canvas = () => {
       if (action === 'moving') {
 
         // used for chaching mechanisms
-        setChanged(true);
+
+        dispatch(setChanged(true));
+
         move(event, elements);
 
       } else if (action === 'resizing') {
 
         // used for chaching mechanisms
-        setChanged(true);
+        dispatch(setChanged(true));
         if (selectedElement.type === 'pencil') {
           resizeElement(event, elements);
         } else {

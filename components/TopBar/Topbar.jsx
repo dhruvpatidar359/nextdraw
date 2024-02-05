@@ -7,10 +7,12 @@ import { IoMove, IoText } from "react-icons/io5";
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { updateElement } from '../ElementManipulation/Element';
 import { setAction } from '../Redux/features/actionSlice';
-import { redo, setElement, undo } from '../Redux/features/elementSlice';
+import { redo, setChanged, setElement, undo } from '../Redux/features/elementSlice';
 import { setSelectedElement } from '../Redux/features/selectedElementSlice';
 import { changeTool } from '../Redux/features/toolSlice';
 import ButtonComponent from './ButtonComponent';
+import { ShapeCache } from '../Redux/ShapeCache';
+import { setOldElement } from '../Redux/features/oldSelectedElementSlice';
 
 const buttons = [
   { tooltip: 'Rectangle', icon: FaSquare, shortcut: '1', tool: 'rect' },
@@ -32,6 +34,7 @@ const Topbar = () => {
   const index = useSelector(state => state.elements.index);
   const elements = useSelector(state => state.elements.value[index], shallowEqual);
   const selectedElement = useSelector(state => state.selectedElement.value);
+  const changed = useSelector(state => state.elements.changed);
 
 
   const updateText = () => {
@@ -50,7 +53,7 @@ const Topbar = () => {
   // keyboard handler 
   useEffect(() => {
     const handler = (event) => {
-      console.log(event.key);
+  
       // when we are writing we should not listen to any changeTool
       if (action === 'writing') {
         return;
@@ -101,19 +104,50 @@ const Topbar = () => {
       } else if (event.key === 'Delete') {
 
         if (selectedElement != null) {
-          const elementsCopy = [...elements];
-          const updatedElements = elementsCopy
-            .filter((element) => element.id !== selectedElement.id)
-            .map((element, index) => {
-              return { ...element, id: index };
-            });
-          dispatch(setElement([updatedElements]));
+          let elementsCopy = [];
+          const id = selectedElement.id;
+
+
+          elements.forEach((element, index) => {
+           
+            if (index < id) {
+              elementsCopy.push(element);
+            } else if (index === id) {
+
+              const elementToDelete = elements[index];
+
+              if (ShapeCache.cache.has(elementToDelete)) {
+
+                ShapeCache.cache.delete(elementToDelete);
+              }
+            } else {
+
+              const newElement = { ...element, id: index - 1 };
+
+              console.log(newElement);
+              console.log(ShapeCache.cache.get(element));
+              ShapeCache.cache.set(newElement,ShapeCache.cache.get(element));
+
+              if (ShapeCache.cache.has(element)) {
+
+                ShapeCache.cache.delete(element);
+              }
+              elementsCopy.push(newElement);
+
+            }
+
+          });
+          if(!changed) {
+            dispatch(setElement([elementsCopy,true]));
+            dispatch(setChanged(true));
+          } else {
+            dispatch(setElement([elementsCopy]));
+           
+          }
+         
+      
+          dispatch(setSelectedElement(null));
         }
-
-
-
-        dispatch(setSelectedElement(null));
-
       }
 
 

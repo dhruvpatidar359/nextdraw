@@ -5,7 +5,9 @@ export const elementSlice = createSlice({
     name:'elements',
     initialState : {
         value : [[]],
-        index : 0
+        index : 0,
+        changed : false,
+        dupState : false
     },
 
     reducers : {
@@ -14,6 +16,15 @@ export const elementSlice = createSlice({
         setIndex :(state,action) => {
             state.index = state.index - 1;
         },
+
+        setChanged :(state,action) => {
+            state.changed = action.payload;
+        },
+
+        setDupState :(state,action) => {
+            state.dupState = action.payload;
+        },
+
         setElement :(state,action) => {
 
             const newState = action.payload[0];
@@ -85,5 +96,5 @@ export const elementSlice = createSlice({
 })
 
 
-export const {setElement,undo,redo,setIndex} = elementSlice.actions;
+export const {setElement,undo,redo,setIndex,setChanged,setDupState} = elementSlice.actions;
 export default elementSlice.reducer;

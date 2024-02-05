@@ -36,7 +36,8 @@ export const drawElements = (ctx, element, selectedElement) => {
     case "ellipse":
     case "diamond":
       if (ShapeCache.cache.has(element)) {
-        // console.log(`using cache ${element.id}`);
+        console.log(`using cache ${element.id}`);
+     
         roughCanvasRef.draw(ShapeCache.cache.get(element));
       } else {
 
@@ -47,7 +48,7 @@ export const drawElements = (ctx, element, selectedElement) => {
     case 'pencil':
       ctx.fillStyle = 'red';
       if (ShapeCache.cache.has(element)) {
-        // console.log(`pencil detected ${element.id}`);
+       
         ctx.fill(ShapeCache.cache.get(element));
       } else {
         ctx.fill(getElementObject(element));
@@ -91,6 +92,7 @@ export const renderer = (ctx, elements, selectedElement, action) => {
     if (action === 'writing' && selectedElement != null && selectedElement.id === element.id) {
       return;
     }
+
     drawElements(ctx, element, selectedElement);
 
   });
