@@ -1,7 +1,7 @@
 
 import store from '@/app/store';
 import { useEffect } from 'react';
-import { FaCircle, FaPencilAlt, FaRedo, FaSlash, FaSquare, FaUndo } from "react-icons/fa";
+import { FaCircle, FaImage, FaPencilAlt, FaRedo, FaSlash, FaSquare, FaUndo } from "react-icons/fa";
 import { FaDiamond } from "react-icons/fa6";
 import { IoMove, IoText } from "react-icons/io5";
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
@@ -53,7 +53,7 @@ const Topbar = () => {
   // keyboard handler 
   useEffect(() => {
     const handler = (event) => {
-  
+
       // when we are writing we should not listen to any changeTool
       if (action === 'writing') {
         return;
@@ -109,7 +109,7 @@ const Topbar = () => {
 
 
           elements.forEach((element, index) => {
-           
+
             if (index < id) {
               elementsCopy.push(element);
             } else if (index === id) {
@@ -126,7 +126,7 @@ const Topbar = () => {
 
               console.log(newElement);
               console.log(ShapeCache.cache.get(element));
-              ShapeCache.cache.set(newElement,ShapeCache.cache.get(element));
+              ShapeCache.cache.set(newElement, ShapeCache.cache.get(element));
 
               if (ShapeCache.cache.has(element)) {
 
@@ -137,15 +137,15 @@ const Topbar = () => {
             }
 
           });
-          if(!changed) {
-            dispatch(setElement([elementsCopy,true]));
+          if (!changed) {
+            dispatch(setElement([elementsCopy, true]));
             dispatch(setChanged(true));
           } else {
             dispatch(setElement([elementsCopy]));
-           
+
           }
-         
-      
+
+
           dispatch(setSelectedElement(null));
         }
       }
@@ -269,6 +269,37 @@ const Topbar = () => {
         <span className=""><FaRedo /></span>
         <span className="absolute bottom-0 right-0 text-white p-1 rounded">
           {'9'}
+        </span>
+      </button>
+
+      <button onClick={() => {
+
+
+
+        let canvas = document.getElementById("canvas");
+        var newCanvas = canvas.cloneNode(true);
+        var ctx = newCanvas.getContext('2d');
+        ctx.fillStyle = "#FFF";
+        ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+        ctx.drawImage(canvas, 0, 0);
+        let canvasUrl = newCanvas.toDataURL("image/jpeg");
+
+
+        // Create an anchor, and set the href value to our data URL
+        const createEl = document.createElement('a');
+        createEl.href = canvasUrl;
+
+        // This is the name of our downloaded file
+        createEl.download = "download-this-canvas";
+
+        // Click the download button, causing a download, and then remove it
+        createEl.click();
+        createEl.remove();
+
+      }} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
+        <span className=""><FaImage /></span>
+        <span className="absolute bottom-0 right-0 text-white p-1 rounded">
+          {'10'}
         </span>
       </button>
     </div>
