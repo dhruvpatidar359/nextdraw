@@ -1,16 +1,21 @@
 "use client"
+import { useSelector } from 'react-redux';
 import Canvas from './Canvas';
 import Topbar from './TopBar/Topbar';
+import CircularToolBar from './TopBar/CircularToolBar/CircularToolBar';
 
 
 const app = () => {
 
- 
+  const toolWheel = useSelector(state => state.tool.toolWheel);
   return (
     <div>
 
       <Topbar></Topbar>
-      <Canvas ></Canvas></div>
+      <Canvas ></Canvas>
+
+      {toolWheel ? <CircularToolBar /> : null}
+    </div>
   )
 }
 

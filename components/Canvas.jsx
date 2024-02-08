@@ -14,9 +14,10 @@ import { setChanged, setDupState, setElement } from './Redux/features/elementSli
 import { setOldElement } from './Redux/features/oldSelectedElementSlice';
 import { setResizingDirection } from './Redux/features/resizeSlice';
 import { setSelectedElement } from './Redux/features/selectedElementSlice';
-import { changeTool } from './Redux/features/toolSlice';
+import { changeTool, changeToolWheel } from './Redux/features/toolSlice';
 import { resizeElement } from './Resize/resize';
 import { getminMax } from '@/utils/common';
+import CircularToolBar from './TopBar/CircularToolBar/CircularToolBar';
 
 
 
@@ -35,6 +36,7 @@ const Canvas = () => {
   const oldElement = useSelector(state => state.oldElement.value);
   const changed = useSelector(state => state.elements.changed);
   const dupState = useSelector(state => state.elements.dupState);
+  const toolWheel = useSelector(state => state.tool.toolWheel);
 
 
   // useState for local height and width of canvas
@@ -104,6 +106,9 @@ const Canvas = () => {
 
     }
   }, [tool])
+
+
+
 
 
 
@@ -219,6 +224,12 @@ const Canvas = () => {
   }
 
   const handleMouseDown = (event) => {
+
+    if (event.button == 1) {
+      dispatch(changeToolWheel(true));
+      return;
+    }
+
     modifyClient(event);
     if (action === 'writing') {
       return;
@@ -374,6 +385,7 @@ const Canvas = () => {
 
   const handleMouseUp = (event) => {
     // according to scale and traslation , we have to modify indexes
+    
     modifyClient(event);
 
     if (action === 'writing') {
@@ -510,6 +522,7 @@ const Canvas = () => {
     dispatch(setAction("none"));
     dispatch(setResizingDirection(null));
 
+
   }
 
 
@@ -584,6 +597,10 @@ const Canvas = () => {
 
   return (
     <div>
+
+
+
+
       {(action === 'writing' && tool === 'text' && selectedElement != null) ?
         (<textarea id='textarea' ref={textAreaRef} onInput={handleInput} onBlur={handleBlur} style={{
           position: "fixed", top: (selectedElement.y1 + panOffset.y) * scale - scaleOffset.y,

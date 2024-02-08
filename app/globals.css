@@ -56,3 +56,187 @@ html, body {
 
 
 
+
+#app-info {
+  margin: auto;
+  padding: 1em;
+  text-align: center;
+}
+
+#current-weapon {
+  margin: auto;
+  padding: 1em;
+  border-radius: 15px;
+  display: flex;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#current-weapon h3 {
+  letter-spacing: 1px;
+  font-weight: 400;
+}
+
+#current-weapon-info {
+  text-align: center;
+  border: 3px solid white;
+  background: rgba(255, 255, 255, 0.5);
+  margin: 1em;
+  letter-spacing: 5px;
+  padding: 1em 1.5em;
+  border-radius: 15px;
+}
+
+#current-weapon-name {
+  color: black;
+}
+
+#current-weapon-image {
+  width: 200px;
+  margin: 15px 0;
+}
+
+#weapon-selector-button {
+  padding: 1em 2em;
+  margin: 1em;
+  border: none;
+  border-radius: 15px;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  background: white;
+  letter-spacing: 2px;
+  color: black;
+  transition: all 0.2s ease-in-out;
+}
+
+#weapon-selector-button:hover {
+  background: black;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 3px rgba(255, 255, 255, 0.5);
+}
+
+#weapon-selector-wrapper {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: background-color 0.5s ease-in-out;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#weapon-selector-wrapper.active {
+  visibility: visible;
+  background-color: rgba(5, 21, 255, 0.2);
+  opacity: 1;
+}
+
+#weapon-properties {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150px;
+  margin: 1em;
+  padding: 0.5em;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+#weapon-properties h4 {
+  font-weight: 400;
+  margin: 0;
+}
+
+.bar {
+  height: 10px;
+  width: 100%;
+  margin: 5px 0;
+  position: relative;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.value-bar {
+  background: rgba(255, 255, 255, 1);
+  height: 10px;
+  transition: all 0.5s ease-in-out;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#damage {
+  width: 0;
+}
+
+#fire-rate {
+  width: 0;
+}
+
+#accuracy {
+  width: 0;
+}
+
+#range {
+  width: 0;
+}
+
+svg {
+  transform: rotate(22deg);
+}
+
+svg>text {
+  font-weight: 700;
+  font-size: 1.5em;
+  stroke: black;
+}
+
+svg text,
+svg g text,
+svg g image {
+  transform: rotate(-22deg);
+}
+
+g path {
+  stroke: rgba(0, 0, 0, 0.3);
+  stroke-width: 5px;
+  stroke-dasharray: 235.5 440;
+  transform-origin: center center;
+  transform: scale(0.98);
+  transform-box: fill-box;
+}
+
+g text {
+  font-weight: 700;
+  stroke: black;
+}
+
+g.active-weapon path {
+  stroke: rgba(82, 149, 177, 1);
+  stroke-width: 10px;
+  stroke-dasharray: 235.5 440;
+}
+
+g:hover {
+  cursor: pointer;
+}
+
+g:hover path {
+  fill: white;
+  transition: all 0.2s ease-in-out;
+  stroke-width: 0;
+}
+
+#hovered-weapon-name {
+  fill: white;
+}

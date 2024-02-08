@@ -36,7 +36,7 @@ export function addElement(id, x1, y1, x2, y2, type) {
 
 export const getElementObject = (element) => {
 
-  const { x1, y1, x2, y2, type, points } = element;
+  const { x1, y1, x2, y2, type } = element;
 
   const roughCanvasRef = store.getState().canvas.value;
   const root = roughCanvasRef.generator;
