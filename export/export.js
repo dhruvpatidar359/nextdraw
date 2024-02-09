@@ -36,7 +36,7 @@ export const exportImage = () => {
 
 
     ctx.fillStyle = "#FFF";
-    ctx.fillRect(0, 0, width, height);
+    // ctx.fillRect(0, 0, width, height);
 
     let rC = rough.canvas(newCanvas);
 
