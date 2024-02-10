@@ -5,7 +5,7 @@ import { FaCircle, FaImage, FaPencilAlt, FaRedo, FaSlash, FaSquare, FaUndo } fro
 import { FaDiamond } from "react-icons/fa6";
 import { IoMove, IoText } from "react-icons/io5";
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { updateElement } from '../ElementManipulation/Element';
+import { getElementObject, updateElement } from '../ElementManipulation/Element';
 import { setAction } from '../Redux/features/actionSlice';
 import { redo, setChanged, setElement, undo } from '../Redux/features/elementSlice';
 import { setSelectedElement } from '../Redux/features/selectedElementSlice';
@@ -13,6 +13,10 @@ import { changeTool } from '../Redux/features/toolSlice';
 import ButtonComponent from './ButtonComponent';
 import { ShapeCache } from '../Redux/ShapeCache';
 import { setOldElement } from '../Redux/features/oldSelectedElementSlice';
+import { forEach } from 'lodash';
+import { RoughCanvas } from 'roughjs/bin/canvas';
+
+import { exportImage } from '@/export/export';
 
 const buttons = [
   { tooltip: 'Rectangle', icon: FaSquare, shortcut: '1', tool: 'rect' },
@@ -35,6 +39,7 @@ const Topbar = () => {
   const elements = useSelector(state => state.elements.value[index], shallowEqual);
   const selectedElement = useSelector(state => state.selectedElement.value);
   const changed = useSelector(state => state.elements.changed);
+  const toolWheel = useSelector(state => state.tool.toolWheel);
 
 
   const updateText = () => {
@@ -161,71 +166,7 @@ const Topbar = () => {
   });
 
 
-  // mouse wheel handler 
-  // useEffect(() => {
-  //   const handleWheel = (event) => {
 
-
-
-  //     let currentTool;
-  //     console.log(event.deltaY);
-  //     if (event.deltaY > 0) {
-  //       currentTool = (toolIndex + 1) % (buttons.length + 1);
-  //     } else {
-  //       currentTool = (toolIndex - 1) === 0 ? buttons.length : toolIndex - 1;
-  //     }
-
-
-  //     currentTool = currentTool === 0 ? 1 : currentTool;
-
-
-  //     if(store.getState().action.value === 'writing') {
-  //      const textArea =  document.getElementById('textarea').value
-
-  //      const {id,x1,y1,type,x2,y2} = store.getState().selectedElement.value;
-
-  //       updateElement(id,x1,y1,x2,y2,type,{text : textArea});
-  //       dispatch(setAction("none"));
-  //       dispatch(setSelectedElement(null));
-  //     }
-
-
-  //     switch (currentTool) {
-  //       case 1:
-  //         dispatch(changeTool("rect"));
-  //         break;
-  //       case 2:
-  //         dispatch(changeTool("line"));
-  //         break;
-  //       case 3:
-  //         dispatch(changeTool("selection"));
-  //         break;
-  //       case 4:
-  //         dispatch(changeTool("pencil"));
-  //         break;
-  //       case 5:
-  //         dispatch(changeTool("ellipse"));
-  //         break;
-  //       case 6:
-  //         dispatch(changeTool("diamond"));
-  //         break;
-
-  //       case 7:
-  //         dispatch(changeTool("text"));
-  //         break;
-
-  //       default:
-  //         break;
-  //     }
-  //   };
-
-  //   document.addEventListener('wheel', handleWheel);
-
-  //   // Cleanup the event listener on component unmount
-  //   return () => {
-  //     document.removeEventListener('wheel', handleWheel);
-  //   };
-  // }, [toolIndex]);
 
 
 
@@ -274,27 +215,7 @@ const Topbar = () => {
 
       <button onClick={() => {
 
-
-
-        let canvas = document.getElementById("canvas");
-        var newCanvas = canvas.cloneNode(true);
-        var ctx = newCanvas.getContext('2d');
-        ctx.fillStyle = "#FFF";
-        ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
-        ctx.drawImage(canvas, 0, 0);
-        let canvasUrl = newCanvas.toDataURL("image/jpeg");
-
-
-        // Create an anchor, and set the href value to our data URL
-        const createEl = document.createElement('a');
-        createEl.href = canvasUrl;
-
-        // This is the name of our downloaded file
-        createEl.download = "download-this-canvas";
-
-        // Click the download button, causing a download, and then remove it
-        createEl.click();
-        createEl.remove();
+        exportImage();
 
       }} className={`rounded-md p-4 m-2   bg-[#9c83ee] border-2 text-[#200E3A] relative `}>
         <span className=""><FaImage /></span>

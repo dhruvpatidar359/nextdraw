@@ -4,7 +4,8 @@ export const toolSlice = createSlice({
     name: 'tool',
     initialState: {
         value: 'selection',
-        index: 3
+        index: 3,
+        toolWheel : false
     },
 
     reducers: {
@@ -38,11 +39,14 @@ export const toolSlice = createSlice({
                     state.index = 7;
                     break;
             }
+        },
+        changeToolWheel : (state,action) => {
+            state.toolWheel = action.payload;
         }
 
     }
 })
 
 
-export const { changeTool, changeIndex } = toolSlice.actions;
+export const { changeTool, changeIndex ,changeToolWheel} = toolSlice.actions;
 export default toolSlice.reducer;

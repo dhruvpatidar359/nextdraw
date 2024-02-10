@@ -1,0 +1,36 @@
+.svg {
+  transform: rotate(22deg);
+
+}
+
+.svg text,
+.svg g text,
+.svg g image {
+  transform: rotate(-22deg);
+}
+
+.g {
+  transform: scale(0.7);
+  /* Adjust the scale as needed */
+
+}
+
+.g path {
+
+  stroke-width: 5px;
+  stroke-dasharray: 235.5 440;
+  transform-origin: center center;
+  transform: scale(0.98);
+  transform-box: fill-box;
+}
+
+.g:hover {
+  cursor: pointer;
+}
+
+.g:hover path {
+  fill: #FFCF96;
+  transition: all 0.2s ease-in-out;
+  stroke-width: 0;
+}
+

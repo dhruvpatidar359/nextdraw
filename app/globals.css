@@ -17,23 +17,21 @@
 }
 
 body {
-  
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
 
-   
-    -webkit-user-select: none;
-    -ms-user-select: none; 
-    user-select: none;   
-    user-zoom: fixed;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+
+
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-zoom: fixed;
 }
 
-html, body {
+html,
+body {
   overscroll-behavior-x: none;
   user-zoom: fixed;
 }
@@ -43,8 +41,8 @@ html, body {
 
 @font-face {
   font-family: 'Virgil';
- 
- src: local('Virgil'), url(../public/fonts/Virgil.woff2) format('woff2');
+
+  src: local('Virgil'), url(../public/fonts/Virgil.woff2) format('woff2');
   font-weight: normal;
   font-style: normal;
 }
@@ -56,3 +54,31 @@ html, body {
 
 
 
+
+
+
+
+
+
+
+
+#weapon-selector-wrapper {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: background-color 0.5s ease-in-out;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#weapon-selector-wrapper.active {
+  visibility: visible;
+  background-color: rgba(29, 28, 31, 0.931);
+  opacity: 1;
+}
