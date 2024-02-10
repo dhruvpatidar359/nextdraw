@@ -7,8 +7,14 @@ import rough from 'roughjs/bundled/rough.esm';
 export const exportImage = () => {
 
 
+
+
     const index = store.getState().elements.index;
     const elements = store.getState().elements.value[index];
+
+    if(elements.length == 0) {
+        return;
+    }
 
     let newCanvas = document.createElement("canvas");
     let ctx = newCanvas.getContext('2d');

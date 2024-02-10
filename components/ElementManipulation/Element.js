@@ -22,8 +22,8 @@ export function addElement(id, x1, y1, x2, y2, type) {
       return { id, type, points: [{ x: x1, y: y1 }] };
 
     case "text":
-    
-      return {id,type,x1,y1,x2  ,y2,text : ""};  
+
+      return { id, type, x1, y1, x2, y2, text: "" };
 
     default:
 
@@ -54,7 +54,7 @@ export const getElementObject = (element) => {
 
 
     case 'line':
-      elementObject = root.line(x1, y1, x2, y2, { seed: 12 });
+      elementObject = root.line(x1, y1, x2, y2, { seed: 12, strokeWidth  : 5});
       break;
 
     case 'pencil':
@@ -77,16 +77,16 @@ export const getElementObject = (element) => {
       break;
 
 
-    case "diamond" :
+    case "diamond":
 
-    const top = [x1 + (x2-x1) / 2,y1];
-    const left = [x1 , y1 + (y2-y1) / 2];
-    const bottom = [x1 + (x2-x1) / 2,y2];
-    const right = [x2 , y1 + (y2-y1) / 2];
+      const top = [x1 + (x2 - x1) / 2, y1];
+      const left = [x1, y1 + (y2 - y1) / 2];
+      const bottom = [x1 + (x2 - x1) / 2, y2];
+      const right = [x2, y1 + (y2 - y1) / 2];
 
-    elementObject = root.polygon([top,left,bottom,right],{seed : 17});
-        
-      break;  
+      elementObject = root.polygon([top, left, bottom, right], { seed: 17, fill: 'grey', fillStyle: "solid" });
+
+      break;
     default:
       elementObject = root.line(x1, y1, x2, y2, { seed: 6 });
       break;
@@ -191,7 +191,7 @@ export const getElementBelow = (event, selectedElement) => {
 
 
 // updates the old element with new one having new props or any change
-export const updateElement = (id, x1, y1, x2, y2, type,options) => {
+export const updateElement = (id, x1, y1, x2, y2, type, options) => {
 
   const histIndex = store.getState().elements.index;
   const elements = store.getState().elements.value[histIndex];
@@ -220,36 +220,36 @@ export const updateElement = (id, x1, y1, x2, y2, type,options) => {
       break;
 
 
-      case "text":
+    case "text":
 
-       const context = document.getElementById("canvas").getContext('2d');
-        context.font = '24px Virgil';
-        let textWidth = x1 ;
-        let textHeight = y1;
+      const context = document.getElementById("canvas").getContext('2d');
+      context.font = '24px Virgil';
+      let textWidth = x1;
+      let textHeight = y1;
 
-        var txt = options.text;
-        var lines = txt.split('\n');
-        var linesLength = lines.length;
+      var txt = options.text;
+      var lines = txt.split('\n');
+      var linesLength = lines.length;
 
-        var textWidthVar = 0;
-        for( let i = 0 ; i < linesLength ;i++) {
-          const line = lines[i];
-          textWidthVar = Math.max(textWidthVar, context.measureText(line).width)
-        } 
+      var textWidthVar = 0;
+      for (let i = 0; i < linesLength; i++) {
+        const line = lines[i];
+        textWidthVar = Math.max(textWidthVar, context.measureText(line).width)
+      }
 
-        
-        textWidth += textWidthVar;
-        textHeight = textHeight +  (linesLength) * 30;
 
-        if(store.getState().action.value === 'resizing') {
-          tempNewArray[id] = {...addElement(id,x1,y2,x2,textHeight,type),text : options.text}
-        } else {
-          tempNewArray[id] = {...addElement(id,x1,y1,textWidth,textHeight,type),text : options.text}
-        }
+      textWidth += textWidthVar;
+      textHeight = textHeight + (linesLength) * 30;
 
-       
-       
-        break;
+      if (store.getState().action.value === 'resizing') {
+        tempNewArray[id] = { ...addElement(id, x1, y2, x2, textHeight, type), text: options.text }
+      } else {
+        tempNewArray[id] = { ...addElement(id, x1, y1, textWidth, textHeight, type), text: options.text }
+      }
+
+
+
+      break;
 
     default:
       break;
