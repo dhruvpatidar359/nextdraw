@@ -1,10 +1,11 @@
 
 'use client';
 
-import App from '@/components/App';
+
 
 import { Provider, useSelector } from 'react-redux';
 import store from './store';
+import App from '@/components/app';
 
 
 
