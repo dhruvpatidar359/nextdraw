@@ -5,7 +5,7 @@ import Topbar from './TopBar/Topbar';
 import CircularToolBar from './TopBar/CircularToolBar/CircularToolBar';
 
 
-const app = () => {
+const App = () => {
 
   const toolWheel = useSelector(state => state.tool.toolWheel);
   return (
@@ -19,4 +19,4 @@ const app = () => {
   )
 }
 
-export default app
+export default App
