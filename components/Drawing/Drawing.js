@@ -32,7 +32,7 @@ export const drawElements = (ctx, element) => {
   // roughCanvasRef.path('M 10 315 L 110 215 A 30 50 0 0 1 162.55 162.45 L 172.55 152.45 A 30 50 -45 0 1 215.1 109.9 L 315 10', { fill: 'green',seed:10 });
   switch (element.type) {
     case "line":
-    case "rect":
+    case "rectangle":
     case "ellipse":
     case "diamond":
       if (ShapeCache.cache.has(element)) {
@@ -77,7 +77,7 @@ export const drawElements = (ctx, element) => {
 }
 
 
-export const renderer = (ctx, elements, selectedElement, action) => {
+export const renderer = (ctx, elements, selectedElement, action,scale) => {
 
   let boundedElement = null;
 
@@ -96,6 +96,6 @@ export const renderer = (ctx, elements, selectedElement, action) => {
 
 
 
-  drawBounds(ctx, boundedElement, action);
+  drawBounds(ctx, boundedElement, action,scale);
 
 }

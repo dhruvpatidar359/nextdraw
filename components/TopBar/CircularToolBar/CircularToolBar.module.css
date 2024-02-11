@@ -11,7 +11,7 @@
 
 .g {
   transform: scale(0.7);
-  /* Adjust the scale as needed */
+
 
 }
 
@@ -30,7 +30,7 @@
 
 .g:hover path {
   fill: #FFCF96;
+
   transition: all 0.2s ease-in-out;
   stroke-width: 0;
 }
-

@@ -13,7 +13,7 @@ export const toolSlice = createSlice({
             state.value = action.payload;
 
             switch (action.payload) {
-                case "rect":
+                case "rectangle":
                     state.index = 1;
                     break;
                 case 'line':

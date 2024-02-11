@@ -9,7 +9,7 @@ import { setSelectedElement } from "../Redux/features/selectedElementSlice";
 export function addElement(id, x1, y1, x2, y2, type) {
 
   switch (type) {
-    case 'rect':
+    case 'rectangle':
     case "ellipse":
     case 'line':
     case 'diamond':
@@ -44,7 +44,7 @@ export const getElementObject = (element) => {
   let elementObject;
 
   switch (type) {
-    case 'rect':
+    case 'rectangle':
       elementObject = root.rectangle(x1,
         y1,
         x2 - x1,
@@ -54,7 +54,7 @@ export const getElementObject = (element) => {
 
 
     case 'line':
-      elementObject = root.line(x1, y1, x2, y2, { seed: 12, strokeWidth  : 5});
+      elementObject = root.line(x1, y1, x2, y2, { seed: 12, strokeWidth: 5 });
       break;
 
     case 'pencil':
@@ -72,7 +72,7 @@ export const getElementObject = (element) => {
       elementObject = root.ellipse(centerX,
         centerY,
         x2 - x1,
-        y2 - y1, { seed: 11, strokeWidth: 3, fillStyle: 'solid', fill: 'grey' }
+        (y2 - y1) / 1.1, { seed: 11, strokeWidth: 3, fillStyle: 'solid', fill: 'grey' }
       );
       break;
 
@@ -96,7 +96,7 @@ export const getElementObject = (element) => {
 
 }
 
-export const getElementBelow = (event, selectedElement) => {
+export const getElementBelow = (event, selectedElement, scale) => {
   const histIndex = store.getState().elements.index;
   const elements = store.getState().elements.value[histIndex];
 
@@ -122,6 +122,7 @@ export const getElementBelow = (event, selectedElement) => {
       const maxY = Math.max(y1, y2);
 
       if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
+
         return elements[selectedElement.id];
       }
 
@@ -131,11 +132,11 @@ export const getElementBelow = (event, selectedElement) => {
 
     switch (type) {
       case "ellipse":
-      case "rect":
+      case "rectangle":
       case "diamond":
       case "text":
 
-        if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
+        if (event.clientX > minX - 15 / scale && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
           found = true;
         }
         break;
@@ -200,7 +201,7 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
 
   switch (type) {
     case "line":
-    case "rect":
+    case "rectangle":
     case "ellipse":
     case "diamond":
 
@@ -266,7 +267,7 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
 
 export const adjustElementCoordinates = element => {
   const { id, type, x1, y1, x2, y2 } = element;
-  if (type === "rect" || type === 'ellipse' || type === 'diamond') {
+  if (type === "rectangle" || type === 'ellipse' || type === 'diamond') {
     const minX = Math.min(x1, x2);
     const maxX = Math.max(x1, x2);
     const minY = Math.min(y1, y2);

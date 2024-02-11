@@ -12,7 +12,7 @@ export const exportImage = () => {
     const index = store.getState().elements.index;
     const elements = store.getState().elements.value[index];
 
-    if(elements.length == 0) {
+    if (elements.length == 0) {
         return;
     }
 
@@ -25,11 +25,13 @@ export const exportImage = () => {
         y2 = elements[0].y2;
 
     elements.forEach(element => {
-        x1 = Math.min(x1, element.x1);
-        x2 = Math.max(x2, element.x2);
-        y1 = Math.min(y1, element.y1);
-        y2 = Math.max(y2, element.y2);
+        x1 = Math.min(x1, element.x1,element.x2);
+        x2 = Math.max(x2, element.x2,element.x1);
+        y1 = Math.min(y1, element.y1,element.y2);
+        y2 = Math.max(y2, element.y2,element.y1);
     });
+
+    
 
     let width = x2 - x1 + 20;
     let height = y2 - y1 + 20;
@@ -42,7 +44,7 @@ export const exportImage = () => {
 
 
     ctx.fillStyle = "#FFF";
-    // ctx.fillRect(0, 0, width, height);
+    ctx.fillRect(0, 0, width, height);
 
     let rC = rough.canvas(newCanvas);
 
@@ -52,7 +54,7 @@ export const exportImage = () => {
     elements.forEach(element => {
 
         switch (element.type) {
-            case "rect":
+            case "rectangle":
             case "line":
             case "diamond":
             case "ellipse":

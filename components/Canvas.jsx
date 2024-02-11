@@ -18,6 +18,8 @@ import { changeTool, changeToolWheel } from './Redux/features/toolSlice';
 import { resizeElement } from './Resize/resize';
 import { getminMax } from '@/utils/common';
 import CircularToolBar from './TopBar/CircularToolBar/CircularToolBar';
+import { Button } from './ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 
 
@@ -36,7 +38,7 @@ const Canvas = () => {
   const oldElement = useSelector(state => state.oldElement.value);
   const changed = useSelector(state => state.elements.changed);
   const dupState = useSelector(state => state.elements.dupState);
-  const toolWheel = useSelector(state => state.tool.toolWheel);
+  // const toolWheel = useSelector(state => state.tool.toolWheel);
 
 
   // useState for local height and width of canvas
@@ -84,7 +86,7 @@ const Canvas = () => {
 
   useEffect(() => {
 
-    if (tool === 'rect' ||
+    if (tool === 'rectangle' ||
       tool === 'line' ||
       tool === 'pencil' ||
       tool === 'ellipse' ||
@@ -160,7 +162,7 @@ const Canvas = () => {
     ctx.save();
     ctx.translate(panOffset.x * scale - scaleOffsetX, panOffset.y * scale - scaleOffsetY);
     ctx.scale(scale, scale);
-    renderer(ctx, elements, selectedElement, action);
+    renderer(ctx, elements, selectedElement, action, scale);
     ctx.restore();
 
     console.log(ShapeCache.cache);
@@ -238,13 +240,10 @@ const Canvas = () => {
     if (tool === "selection") {
 
 
-      const ele = getElementBelow(event, selectedElement);
+      const ele = getElementBelow(event, selectedElement, scale);
 
 
       if (ele != null) {
-
-        // double click functionality for text edit
-
 
 
 
@@ -385,7 +384,7 @@ const Canvas = () => {
 
   const handleMouseUp = (event) => {
     // according to scale and traslation , we have to modify indexes
-    
+
     modifyClient(event);
 
     if (action === 'writing') {
@@ -531,7 +530,7 @@ const Canvas = () => {
     modifyClient(event);
     if (tool === 'selection') {
 
-      mouseCursorChange(event, elements, selectedElement);
+      mouseCursorChange(event, elements, selectedElement, scale);
 
       if (action === 'moving') {
 
@@ -597,6 +596,20 @@ const Canvas = () => {
 
   return (
     <div>
+
+      <div className="fixed bottom-2 left-2 flex flex-row items-center">
+        <Button onClick={() => setscale(scale - 0.1)} variant="outline" size="icon" className="h-8 w-8">
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <div className="mx-2 bg-slate-300 rounded-md"> {/* Added margin on both sides */}
+          <Button onClick={() => setscale(1)} variant="ghost" className="h-8 w-16 text-center"> {/* Adjusted width */}
+            {`${(scale * 100).toFixed(1)}%`}
+          </Button>
+        </div>
+        <Button onClick={() => setscale(scale + 0.1)} variant="outline" size="icon" className="h-8 w-8">
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
 
 
 
