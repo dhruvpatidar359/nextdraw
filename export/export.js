@@ -25,13 +25,13 @@ export const exportImage = () => {
         y2 = elements[0].y2;
 
     elements.forEach(element => {
-        x1 = Math.min(x1, element.x1,element.x2);
-        x2 = Math.max(x2, element.x2,element.x1);
-        y1 = Math.min(y1, element.y1,element.y2);
-        y2 = Math.max(y2, element.y2,element.y1);
+        x1 = Math.min(x1, element.x1, element.x2);
+        x2 = Math.max(x2, element.x2, element.x1);
+        y1 = Math.min(y1, element.y1, element.y2);
+        y2 = Math.max(y2, element.y2, element.y1);
     });
 
-    
+
 
     let width = x2 - x1 + 20;
     let height = y2 - y1 + 20;
@@ -105,7 +105,7 @@ export const exportImage = () => {
     createEl.href = canvasUrl;
 
     // This is the name of our downloaded file
-    createEl.download = "download-this-canvas";
+    createEl.download = "Art";
 
     // Click the download button, causing a download, and then remove it
     createEl.click();

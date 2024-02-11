@@ -10,7 +10,7 @@ import { move } from './Move/move';
 import { ShapeCache } from './Redux/ShapeCache';
 import { setAction } from './Redux/features/actionSlice';
 import { setCanvas } from './Redux/features/canvasSlice';
-import { setChanged, setDupState, setElement } from './Redux/features/elementSlice';
+import { redo, setChanged, setDupState, setElement, undo } from './Redux/features/elementSlice';
 import { setOldElement } from './Redux/features/oldSelectedElementSlice';
 import { setResizingDirection } from './Redux/features/resizeSlice';
 import { setSelectedElement } from './Redux/features/selectedElementSlice';
@@ -19,7 +19,14 @@ import { resizeElement } from './Resize/resize';
 import { getminMax } from '@/utils/common';
 import CircularToolBar from './TopBar/CircularToolBar/CircularToolBar';
 import { Button } from './ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Redo, Undo } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 
 
 
@@ -598,17 +605,98 @@ const Canvas = () => {
     <div>
 
       <div className="fixed bottom-2 left-2 flex flex-row items-center">
-        <Button onClick={() => setscale(scale - 0.1)} variant="outline" size="icon" className="h-8 w-8">
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <div className="mx-2 bg-slate-300 rounded-md"> {/* Added margin on both sides */}
-          <Button onClick={() => setscale(1)} variant="ghost" className="h-8 w-16 text-center"> {/* Adjusted width */}
-            {`${(scale * 100).toFixed(1)}%`}
-          </Button>
+
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={() => setscale(scale - 0.1)} variant="outline" size="icon" className="h-8 w-8" >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Zoom Out</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+
+        <div className="mx-2 bg-[#F6FDC3] rounded-md"> {/* Added margin on both sides */}
+
+          <TooltipProvider delayDuration={100}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button onClick={() => setscale(1)} variant="ghost" className="h-8 w-16 text-center"> {/* Adjusted width */}
+                  {`${(scale * 100).toFixed(1)}%`}
+                </Button>
+
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Reset Zoom</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+
         </div>
-        <Button onClick={() => setscale(scale + 0.1)} variant="outline" size="icon" className="h-8 w-8">
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={() => setscale(scale + 0.1)} variant="outline" size="icon" className="h-8 w-8">
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Zoom In</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <span className='p-2'></span>
+
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={() => {
+
+                if (store.getState().action.value === 'writing') {
+                  return;
+                }
+                dispatch(setSelectedElement(null));
+                dispatch(undo());
+
+              }} variant="outline" size="icon" className="h-8 w-8 m-2">
+                <Undo className="h-4 w-4 " />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Undo</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={() => {
+                if (store.getState().action.value === 'writing') {
+                  return;
+                }
+                dispatch(setSelectedElement(null));
+                dispatch(redo());
+              }} variant="outline" size="icon" className="h-8 w-8">
+                <Redo className="h-4 w-4" />
+              </Button>
+
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Redo</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+
       </div>
 
 
