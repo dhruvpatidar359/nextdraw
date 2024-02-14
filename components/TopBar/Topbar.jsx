@@ -1,6 +1,6 @@
 
 import store from '@/app/store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FaCircle, FaImage, FaPencilAlt, FaRedo, FaSlash, FaSquare, FaUndo } from "react-icons/fa";
 import { FaDiamond } from "react-icons/fa6";
 import { IoMove, IoText } from "react-icons/io5";
@@ -13,17 +13,23 @@ import { changeTool } from '../Redux/features/toolSlice';
 import ButtonComponent from './ButtonComponent';
 import { ShapeCache } from '../Redux/ShapeCache';
 import { Button } from "@/components/ui/button"
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { exportImage } from '@/export/export';
+import ExportDialog from '@/export/ExportDialog';
 
 const buttons = [
-  { tooltip: 'Rectangle', icon: "./square.svg", shortcut: '1', tool: 'rectangle' },
-  { tooltip: 'Line', icon: "./line.svg", shortcut: '2', tool: 'line' },
-  { tooltip: 'Selection', icon: "./move.svg", shortcut: '3', tool: 'selection' },
-  { tooltip: 'Pencil', icon: "./pencil.svg", shortcut: '4', tool: 'pencil' },
-  { tooltip: 'Ellipse', icon: "./circle.svg", shortcut: '5', tool: 'ellipse' },
-  { tooltip: 'Diamond', icon: "./diamond.svg", shortcut: '6', tool: 'diamond' },
-  { tooltip: 'Text', icon: "./text.svg", shortcut: '7', tool: 'text' },
+  { tooltip: 'Rectangle', icon: "./square.svg", shortcut: 'Rectangle - 1', tool: 'rectangle' },
+  { tooltip: 'Line', icon: "./line.svg", shortcut: 'Line - 2', tool: 'line' },
+  { tooltip: 'Selection', icon: "./move.svg", shortcut: 'Selection - 3', tool: 'selection' },
+  { tooltip: 'Pencil', icon: "./pencil.svg", shortcut: 'Pencil - 4', tool: 'pencil' },
+  { tooltip: 'Ellipse', icon: "./circle.svg", shortcut: 'Ellipse - 5', tool: 'ellipse' },
+  { tooltip: 'Diamond', icon: "./diamond.svg", shortcut: 'Diamond - 6', tool: 'diamond' },
+  { tooltip: 'Text', icon: "./text.svg", shortcut: 'Text - 7', tool: 'text' },
 
 
 ];
@@ -38,6 +44,9 @@ const Topbar = () => {
   const selectedElement = useSelector(state => state.selectedElement.value);
   const changed = useSelector(state => state.elements.changed);
   const toolWheel = useSelector(state => state.tool.toolWheel);
+  const [open, changeOpen] = useState(false);
+
+
 
 
   const updateText = () => {
@@ -172,7 +181,8 @@ const Topbar = () => {
 
 
   return (
-    <div className='flex flex-row absolute left-1/2 transform -translate-x-1/2 rounded-md bg-white border-2 m-2'>
+
+    <div className='flex flex-row absolute left-1/2 transform -translate-x-1/2 rounded bg-white border-2 my-2'>
 
       {buttons.map((button, index) =>
 
@@ -186,39 +196,30 @@ const Topbar = () => {
 
       )}
 
-      {/* <Button onClick={() => {
-        if (store.getState().action.value === 'writing') {
-          return;
-        }
-        dispatch(setSelectedElement(null));
-        dispatch(undo());
-      }} className={`rounded-md p-4 m-2   bg-[#F6FDC3] border-2 text-[#200E3A] relative `}>
-        <span className=""><FaUndo /></span>
-        <span className="absolute bottom-0 right-0 text-white p-1 rounded">
-          {'8'}
-        </span>
-      </Button>
-      <Button onClick={() => {
-        if (store.getState().action.value === 'writing') {
-          return;
-        }
-        dispatch(setSelectedElement(null));
-        dispatch(redo())
-      }} className={`rounded-md p-4 m-2   bg-[#F6FDC3] border-2 text-[#200E3A] relative `}>
-        <span className=""><FaRedo /></span>
-        <span className="absolute bottom-0 right-0 text-white p-1 rounded">
-          {'9'}
-        </span>
-      </Button> */}
+     
 
-      <Button onClick={() => {
 
-        exportImage();
-
-      }} className={`rounded-md py-5 px-4 m-2  bg-[#F6FDC3] border-2 text-[#200E3A] relative hover:bg-['#F6FDC3'] `}>
+      <TooltipProvider delayDuration={100}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+        <Button onClick={() => {
+        changeOpen(true);
+      }} style={{ width: '50px', height: '45px' }} className={`rounded py-2 px-2 m-2  bg-[#F6FDC3] border-2 text-[#200E3A] relative hover:bg-['#F6FDC3'] `}>
         <img src="./export.svg" alt="icon" className="h-5 w-5" />
 
       </Button>
+
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Export</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+
+      <ExportDialog open={open} changeOpen={changeOpen} ></ExportDialog>
+
+
+
 
     </div>
   )

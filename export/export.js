@@ -1,10 +1,12 @@
 import store from "@/app/store";
 import { getElementObject } from "@/components/ElementManipulation/Element";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import rough from 'roughjs/bundled/rough.esm';
 
 
 
-export const exportImage = () => {
+export const exportImage = (backgroundExport, toast) => {
 
 
 
@@ -13,6 +15,11 @@ export const exportImage = () => {
     const elements = store.getState().elements.value[index];
 
     if (elements.length == 0) {
+        toast({
+            title: "Uh oh! Canvas is Empty.",
+            description: "You hav't drawn anything YET",
+            duration: 3000
+        });
         return;
     }
 
@@ -44,7 +51,11 @@ export const exportImage = () => {
 
 
     ctx.fillStyle = "#FFF";
-    ctx.fillRect(0, 0, width, height);
+    console.log(backgroundExport);
+    if (backgroundExport) {
+        ctx.fillRect(0, 0, width, height);
+    }
+
 
     let rC = rough.canvas(newCanvas);
 

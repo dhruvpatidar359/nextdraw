@@ -76,12 +76,15 @@
   }
 }
 
+
+
 body {
 
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(to bottom,
       transparent,
       rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+
 
 
   -webkit-user-select: none;
@@ -92,8 +95,10 @@ body {
 
 html,
 body {
-  overscroll-behavior-x: none;
+
+
   user-zoom: fixed;
+
 }
 
 

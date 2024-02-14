@@ -3,13 +3,15 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import styles from '../CircularToolBar/CircularToolBar.module.css';
 import { exportImage } from '@/export/export';
+import ExportDialog from '@/export/ExportDialog';
 
-const CircularToolBar = () => {
+const CircularToolBar = ({changeOpen}) => {
 
 
   const tool = useSelector(state => state.tool.value);
   const [currentTool, setCurrentTool] = useState(tool);
   const dispatch = useDispatch();
+
 
 
 
@@ -58,10 +60,12 @@ const CircularToolBar = () => {
     const element = event.currentTarget;
     const tool = element.getAttribute("data-tool-name");
 
-    if(tool === 'Export') {
-      exportImage();
+    if (tool === 'Export') {
+      console.log(changeOpen);
+      changeOpen(true);
+
     } else {
-      dispatch(changeTool(tool)); 
+      dispatch(changeTool(tool));
     }
 
     setCurrentTool(tool);
@@ -74,6 +78,8 @@ const CircularToolBar = () => {
 
   return (
     <div >
+
+
 
       <div id="app-info">
 

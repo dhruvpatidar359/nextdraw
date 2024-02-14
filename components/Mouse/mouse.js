@@ -35,7 +35,7 @@ export const mouseCursorChange = (event, elements, selectedElement, scale) => {
       const maxY = Math.max(y1, y2);
 
       if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
-        console.log(selectedElement);
+      
         const onResizeNode = getCurrentResizingNode(event, elements[selectedElement.id], scale);
         if (onResizeNode[0] === 1) {
 
