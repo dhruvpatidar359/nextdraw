@@ -111,7 +111,7 @@ const Canvas = () => {
       }
 
     } else {
-
+      console.log("chanign tgo cursor");
       document.body.style.cursor = `url('defaultCursor.svg'), auto`;
 
     }
@@ -173,7 +173,7 @@ const Canvas = () => {
     renderer(ctx, elements, selectedElement, action, scale);
     ctx.restore();
 
-    console.log(ShapeCache.cache);
+    // console.log(ShapeCache.cache);
 
   }, [elements, selectedElement, action, panOffset, scale]);
 
@@ -453,7 +453,7 @@ const Canvas = () => {
 
         if (ShapeCache.cache.has(oldElement)) {
           ShapeCache.cache.delete(oldElement);
-          console.log("ker deya delete move🔥");
+          // console.log("ker deya delete move🔥");
         }
 
         const newElement = elements[selectedElement.id];

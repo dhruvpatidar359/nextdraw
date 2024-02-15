@@ -36,7 +36,7 @@ export const drawElements = (ctx, element) => {
     case "ellipse":
     case "diamond":
       if (ShapeCache.cache.has(element)) {
-        console.log(`using cache ${element.id}`);
+        // console.log(`using cache ${element.id}`);
 
         roughCanvasRef.draw(ShapeCache.cache.get(element));
       } else {

@@ -61,7 +61,7 @@ const CircularToolBar = ({changeOpen}) => {
     const tool = element.getAttribute("data-tool-name");
 
     if (tool === 'Export') {
-      console.log(changeOpen);
+     
       changeOpen(true);
 
     } else {

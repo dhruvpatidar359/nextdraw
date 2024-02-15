@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/tooltip"
 import { exportImage } from '@/export/export';
 import ExportDialog from '@/export/ExportDialog';
+import Menu from './Menu/Menu';
+import { setHover } from '../Redux/features/hoverSlice';
 
 const buttons = [
   { tooltip: 'Rectangle', icon: "./square.svg", shortcut: 'Rectangle - 1', tool: 'rectangle' },
@@ -136,8 +138,7 @@ const Topbar = () => {
 
               const newElement = { ...element, id: index - 1 };
 
-              console.log(newElement);
-              console.log(ShapeCache.cache.get(element));
+
               ShapeCache.cache.set(newElement, ShapeCache.cache.get(element));
 
               if (ShapeCache.cache.has(element)) {
@@ -159,6 +160,8 @@ const Topbar = () => {
 
 
           dispatch(setSelectedElement(null));
+          dispatch(setHover("none"));
+          document.body.style.cursor = `url('defaultCursor.svg'), auto`;
         }
       }
 
@@ -181,46 +184,48 @@ const Topbar = () => {
 
 
   return (
+    <div className='flex flex-row'>
+      <Menu ></Menu>
+      <div className='flex flex-row absolute left-1/2 transform -translate-x-1/2 rounded bg-white  my-1'>
 
-    <div className='flex flex-row absolute left-1/2 transform -translate-x-1/2 rounded bg-white border-2 my-2'>
+        {buttons.map((button, index) =>
 
-      {buttons.map((button, index) =>
+        (
+          <div key={index} onClick={() => {
 
-      (
-        <div key={index} onClick={() => {
+            dispatch(changeTool(buttons[index].tool))
+          }}>  <ButtonComponent button={button} /> </div>
 
-          dispatch(changeTool(buttons[index].tool))
-        }}>  <ButtonComponent button={button} /> </div>
+        )
 
-      )
-
-      )}
-
-     
-
-
-      <TooltipProvider delayDuration={100}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-        <Button onClick={() => {
-        changeOpen(true);
-      }} style={{ width: '50px', height: '45px' }} className={`rounded py-2 px-2 m-2  bg-[#F6FDC3] border-2 text-[#200E3A] relative hover:bg-['#F6FDC3'] `}>
-        <img src="./export.svg" alt="icon" className="h-5 w-5" />
-
-      </Button>
-
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Export</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-
-      <ExportDialog open={open} changeOpen={changeOpen} ></ExportDialog>
+        )}
 
 
 
 
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button onClick={() => {
+                changeOpen(true);
+              }} style={{ width: '45px', height: '40px' }} className={`rounded px-2 m-2  bg-[#F6FDC3] border-2 text-[#200E3A] relative hover:bg-['#F6FDC3'] `}>
+                <img src="./export.svg" alt="icon" className="h-4 w-4" />
+
+              </Button>
+
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Export</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <ExportDialog open={open} changeOpen={changeOpen} ></ExportDialog>
+
+
+
+
+      </div>
     </div>
   )
 }
