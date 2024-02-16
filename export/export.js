@@ -11,6 +11,7 @@ export const exportImage = (backgroundExport, toast) => {
 
         const index = store.getState().elements.index;
         const elements = store.getState().elements.value[index];
+        const canvasBackground = store.getState().canvas.background;
 
         if (elements.length == 0) {
             toast({
@@ -49,7 +50,40 @@ export const exportImage = (backgroundExport, toast) => {
         ctx?.scale(dpr, dpr);
 
 
-        ctx.fillStyle = "#FFF";
+
+        ctx.globalCompositeOperation = 'destination-under'
+
+        // ctx.fillStyle = canvasBackground;
+
+
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        let gradientColorsList = [];
+
+        for (let i = 0; i < canvasBackground.length; i++) {
+            if (canvasBackground[i] === "#") {
+                gradientColorsList.push(canvasBackground.substring(i, i + 7));
+
+            }
+        }
+        let stop = 0;
+        let setBackground = true;
+        const incremnet = 1 / gradientColorsList.length;
+        gradientColorsList.forEach(value => {
+            if (value.length != 7) {
+                setBackground = false;
+                return;
+            }
+            gradient.addColorStop(stop, value);
+            stop += incremnet;
+        })
+
+        // Set the fill style and draw a rectangle
+        if (setBackground) {
+            ctx.fillStyle = gradient;
+
+
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
         if (backgroundExport) {
             ctx.fillRect(0, 0, width, height);

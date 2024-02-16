@@ -48,12 +48,6 @@ export const ColorPicker = ({ background,
         'linear-gradient(to top left,#ff75c3,#ffa647,#ffe83f,#9fff5b,#70e2ff,#cd93ff)',
     ]
 
-    const images = [
-        'url(https://images.unsplash.com/photo-1691200099282-16fd34790ade?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=90)',
-        'url(https://images.unsplash.com/photo-1691226099773-b13a89a1d167?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=90',
-        'url(https://images.unsplash.com/photo-1688822863426-8c5f9b257090?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=90)',
-        'url(https://images.unsplash.com/photo-1691225850735-6e4e51834cad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=90)',
-    ]
 
     const defaultTab = useMemo(() => {
         if (background.includes('url')) return 'image'
@@ -66,6 +60,7 @@ export const ColorPicker = ({ background,
 
 
     return (
+
         <Popover open={open} onMouseMove={e => {
             e.preventDefault();
         }}>
@@ -75,7 +70,7 @@ export const ColorPicker = ({ background,
                 <div className="w-full flex items-center gap-2" onClick={() => setOpen(true)}>
                     {background ? (
                         <div
-                            className="h-4 w-4 rounded !bg-center !bg-cover transition-all"
+                            className="h-4 w-4 rounded border-2 !bg-center !bg-cover transition-all"
                             style={{ background }}
                         ></div>
                     ) : (
@@ -90,7 +85,9 @@ export const ColorPicker = ({ background,
             <PopoverContent className="w-64" onClick={e => {
                 e.preventDefault();
 
-            }} >
+            }} onMouseMove={e => {
+                e.preventDefault();
+            }}>
                 <Tabs defaultValue={defaultTab} className="w-full">
                     <TabsList className="w-full mb-4">
                         <TabsTrigger className="flex-1" value="solid">
@@ -99,9 +96,7 @@ export const ColorPicker = ({ background,
                         <TabsTrigger className="flex-1" value="gradient">
                             Gradient
                         </TabsTrigger>
-                        <TabsTrigger className="flex-1" value="image">
-                            Image
-                        </TabsTrigger>
+
                     </TabsList>
 
                     <TabsContent value="solid" className="flex flex-wrap gap-1 mt-0">
@@ -127,35 +122,26 @@ export const ColorPicker = ({ background,
                             ))}
                         </div>
 
-
                     </TabsContent>
 
-                    <TabsContent value="image" className="mt-0">
-                        <div className="grid grid-cols-2 gap-1 mb-2">
-                            {images.map((s) => (
-                                <div
-                                    key={s}
-                                    style={{ backgroundImage: s }}
-                                    className="rounded-md bg-cover bg-center h-12 w-full cursor-pointer active:scale-105"
-                                    onClick={() => setBackground(s)}
-                                />
-                            ))}
-                        </div>
 
-
-                    </TabsContent>
-
-                    <TabsContent value="password">Change your password here.</TabsContent>
                 </Tabs>
 
+
                 <Input
-             
-                                
+
+                    onMouseMove={
+                        () => {
+
+                            document.getElementById("custom").focus();
+                        }
+                    }
                     id="custom"
                     value={background}
+
                     className="col-span-2 h-8 mt-4"
                     onChange={(e) => setBackground(e.currentTarget.value)}
-                   
+
                 />
             </PopoverContent>
         </Popover>

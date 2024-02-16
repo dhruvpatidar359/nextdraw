@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     AppWindow,
     Cloud,
@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { IoLogoGithub, IoMenu, IoMenuSharp } from 'react-icons/io5'
 import store from '@/app/store'
-import { shallowEqual, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { toast } from '@/components/ui/use-toast'
 import { open, save } from './menuActions'
 import { exportImage } from '@/export/export'
@@ -47,15 +47,26 @@ import { setElement } from '@/components/Redux/features/elementSlice'
 import { ShapeCache } from '@/components/Redux/ShapeCache'
 import { FaGithub } from 'react-icons/fa'
 import { ColorPicker, GradientPicker } from './ColorPicker'
+import { setCanvasBackground } from '@/components/Redux/features/canvasSlice'
 const Menu = () => {
 
     const index = useSelector(state => state.elements.index);
     const elements = useSelector(state => state.elements.value[index], shallowEqual);
-    const [background, setBackground] = useState('#B4D455')
+    const canvas = useSelector(state => state.canvas.value);
+    const [background, setBackground] = useState('#FFFFFF');
+    const dispatch = useDispatch();
+
+
+    useEffect(() => {
+
+        dispatch(setCanvasBackground(background));
+
+    }, [background])
+
 
     return (
         <div className='fixed'>
-            <DropdownMenu>
+            <DropdownMenu >
                 <DropdownMenuTrigger asChild>
                     <div className='fixed top-3 left-2'>
                         <Button onClick={() => {
@@ -68,7 +79,7 @@ const Menu = () => {
 
 
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
+                <DropdownMenuContent className="w-56 m-2">
                     <DropdownMenuLabel>Menu</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
@@ -115,44 +126,21 @@ const Menu = () => {
                             <DropdownMenuPortal>
                                 <DropdownMenuSubContent>
                                     <DropdownMenuItem onClick={e => {
-                e.preventDefault();
+                                        e.preventDefault();
 
-            }}>
-                                        <ColorPicker background={background} setBackground={setBackground} />
+                                    }}>
+                                        <ColorPicker background={background} setBackground={setBackground} className="w-full truncate" />
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <MessageSquare className="mr-2 h-4 w-4" />
-                                        <span>Message</span>
-                                    </DropdownMenuItem>
+
 
                                 </DropdownMenuSubContent>
                             </DropdownMenuPortal>
                         </DropdownMenuSub>
-                        <DropdownMenuItem>
-                            <Plus className="mr-2 h-4 w-4" />
-                            <span>New Team</span>
-                            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-                        </DropdownMenuItem>
+
                     </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <Github className="mr-2 h-4 w-4" />
-                        <span>GitHub</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <LifeBuoy className="mr-2 h-4 w-4" />
-                        <span>Support</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem disabled>
-                        <Cloud className="mr-2 h-4 w-4" />
-                        <span>API</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <LogOut className="mr-2 h-4 w-4" />
-                        <span>Log out</span>
-                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                    </DropdownMenuItem>
+
+
+
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>

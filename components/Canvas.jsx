@@ -27,6 +27,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import ExportDialog from '@/export/ExportDialog';
+import { Input } from './ui/input';
 
 
 
@@ -46,6 +47,7 @@ const Canvas = () => {
   const oldElement = useSelector(state => state.oldElement.value);
   const changed = useSelector(state => state.elements.changed);
   const dupState = useSelector(state => state.elements.dupState);
+  const canvasBackground = useSelector(state => state.canvas.background);
   // const toolWheel = useSelector(state => state.tool.toolWheel);
 
 
@@ -111,7 +113,7 @@ const Canvas = () => {
       }
 
     } else {
-      console.log("chanign tgo cursor");
+
       document.body.style.cursor = `url('defaultCursor.svg'), auto`;
 
     }
@@ -126,6 +128,7 @@ const Canvas = () => {
     if (typeof window !== 'undefined') {
       const canvas = document.getElementById('canvas');
       const ctx = canvas.getContext('2d');
+
 
       const dpr = window.devicePixelRatio;
       const scalingRect = canvas.getBoundingClientRect();
@@ -157,6 +160,46 @@ const Canvas = () => {
     // Clear the canvas before drawing elements
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+
+
+
+
+
+    ctx.globalCompositeOperation = 'destination-under'
+
+    // ctx.fillStyle = canvasBackground;
+
+
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    let gradientColorsList = [];
+
+    for (let i = 0; i < canvasBackground.length; i++) {
+      if (canvasBackground[i] === "#") {
+        gradientColorsList.push(canvasBackground.substring(i, i + 7));
+
+      }
+    }
+    let setBackground = true;
+    let stop = 0;
+    const incremnet = 1 / gradientColorsList.length;
+    gradientColorsList.forEach(value => {
+      if (value.length != 7) {
+        setBackground = false;
+        return;
+      }
+      gradient.addColorStop(stop, value);
+      stop += incremnet;
+    })
+
+    // Set the fill style and draw a rectangle
+    if (setBackground) {
+      ctx.fillStyle = gradient;
+
+
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+
     // a single resource for rendering the elements
 
     const scaleWidth = canvas.width * scale;
@@ -175,7 +218,7 @@ const Canvas = () => {
 
     // console.log(ShapeCache.cache);
 
-  }, [elements, selectedElement, action, panOffset, scale]);
+  }, [elements, selectedElement, action, panOffset, scale, canvasBackground]);
 
 
   // scale and pan
@@ -604,6 +647,7 @@ const Canvas = () => {
 
   return (
     <div>
+   
 
       <div className="fixed bottom-2 left-2 flex flex-row items-center">
 

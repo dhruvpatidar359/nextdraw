@@ -23,15 +23,16 @@ import { exportImage } from '@/export/export';
 import ExportDialog from '@/export/ExportDialog';
 import Menu from './Menu/Menu';
 import { setHover } from '../Redux/features/hoverSlice';
+import { Circle, Diamond, ImageDown, LucideImageDown, Minus, Move, Pencil, Square, Type } from 'lucide-react';
 
 const buttons = [
-  { tooltip: 'Rectangle', icon: "./square.svg", shortcut: 'Rectangle - 1', tool: 'rectangle' },
-  { tooltip: 'Line', icon: "./line.svg", shortcut: 'Line - 2', tool: 'line' },
-  { tooltip: 'Selection', icon: "./move.svg", shortcut: 'Selection - 3', tool: 'selection' },
-  { tooltip: 'Pencil', icon: "./pencil.svg", shortcut: 'Pencil - 4', tool: 'pencil' },
-  { tooltip: 'Ellipse', icon: "./circle.svg", shortcut: 'Ellipse - 5', tool: 'ellipse' },
-  { tooltip: 'Diamond', icon: "./diamond.svg", shortcut: 'Diamond - 6', tool: 'diamond' },
-  { tooltip: 'Text', icon: "./text.svg", shortcut: 'Text - 7', tool: 'text' },
+  { tooltip: 'Rectangle', icon: Square, shortcut: 'Rectangle - 1', tool: 'rectangle' },
+  { tooltip: 'Line', icon: Minus, shortcut: 'Line - 2', tool: 'line' },
+  { tooltip: 'Selection', icon: Move, shortcut: 'Selection - 3', tool: 'selection' },
+  { tooltip: 'Pencil', icon: Pencil, shortcut: 'Pencil - 4', tool: 'pencil' },
+  { tooltip: 'Ellipse', icon: Circle, shortcut: 'Ellipse - 5', tool: 'ellipse' },
+  { tooltip: 'Diamond', icon: Diamond, shortcut: 'Diamond - 6', tool: 'diamond' },
+  { tooltip: 'Text', icon: Type, shortcut: 'Text - 7', tool: 'text' },
 
 
 ];
@@ -186,7 +187,7 @@ const Topbar = () => {
   return (
     <div className='flex flex-row'>
       <Menu ></Menu>
-      <div className='flex flex-row absolute left-1/2 transform -translate-x-1/2 rounded bg-white  my-1'>
+      <div className='flex flex-row absolute left-1/2 transform -translate-x-1/2 rounded-md bg-white  my-1 shadow-md'>
 
         {buttons.map((button, index) =>
 
@@ -206,10 +207,11 @@ const Topbar = () => {
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button onClick={() => {
+              <Button variant="ghost" onClick={() => {
                 changeOpen(true);
-              }} style={{ width: '45px', height: '40px' }} className={`rounded px-2 m-2  bg-[#F6FDC3] border-2 text-[#200E3A] relative hover:bg-['#F6FDC3'] `}>
-                <img src="./export.svg" alt="icon" className="h-4 w-4" />
+              }} style={{ width: '35px', height: '35px', position: 'relative' }} className={`rounded px-2 m-1  `}>
+                <LucideImageDown className="h-4 w-4 opacity-90"></LucideImageDown>
+
 
               </Button>
 
