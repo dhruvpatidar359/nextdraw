@@ -101,6 +101,7 @@ const Menu = () => {
                         <DropdownMenuItem onClick={() => {
                             store.dispatch(setElement([[], false]));
                             ShapeCache.cache = new WeakMap();
+                            store.dispatch(setCanvasBackground("#FFFFFF"))
                         }}>
                             <Delete className="mr-2 h-4 w-4" />
                             <span>Reset The Canvas</span>

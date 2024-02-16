@@ -116,7 +116,7 @@ export const exportImage = (backgroundExport, toast) => {
                     })
 
                     elementCopy.points = points;
-                    ctx.fillStyle = "red"
+                    ctx.fillStyle = element.stroke;
                     ctx.fill(getElementObject(elementCopy));
 
                     break;
@@ -129,7 +129,7 @@ export const exportImage = (backgroundExport, toast) => {
 
                     var lineheight = 30;
                     var lines = txt.split('\n');
-                    ctx.fillStyle = 'black';
+                    ctx.fillStyle = element.stroke;
                     for (var i = 0; i < lines.length; i++)
                         ctx.fillText(lines[i], element.x1 + x1, element.y1 + y1 + 6 + (i * lineheight));
 

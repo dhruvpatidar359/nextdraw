@@ -46,7 +46,7 @@ export const drawElements = (ctx, element) => {
       break;
 
     case 'pencil':
-      ctx.fillStyle = 'grey';
+      ctx.fillStyle = element.stroke;
       if (ShapeCache.cache.has(element)) {
 
         ctx.fill(ShapeCache.cache.get(element));
@@ -66,7 +66,7 @@ export const drawElements = (ctx, element) => {
 
       var lineheight = 30;
       var lines = txt.split('\n');
-      ctx.fillStyle = 'black';
+      ctx.fillStyle = element.stroke;
       for (var i = 0; i < lines.length; i++)
         ctx.fillText(lines[i], element.x1, element.y1 + 6 + (i * lineheight));
       break;
@@ -77,7 +77,7 @@ export const drawElements = (ctx, element) => {
 }
 
 
-export const renderer = (ctx, elements, selectedElement, action,scale) => {
+export const renderer = (ctx, elements, selectedElement, action, scale) => {
 
   let boundedElement = null;
 
@@ -96,6 +96,6 @@ export const renderer = (ctx, elements, selectedElement, action,scale) => {
 
 
 
-  drawBounds(ctx, boundedElement, action,scale);
+  drawBounds(ctx, boundedElement, action, scale);
 
 }

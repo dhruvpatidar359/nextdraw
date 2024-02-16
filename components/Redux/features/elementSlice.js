@@ -30,7 +30,7 @@ export const elementSlice = createSlice({
             const newState = action.payload[0];
             let overwrite = false;
             if(action.payload.length === 2) {
-                console.log("overwriting");
+                
                 overwrite = action.payload[1];
             }
         
@@ -48,9 +48,6 @@ export const elementSlice = createSlice({
 
                 // we are deleteing those elements from the weakmap that are 
                 // removed from the history
-
-                // console.log(current(updatedState[updatedState.length-1]));
-                // console.log(current(latestState));
 
                 var set = new Set();
                 current(updatedState[updatedState.length-1]).forEach(e => {

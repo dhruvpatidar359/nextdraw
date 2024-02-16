@@ -14,20 +14,20 @@ export function addElement(id, x1, y1, x2, y2, type) {
     case 'line':
     case 'diamond':
 
-      return { id, x1, x2, y1, y2, type };
+      return { id, x1, x2, y1, y2, type, stroke: "#000000", fill: null, fillStyle: "solid" };
 
 
 
     case "pencil":
-      return { id, type, points: [{ x: x1, y: y1 }] };
+      return { id, type, points: [{ x: x1, y: y1 }], stroke: "#000000"  };
 
     case "text":
 
-      return { id, type, x1, y1, x2, y2, text: "" };
+      return { id, type, x1, y1, x2, y2, text: "", stroke: "#000000" };
 
     default:
 
-      return { id, x1, x2, y1, y2, type };
+      return { id, x1, x2, y1, y2, type, stroke: "#000000" };
 
   }
 
@@ -42,19 +42,23 @@ export const getElementObject = (element) => {
   const root = roughCanvasRef.generator;
 
   let elementObject;
-
+  const stroke = element.stroke;
+  const fill = element.fill;
+  const fillStyle = element.fillStyle;
   switch (type) {
     case 'rectangle':
+
+
       elementObject = root.rectangle(x1,
         y1,
         x2 - x1,
-        y2 - y1, { seed: 25, strokeWidth: 3, fillStyle: 'solid', fill: 'grey' }
+        y2 - y1, { seed: 25, strokeWidth: 3, stroke: stroke, fill: fill, fillStyle: fillStyle }
       );
       break;
 
 
     case 'line':
-      elementObject = root.line(x1, y1, x2, y2, { seed: 12, strokeWidth: 5 });
+      elementObject = root.line(x1, y1, x2, y2, { seed: 12, strokeWidth: 5,stroke : stroke , fill: fill, fillStyle: fillStyle });
       break;
 
     case 'pencil':
@@ -72,7 +76,7 @@ export const getElementObject = (element) => {
       elementObject = root.ellipse(centerX,
         centerY,
         x2 - x1,
-        (y2 - y1) / 1.1, { seed: 11, strokeWidth: 3, fillStyle: 'solid', fill: 'grey' }
+        (y2 - y1) / 1.1, { seed: 11, strokeWidth: 3,  fill: fill, fillStyle: fillStyle, stroke: stroke }
       );
       break;
 
@@ -84,7 +88,7 @@ export const getElementObject = (element) => {
       const bottom = [x1 + (x2 - x1) / 2, y2];
       const right = [x2, y1 + (y2 - y1) / 2];
 
-      elementObject = root.polygon([top, left, bottom, right], { seed: 17, fill: 'grey', fillStyle: "solid" });
+      elementObject = root.polygon([top, left, bottom, right], { seed: 17, fill: 'grey', fillStyle: "solid", stroke: stroke , fill: fill, fillStyle: fillStyle});
 
       break;
     default:
@@ -199,14 +203,25 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
   const action = store.getState().action.value;
   const tempNewArray = [...elements];
 
+
+
   switch (type) {
     case "line":
     case "rectangle":
     case "ellipse":
     case "diamond":
 
-      const updatedElement = addElement(id, x1, y1, x2, y2, type)
+
+      let { id: elementId, x1: elementX1, y1: elementY1, x2: elementX2, y2: elementY2, type: elementType, ...otherProps } = elements[id];
+      const updatedElement = { ...addElement(id, x1, y1, x2, y2, type), ...otherProps }
+
+
+
       tempNewArray[id] = updatedElement;
+
+
+
+
       if (action === 'drawing') {
         store.dispatch(setSelectedElement(updatedElement));
       }
@@ -214,9 +229,12 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
 
     case "pencil":
 
+
+      let { id: pencilId, x1: pencilX1, y1: pencilY1, x2: pencilX2, y2: pencilY2, type: pencilType, points: pencilPoints, ...otherPencilProps } = elements[id];
+
       tempNewArray[id] = {
         ...tempNewArray[id],
-        points: [...tempNewArray[id].points, { x: x2, y: y2 }],
+        points: [...tempNewArray[id].points, { x: x2, y: y2 }], ...otherPencilProps
       };
       break;
 
@@ -225,6 +243,9 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
 
       const context = document.getElementById("canvas").getContext('2d');
       context.font = '24px Virgil';
+
+      let { id: textId, x1: textX1, y1: textY1, x2: textX2, y2: textY2, type: textType, text: textStrign, ...otherTextProps } = elements[id];
+
       let textWidth = x1;
       let textHeight = y1;
 
@@ -243,9 +264,9 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
       textHeight = textHeight + (linesLength) * 30;
 
       if (store.getState().action.value === 'resizing') {
-        tempNewArray[id] = { ...addElement(id, x1, y2, x2, textHeight, type), text: options.text }
+        tempNewArray[id] = { ...addElement(id, x1, y2, x2, textHeight, type), text: options.text, ...otherTextProps }
       } else {
-        tempNewArray[id] = { ...addElement(id, x1, y1, textWidth, textHeight, type), text: options.text }
+        tempNewArray[id] = { ...addElement(id, x1, y1, textWidth, textHeight, type), text: options.text, ...otherTextProps }
       }
 
 
@@ -263,6 +284,9 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
 
 
 }
+
+
+
 
 
 export const adjustElementCoordinates = element => {

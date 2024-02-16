@@ -141,6 +141,10 @@ export const ColorPicker = ({ background,
 
                     className="col-span-2 h-8 mt-4"
                     onChange={(e) => setBackground(e.currentTarget.value)}
+                    onKeyDown={(event) => {
+                        event.stopPropagation();
+
+                    }}
 
                 />
             </PopoverContent>
