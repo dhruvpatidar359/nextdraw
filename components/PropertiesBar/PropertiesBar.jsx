@@ -10,12 +10,14 @@ import {
 import SimpleColorPicker from '../TopBar/Menu/SimpleColorPicker'
 import { Separator } from "@/components/ui/separator"
 import { Button } from '../ui/button'
-import { AlignCenter, AlignLeft, AlignRight } from 'lucide-react'
+import { AlignCenter, AlignLeft, AlignRight, Dot, Minus, MoreHorizontal, RectangleVertical, Spline, Square } from 'lucide-react'
 import { Slider } from '../ui/slider'
 import { ScrollArea } from '../ui/scroll-area'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { addElement, updateElement } from '../ElementManipulation/Element'
 import { setElement } from '../Redux/features/elementSlice'
+import { FaRegSquareFull } from 'react-icons/fa6'
+import { MdRoundedCorner } from "react-icons/md";
 
 
 const PropertiesBar = () => {
@@ -24,6 +26,10 @@ const PropertiesBar = () => {
 
     const [stroke, setStroke] = useState("");
     const [background, setBackground] = useState("");
+    const [strokeStyle, setStrokeStyle] = useState("");
+    const [strokeWidth, setStrokeWidth] = useState(2);
+    const [sharp, setSharp] = useState(false);
+    const [bowing, setBowing] = useState(1);
 
     const selectedElement = useSelector(state => state.selectedElement.value);
     const index = useSelector(state => state.elements.index);
@@ -46,7 +52,11 @@ const PropertiesBar = () => {
 
         if (element.type != "pencil" || element.type != "text") {
             const currentBackground = element.fill;
+            const currentStrokeStyle = element.strokeStyle;
+            const currentStrokeWidth = element.strokeWidth;
             setBackground(currentBackground);
+            setStrokeStyle(currentStrokeStyle);
+            setStrokeWidth(currentStrokeWidth);
         }
 
 
@@ -67,28 +77,28 @@ const PropertiesBar = () => {
         const id = element.id;
         const type = element.type;
 
-        let options ;
+        let options;
 
 
         switch (type) {
             case "rectangle":
             case "diamond":
             case "ellipse":
-                options = { stroke: stroke, fill: background };
+                options = { stroke: stroke, fill: background, strokeStyle: strokeStyle, strokeWidth: strokeWidth, sharp: sharp, bowing: bowing };
                 break;
             case "text":
-                options = { stroke: stroke};
+                options = { stroke: stroke };
                 break;
             case "pencil":
-                options = { stroke: stroke};
-                break;    
+                options = { stroke: stroke };
+                break;
 
             case "line":
-                options = { stroke: stroke};
+                options = { stroke: stroke, strokeStyle: strokeStyle, strokeWidth: strokeWidth, bowing: bowing };
                 break;
-                
+
             default:
-                break;    
+                break;
 
         }
 
@@ -109,12 +119,12 @@ const PropertiesBar = () => {
 
 
         setChangedByUser(false);
-    }, [stroke, background])
+    }, [stroke, background, strokeStyle, strokeWidth, sharp, bowing])
 
 
     return (
         <div className='absolute left-2 top-20'>
-            <ScrollArea className="h-[400px] rounded-md border p-1 bg-white">
+            <ScrollArea className="h-[400px] rounded-md border p-2 bg-white">
                 <Card >
 
                     <CardContent >
@@ -148,7 +158,7 @@ const PropertiesBar = () => {
                     </CardContent>
 
 
-                    <CardContent >
+               {selectedElement.type != "pencil" && selectedElement.type != 'text' === true ?     <CardContent >
                         <span className='text-xs'>Background</span>
                         <div className="flex flex-row">  {solids.map((s) => (
                             <div
@@ -177,9 +187,9 @@ const PropertiesBar = () => {
 
                     </CardContent>
 
+                           : null }
 
-
-                    <CardContent>
+{ selectedElement.type === 'text' ?    <CardContent>
                         <span className='text-xs'>Font size</span>
                         <div className='flex flex-row'>
                             <Button variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
@@ -198,8 +208,8 @@ const PropertiesBar = () => {
                         </div>
 
                     </CardContent>
-
-                    <CardContent>
+:null }
+     { selectedElement.type === 'text' ?                 <CardContent>
                         <span className='text-xs'>Text align</span>
                         <div className='flex flex-row'>
 
@@ -218,7 +228,163 @@ const PropertiesBar = () => {
                         </div>
 
                     </CardContent>
+                    :null }
 
+           { selectedElement.type != 'text' ?           <CardContent>
+                        <span className='text-xs'>Stroke width</span>
+                        <div className='flex flex-row'>
+
+                            <Button onClick={() => {
+
+                                setChangedByUser(true);
+                                setStrokeWidth(2);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
+                                <span>  <Minus className='h-4 w-4' strokeWidth={1.75} /></span>
+
+                            </Button>
+                            <Button onClick={() => {
+
+                                setChangedByUser(true);
+                                setStrokeWidth(4);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                                <span>  <Minus className='h-4 w-4' strokeWidth={2.5} /></span>
+                            </Button>
+                            <Button onClick={() => {
+
+                                setChangedByUser(true);
+                                setStrokeWidth(6);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                                <span>  <Minus className='h-4 w-4' strokeWidth={3.25} /></span>
+                            </Button>
+
+
+                        </div>
+
+                    </CardContent>
+  :null }
+             { selectedElement.type != 'text' && selectedElement.type != "pencil" ?               <CardContent>
+                        <span className='text-xs'>Stroke style</span>
+                        <div className='flex flex-row'>
+
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setStrokeStyle([]);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
+                                <span>  <Minus className='h-4 w-4' /></span>
+
+                            </Button>
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setStrokeStyle([20, 10]);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                                <span className='h-4 w-4 flex flex-row'>
+
+                                    <Minus className='h-4 w-2' strokeWidth={5} />
+                                    <Minus className='h-4 w-2' strokeWidth={5} />
+                                    <Minus className='h-4 w-2' strokeWidth={5} />
+                                </span>
+                            </Button>
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setStrokeStyle([10, 10]);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                                <span className='h-4 w-4 flex flex-row'>
+
+                                    <Dot className='h-4 w-3' strokeWidth={5} />
+                                    <Dot className='h-4 w-3' strokeWidth={5} />
+                                    <Dot className='h-4 w-3' strokeWidth={5} />
+                                    <Dot className='h-4 w-3' strokeWidth={5} />
+                                </span>
+                            </Button>
+
+
+                        </div>
+
+                    </CardContent>
+                    :null }
+
+
+{ selectedElement.type != 'text' && selectedElement.type != "pencil" ?   <CardContent>
+                        <span className='text-xs'>Sloppiness</span>
+                        <div className='flex flex-row'>
+
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setBowing(2);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
+                                <span>  <Spline className='h-4 w-4' /></span>
+
+                            </Button>
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setBowing(10);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                                <div className="flex relative">
+                                    <span className="">
+                                        <Spline className="relative left-2 h-4 w-4" strokeWidth={2} />
+                                    </span>
+                                    <Spline className="relative right-1  h-4 w-4" strokeWidth={2} />
+                                </div>
+
+                            </Button>
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setBowing(14);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                                <div className="flex relative">
+
+                                    <Spline className="relative left-4 h-4 w-4" strokeWidth={2} />
+
+                                    <Spline className="relative right-1  h-4 w-4" strokeWidth={2} />
+                                    <Spline className="relative right-3  h-4 w-4" strokeWidth={2} />
+                                </div>
+                            </Button>
+
+
+                        </div>
+
+                    </CardContent>
+      :null }
+         { selectedElement.type != 'text' && selectedElement.type != "pencil" ?            <CardContent>
+                        <span className='text-xs'>Edges</span>
+
+                        <div className='flex flex-row'>
+
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setSharp(true);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
+
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="img" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" strokeWidth="1.5">
+                                        <path d="M3.33334 9.99998V6.66665C3.33334 6.04326 3.33403 4.9332 3.33539 3.33646C4.95233 3.33436 6.06276 3.33331 6.66668 3.33331H10"></path>
+                                        <path d="M13.3333 3.33331V3.34331"></path>
+                                        <path d="M16.6667 3.33331V3.34331"></path>
+                                        <path d="M16.6667 6.66669V6.67669"></path>
+                                        <path d="M16.6667 10V10.01"></path>
+                                        <path d="M3.33334 13.3333V13.3433"></path>
+                                        <path d="M16.6667 13.3333V13.3433"></path>
+                                        <path d="M3.33334 16.6667V16.6767"></path>
+                                        <path d="M6.66666 16.6667V16.6767"></path>
+                                        <path d="M10 16.6667V16.6767"></path>
+                                        <path d="M13.3333 16.6667V16.6767"></path>
+                                        <path d="M16.6667 16.6667V16.6767"></path>
+                                    </svg></div>
+                            </Button>
+
+
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setSharp(false);
+                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                                <span>  <MdRoundedCorner className='-scale-x-90 h-4 w-4' /></span>
+                            </Button>
+
+
+                        </div>
+
+                    </CardContent>
+     :null }
                     <CardContent>
                         <span className='text-xs'>Opacity</span>
                         <Slider className="p-2" max={100} step={1} />

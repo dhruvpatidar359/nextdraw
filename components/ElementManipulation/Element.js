@@ -14,12 +14,12 @@ export function addElement(id, x1, y1, x2, y2, type) {
     case 'line':
     case 'diamond':
 
-      return { id, x1, x2, y1, y2, type, stroke: "#000000", fill: null, fillStyle: "solid" };
+      return { id, x1, x2, y1, y2, type, stroke: "#000000", fill: null, fillStyle: "solid", sharp: false, strokeStyle: null ,strokeWidth : null ,bowing : 2};
 
 
 
     case "pencil":
-      return { id, type, points: [{ x: x1, y: y1 }], stroke: "#000000"  };
+      return { id, type, points: [{ x: x1, y: y1 }], stroke: "#000000" };
 
     case "text":
 
@@ -36,7 +36,7 @@ export function addElement(id, x1, y1, x2, y2, type) {
 
 export const getElementObject = (element) => {
 
-  const { x1, y1, x2, y2, type } = element;
+  let { id, x1, y1, x2, y2, type } = element;
 
   const roughCanvasRef = store.getState().canvas.value;
   const root = roughCanvasRef.generator;
@@ -45,20 +45,45 @@ export const getElementObject = (element) => {
   const stroke = element.stroke;
   const fill = element.fill;
   const fillStyle = element.fillStyle;
+  const sharp = element.sharp;
+  const strokeStyle = element.strokeStyle;
+  const strokeWidth = element.strokeWidth;
+  const bowing = element.bowing;
   switch (type) {
     case 'rectangle':
 
 
-      elementObject = root.rectangle(x1,
-        y1,
-        x2 - x1,
-        y2 - y1, { seed: 25, strokeWidth: 3, stroke: stroke, fill: fill, fillStyle: fillStyle }
-      );
+      if (!sharp) {
+        let minX = Math.min(x1, x2);
+        let maxX = Math.max(x1, x2);
+        let minY = Math.min(y1, y2);
+        let maxY = Math.max(y1, y2);
+
+        x1 = minX;
+        y1 = minY;
+        x2 = maxX;
+        y2 = maxY;
+
+        const w = x2 - x1
+        const h = y2 - y1;
+
+        const r = Math.min(w, h) * 0.25;
+
+
+
+        elementObject = root.path(`M ${x1 + r} ${y1} L ${x1 + w - r} ${y1} Q ${x1 + w} ${y1}, ${x1 + w} ${y1 + r} L ${x1 + w} ${y1 + h - r
+          } Q ${x1 + w} ${y1 + h}, ${x1 + w - r} ${y1 + h} L ${x1 + r} ${y1 + h} Q ${x1} ${y1 + h}, ${x1} ${y1 + h - r
+          } L ${x1} ${y1 + r} Q ${x1} ${y1}, ${x1 + r} ${y1}`, { seed: 25, strokeWidth: 3, stroke: stroke, fill: fill, fillStyle: fillStyle, strokeLineDash: strokeStyle ,strokeWidth : strokeWidth,bowing : bowing});
+      } else {
+        elementObject = root.rectangle(x1, y1, x2 - x1, y2 - y1, { seed: 25, strokeWidth: 3, stroke: stroke, fill: fill, fillStyle: fillStyle, strokeLineDash: strokeStyle ,strokeWidth : strokeWidth,bowing : bowing});
+      }
+
+
       break;
 
 
     case 'line':
-      elementObject = root.line(x1, y1, x2, y2, { seed: 12, strokeWidth: 5,stroke : stroke , fill: fill, fillStyle: fillStyle });
+      elementObject = root.line(x1, y1, x2, y2, { seed: 12, strokeWidth: 5, stroke: stroke, fill: fill, fillStyle: fillStyle ,strokeLineDash:strokeStyle,strokeWidth : strokeWidth ,bowing : bowing });
       break;
 
     case 'pencil':
@@ -76,7 +101,7 @@ export const getElementObject = (element) => {
       elementObject = root.ellipse(centerX,
         centerY,
         x2 - x1,
-        (y2 - y1) / 1.1, { seed: 11, strokeWidth: 3,  fill: fill, fillStyle: fillStyle, stroke: stroke }
+        (y2 - y1) / 1.1, { seed: 11, strokeWidth: 3, fill: fill, fillStyle: fillStyle, stroke: stroke,strokeLineDash:strokeStyle ,strokeWidth : strokeWidth ,bowing : bowing}
       );
       break;
 
@@ -88,7 +113,42 @@ export const getElementObject = (element) => {
       const bottom = [x1 + (x2 - x1) / 2, y2];
       const right = [x2, y1 + (y2 - y1) / 2];
 
-      elementObject = root.polygon([top, left, bottom, right], { seed: 17, fill: 'grey', fillStyle: "solid", stroke: stroke , fill: fill, fillStyle: fillStyle});
+      const topY = Math.min(top[1], bottom[1]);
+      const topX = Math.min(top[0], bottom[0]);
+      const rightY = Math.max(right[1], left[1]);
+      const rightX = Math.max(right[0], left[0]);
+      const bottomX = Math.max(top[0], bottom[0]);
+      const bottomY = Math.max(top[1], bottom[1]);
+      const leftX = Math.min(left[0], right[0]);
+      const leftY = Math.min(left[1], right[1]);
+
+
+      if (!sharp) {
+        elementObject = root.path(`M ${topX + (rightX - topX) * 0.25} ${topY + (rightY - topY) * 0.25
+          } L ${rightX - (rightX - topX) * 0.25} ${rightY - (rightY - topY) * 0.25
+          } 
+      C ${rightX} ${rightY}, ${rightX} ${rightY}, ${rightX - (rightX - bottomX) * 0.25
+          } ${rightY + (bottomY - rightY) * 0.25} 
+      L ${bottomX + (rightX - bottomX) * 0.25} ${bottomY - (bottomY - rightY) * 0.25
+          }  
+      C ${bottomX} ${bottomY}, ${bottomX} ${bottomY}, ${bottomX - (bottomX - leftX) * 0.25
+          } ${bottomY - (bottomY - leftY) * 0.25} 
+      L ${leftX + (bottomX - leftX) * 0.25} ${leftY + (bottomY - leftY) * 0.25
+          } 
+      C ${leftX} ${leftY}, ${leftX} ${leftY}, ${leftX + (topX - leftX) * 0.25
+          } ${leftY - (leftY - topY) * 0.25} 
+      L ${topX - (topX - leftX) * 0.25} ${topY + (leftY - topY) * 0.25} 
+      C ${topX} ${topY}, ${topX} ${topY}, ${topX + (rightX - topX) * 0.25
+          } ${topY + (rightY - topY) * 0.25}`, { seed: 17, fill: 'grey', fillStyle: "solid", stroke: stroke, fill: fill, fillStyle: fillStyle ,strokeLineDash:strokeStyle,strokeWidth : strokeWidth ,bowing : bowing});
+      } else {
+
+
+
+        elementObject = root.polygon([top, left, bottom, right], { seed: 17, fill: 'grey', fillStyle: "solid", stroke: stroke, fill: fill, fillStyle: fillStyle ,strokeLineDash:strokeStyle ,strokeWidth : strokeWidth ,bowing : bowing});
+      }
+
+
+
 
       break;
     default:
@@ -299,7 +359,7 @@ export const adjustElementCoordinates = element => {
     return { id, x1: minX, y1: minY, x2: maxX, y2: maxY, type };
   } else {
     if (x1 < x2 || (x1 === x2 && y1 < y2)) {
-      return { id, x1, y1, x2, y2, type };
+      return { id, x1: x1, y1: y1, x2: x2, y2: y2, type };
     } else {
       return { id, x1: x2, y1: y2, x2: x1, y2: y1, type };
     }
