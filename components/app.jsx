@@ -14,12 +14,12 @@ const App = () => {
   const selectedElemenet = useSelector(state => state.selectedElement.value);
   const tool = useSelector(state => state.tool.value);
   const [open, setOpen] = useState(false);
- 
+
   return (
     <div >
 
       <Topbar></Topbar>
-      { selectedElemenet != null  ? <PropertiesBar></PropertiesBar> : null}
+      {selectedElemenet != null || tool != 'selection' ? <PropertiesBar></PropertiesBar> : null}
       <Canvas ></Canvas>
 
       {open ? <ExportDialog open={open} changeOpen={setOpen} /> : null}

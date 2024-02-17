@@ -18,15 +18,16 @@ import { addElement, updateElement } from '../ElementManipulation/Element'
 import { setElement } from '../Redux/features/elementSlice'
 import { FaRegSquareFull } from 'react-icons/fa6'
 import { MdRoundedCorner } from "react-icons/md";
+import { GlobalProps } from '../Redux/GlobalProps'
 
 
 const PropertiesBar = () => {
 
 
 
-    const [stroke, setStroke] = useState("");
-    const [background, setBackground] = useState("");
-    const [strokeStyle, setStrokeStyle] = useState("");
+    const [stroke, setStroke] = useState("#000000");
+    const [background, setBackground] = useState(null);
+    const [strokeStyle, setStrokeStyle] = useState([]);
     const [strokeWidth, setStrokeWidth] = useState(2);
     const [sharp, setSharp] = useState(false);
     const [bowing, setBowing] = useState(1);
@@ -34,9 +35,11 @@ const PropertiesBar = () => {
 
     const selectedElement = useSelector(state => state.selectedElement.value);
     const index = useSelector(state => state.elements.index);
-    const element = useSelector(state => state.elements.value[index][selectedElement.id], shallowEqual);
+    const tool = useSelector(state => state.tool.value);
+    let element;
     const elements = useSelector(state => state.elements.value[index], shallowEqual);
     const [changedByUser, setChangedByUser] = useState(false);
+
 
     const dispatch = useDispatch();
 
@@ -48,34 +51,85 @@ const PropertiesBar = () => {
         '#09203f',
     ]
 
-    useEffect(() => {
-        const currentStroke = element.stroke
 
-        if (element.type != "pencil" || element.type != "text") {
-            const currentBackground = element.fill;
-            const currentStrokeStyle = element.strokeStyle;
-            const currentStrokeWidth = element.strokeWidth;
-            const currentSharp = element.sharp;
-            const bowing = element.bowing;
+
+
+
+    useEffect(() => {
+
+
+
+        if (selectedElement != null) {
+            element = elements[selectedElement.id];
+
+            const currentStroke = element.stroke
+
+            if (element.type != "pencil" || element.type != "text") {
+                const currentBackground = element.fill;
+                const currentStrokeStyle = element.strokeStyle;
+                const currentStrokeWidth = element.strokeWidth;
+                const currentSharp = element.sharp;
+                const bowing = element.bowing;
+
+                setBackground(currentBackground);
+                setStrokeStyle(currentStrokeStyle);
+                setStrokeWidth(currentStrokeWidth);
+                setSharp(currentSharp);
+                setBowing(bowing);
+            } else if (element.type === 'text') {
+                const currentFontSize = element.fontSize;
+                setFontSize(currentFontSize);
+
+            }
+
+
+            setStroke(currentStroke);
+
+
+
+
+        } else {
+
+            const currentStroke = GlobalProps.stroke
+
+
+            const currentBackground = GlobalProps.fill;
+            const currentStrokeStyle = GlobalProps.strokeStyle;
+            const currentStrokeWidth = GlobalProps.strokeWidth;
+            const currentSharp = GlobalProps.sharp;
+            const bowing = GlobalProps.bowing;
 
             setBackground(currentBackground);
             setStrokeStyle(currentStrokeStyle);
             setStrokeWidth(currentStrokeWidth);
             setSharp(currentSharp);
             setBowing(bowing);
-        } else if (element.type === 'text') {
-            const currentFontSize = element.fontSize;
+
+            const currentFontSize = GlobalProps.fontSize;
             setFontSize(currentFontSize);
 
+
+
+
+            setStroke(currentStroke);
         }
-
-
-        setStroke(currentStroke);
-
-    }, [selectedElement])
+    }, [selectedElement, tool]);
 
 
     useEffect(() => {
+
+        if (selectedElement === null) {
+            GlobalProps.stroke = stroke;
+            GlobalProps.fill = background;
+            GlobalProps.strokeStyle = strokeStyle;
+            GlobalProps.strokeWidth = strokeWidth;
+            GlobalProps.sharp = sharp;
+            GlobalProps.bowing = bowing;
+            GlobalProps.fontSize = fontSize;
+            return;
+        }
+        element = elements[selectedElement.id];
+        console.log("chingin");
         if (!changedByUser) {
             return; // Exit early if stroke hasn't changed by user
         }
@@ -100,7 +154,7 @@ const PropertiesBar = () => {
                 options = { stroke: stroke, fontSize: fontSize };
                 break;
             case "pencil":
-                options = { stroke: stroke ,strokeWidth : strokeWidth};
+                options = { stroke: stroke, strokeWidth: strokeWidth };
                 break;
 
             case "line":
@@ -194,7 +248,7 @@ const PropertiesBar = () => {
                     </CardContent>
 
 
-                    {selectedElement.type != "pencil" && selectedElement.type != 'text' === true ? <CardContent >
+                    {(tool != 'pencil' && tool != 'text') || (selectedElement != null && selectedElement.type != "pencil" && selectedElement.type != 'text' === true) ? <CardContent >
                         <span className='text-xs'>Background</span>
                         <div className="flex flex-row">  {solids.map((s) => (
                             <div
@@ -225,7 +279,7 @@ const PropertiesBar = () => {
 
                         : null}
 
-                    {selectedElement.type === 'text' ? <CardContent>
+                    {(tool === 'text') || (selectedElement != null && selectedElement.type === 'text') ? <CardContent>
                         <span className='text-xs'>Font size</span>
                         <div className='flex flex-row'>
                             <Button onClick={() => {
@@ -257,7 +311,7 @@ const PropertiesBar = () => {
 
                     </CardContent>
                         : null}
-                    {selectedElement.type === 'text' ? <CardContent>
+                    {(tool === 'text') || (selectedElement != null && selectedElement.type === 'text') ? <CardContent>
                         <span className='text-xs'>Text align (Coming Soon)</span>
                         <div className='flex flex-row'>
 
@@ -278,7 +332,7 @@ const PropertiesBar = () => {
                     </CardContent>
                         : null}
 
-                    {selectedElement.type != 'text' ? <CardContent>
+                    {(tool != 'text') || (selectedElement != null && selectedElement.type != 'text') ? <CardContent>
                         <span className='text-xs'>Stroke width</span>
                         <div className='flex flex-row'>
 
@@ -310,7 +364,7 @@ const PropertiesBar = () => {
 
                     </CardContent>
                         : null}
-                    {selectedElement.type != 'text' && selectedElement.type != "pencil" ? <CardContent>
+                    {(tool != 'pencil' && tool != 'text') || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
                         <span className='text-xs'>Stroke style</span>
                         <div className='flex flex-row'>
 
@@ -352,7 +406,7 @@ const PropertiesBar = () => {
                         : null}
 
 
-                    {selectedElement.type != 'text' && selectedElement.type != "pencil" ? <CardContent>
+                    {(tool != 'pencil' && tool != 'text') || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
                         <span className='text-xs'>Sloppiness</span>
                         <div className='flex flex-row'>
 
@@ -393,7 +447,7 @@ const PropertiesBar = () => {
 
                     </CardContent>
                         : null}
-                    {selectedElement.type != 'text' && selectedElement.type != "pencil" ? <CardContent>
+                    {(tool != 'pencil' && tool != 'text') || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
                         <span className='text-xs'>Edges</span>
 
                         <div className='flex flex-row'>

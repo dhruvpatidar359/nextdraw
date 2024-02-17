@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/tooltip"
 import ExportDialog from '@/export/ExportDialog';
 import { Input } from './ui/input';
+import { GlobalProps } from './Redux/GlobalProps';
 
 
 
@@ -159,7 +160,6 @@ const Canvas = () => {
 
     // Clear the canvas before drawing elements
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
 
 
 
@@ -402,7 +402,8 @@ const Canvas = () => {
       }
 
 
-      const newElement = addElement(elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool);
+      const newElement = {...addElement(elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool),stroke : GlobalProps.stroke,fill : GlobalProps.fill,
+       fillStyle : GlobalProps.fillStyle,sharp : GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle,strokeWidth : GlobalProps.strokeWidth,bowing : GlobalProps.bowing,fontSize : GlobalProps.fontSize};
 
       if (dupState === false) {
         dispatch(setElement([[...elements, newElement]]));
@@ -752,7 +753,7 @@ const Canvas = () => {
           position: "fixed", top: (selectedElement.y1 + panOffset.y) * scale - scaleOffset.y,
           left: (selectedElement.x1 + panOffset.x) * scale - scaleOffset.x
 
-          , font: `${selectedElement.fontSize * scale}px Virgil`,color:selectedElement.stroke, margin: 0, padding: 0, border: 0, outline: 0, resize: 'auto', overflow: 'hidden',
+          , font: `${selectedElement.fontSize * scale}px Virgil`, color: selectedElement.stroke, margin: 0, padding: 0, border: 0, outline: 0, resize: 'auto', overflow: 'hidden',
           background: 'transparent', whiteSpace: 'pre'
           , resize: 'none', maxHeight: height - (selectedElement.y1 + panOffset.y) * scale + scaleOffset.y, maxWidth: width - (selectedElement.x1 + panOffset.x) * scale + scaleOffset.x
 

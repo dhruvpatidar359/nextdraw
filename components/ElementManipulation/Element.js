@@ -14,7 +14,7 @@ export function addElement(id, x1, y1, x2, y2, type) {
     case 'line':
     case 'diamond':
 
-      return { id, x1, x2, y1, y2, type, stroke: "#000000", fill: null, fillStyle: "solid", sharp: false, strokeStyle: [], strokeWidth: 2, bowing: 2, opacity: 0.5 };
+      return { id, x1, x2, y1, y2, type, stroke: "#000000", fill: null, fillStyle: "solid", sharp: false, strokeStyle: [], strokeWidth: 2, bowing: 2 };
 
 
 
