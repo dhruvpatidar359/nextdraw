@@ -248,7 +248,7 @@ const PropertiesBar = () => {
                     </CardContent>
 
 
-                    {(tool != 'pencil' && tool != 'text') || (selectedElement != null && selectedElement.type != "pencil" && selectedElement.type != 'text' === true) ? <CardContent >
+                    {(tool != 'pencil' && tool != 'text'  && selectedElement === null) || (selectedElement != null && selectedElement.type != "pencil" && selectedElement.type != 'text' === true) ? <CardContent >
                         <span className='text-xs'>Background</span>
                         <div className="flex flex-row">  {solids.map((s) => (
                             <div
@@ -279,7 +279,7 @@ const PropertiesBar = () => {
 
                         : null}
 
-                    {(tool === 'text') || (selectedElement != null && selectedElement.type === 'text') ? <CardContent>
+                    {(tool === 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type === 'text') ? <CardContent>
                         <span className='text-xs'>Font size</span>
                         <div className='flex flex-row'>
                             <Button onClick={() => {
@@ -311,7 +311,7 @@ const PropertiesBar = () => {
 
                     </CardContent>
                         : null}
-                    {(tool === 'text') || (selectedElement != null && selectedElement.type === 'text') ? <CardContent>
+                    {(tool === 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type === 'text') ? <CardContent>
                         <span className='text-xs'>Text align (Coming Soon)</span>
                         <div className='flex flex-row'>
 
@@ -332,7 +332,7 @@ const PropertiesBar = () => {
                     </CardContent>
                         : null}
 
-                    {(tool != 'text') || (selectedElement != null && selectedElement.type != 'text') ? <CardContent>
+                    {(tool != 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type != 'text') ? <CardContent>
                         <span className='text-xs'>Stroke width</span>
                         <div className='flex flex-row'>
 
@@ -364,7 +364,7 @@ const PropertiesBar = () => {
 
                     </CardContent>
                         : null}
-                    {(tool != 'pencil' && tool != 'text') || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
+                    {(tool != 'pencil' && tool != 'text'&& selectedElement === null) || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
                         <span className='text-xs'>Stroke style</span>
                         <div className='flex flex-row'>
 
@@ -406,7 +406,7 @@ const PropertiesBar = () => {
                         : null}
 
 
-                    {(tool != 'pencil' && tool != 'text') || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
+                    {(tool != 'pencil' && tool != 'text'&& selectedElement === null) || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
                         <span className='text-xs'>Sloppiness</span>
                         <div className='flex flex-row'>
 
@@ -447,7 +447,7 @@ const PropertiesBar = () => {
 
                     </CardContent>
                         : null}
-                    {(tool != 'pencil' && tool != 'text') || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
+                    {(tool != 'pencil' && tool != 'text'&& selectedElement === null) || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
                         <span className='text-xs'>Edges</span>
 
                         <div className='flex flex-row'>

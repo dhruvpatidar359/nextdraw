@@ -14,20 +14,20 @@ export function addElement(id, x1, y1, x2, y2, type) {
     case 'line':
     case 'diamond':
 
-      return { id, x1, x2, y1, y2, type, stroke: "#000000", fill: null, fillStyle: "solid", sharp: false, strokeStyle: [], strokeWidth: 2, bowing: 2 };
+      return { id, x1, x2, y1, y2, type };
 
 
 
     case "pencil":
-      return { id, type, points: [{ x: x1, y: y1 }], stroke: "#000000", strokeWidth: 2 };
+      return { id, type, points: [{ x: x1, y: y1 }] };
 
     case "text":
 
-      return { id, type, x1, y1, x2, y2, text: "", stroke: "#000000", fontSize: 24 };
+      return { id, type, x1, y1, x2, y2, text: "" };
 
     default:
 
-      return { id, x1, x2, y1, y2, type, stroke: "#000000" };
+      return { id, x1, x2, y1, y2, type };
 
   }
 

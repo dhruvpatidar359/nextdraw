@@ -40,7 +40,7 @@ export const drawElements = (ctx, element) => {
 
         roughCanvasRef.draw(ShapeCache.cache.get(element));
       } else {
-
+       
         roughCanvasRef.draw(getElementObject(element));
       }
       break;

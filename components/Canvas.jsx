@@ -49,6 +49,7 @@ const Canvas = () => {
   const changed = useSelector(state => state.elements.changed);
   const dupState = useSelector(state => state.elements.dupState);
   const canvasBackground = useSelector(state => state.canvas.background);
+  const roughCanvasRef = store.getState().canvas.value;
   // const toolWheel = useSelector(state => state.tool.toolWheel);
 
 
@@ -68,6 +69,20 @@ const Canvas = () => {
 
   // dispatcher
   const dispatch = useDispatch();
+
+  useEffect(() => {
+
+    const storedData = localStorage.getItem('elements');
+
+    if (storedData) {
+      const data = JSON.parse(storedData);
+     
+      dispatch(setElement([data, true]));
+     
+      // dispatch(setElement([JSON.parse(storedData), true]));
+
+    }
+  }, [roughCanvasRef]);
 
   useEffect(() => {
     const textArea = textAreaRef.current;
@@ -161,14 +176,7 @@ const Canvas = () => {
     // Clear the canvas before drawing elements
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-
-
-
-
     ctx.globalCompositeOperation = 'destination-under'
-
-    // ctx.fillStyle = canvasBackground;
-
 
     const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
     let gradientColorsList = [];
@@ -402,8 +410,10 @@ const Canvas = () => {
       }
 
 
-      const newElement = {...addElement(elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool),stroke : GlobalProps.stroke,fill : GlobalProps.fill,
-       fillStyle : GlobalProps.fillStyle,sharp : GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle,strokeWidth : GlobalProps.strokeWidth,bowing : GlobalProps.bowing,fontSize : GlobalProps.fontSize};
+      const newElement = {
+        ...addElement(elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool), stroke: GlobalProps.stroke, fill: GlobalProps.fill,
+        fillStyle: GlobalProps.fillStyle, sharp: GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle, strokeWidth: GlobalProps.strokeWidth, bowing: GlobalProps.bowing, fontSize: GlobalProps.fontSize
+      };
 
       if (dupState === false) {
         dispatch(setElement([[...elements, newElement]]));
