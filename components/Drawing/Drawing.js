@@ -60,11 +60,11 @@ export const drawElements = (ctx, element) => {
     case "text":
 
       ctx.textBaseline = "top";
-      ctx.font = "24px Virgil";
+      ctx.font = `${element.fontSize}px Virgil`;
 
       var txt = element.text;
 
-      var lineheight = 30;
+      var lineheight = element.fontSize + 6;
       var lines = txt.split('\n');
       ctx.fillStyle = element.stroke;
       for (var i = 0; i < lines.length; i++)

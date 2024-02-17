@@ -30,6 +30,7 @@ const PropertiesBar = () => {
     const [strokeWidth, setStrokeWidth] = useState(2);
     const [sharp, setSharp] = useState(false);
     const [bowing, setBowing] = useState(1);
+    const [fontSize, setFontSize] = useState(24);
 
     const selectedElement = useSelector(state => state.selectedElement.value);
     const index = useSelector(state => state.elements.index);
@@ -54,9 +55,18 @@ const PropertiesBar = () => {
             const currentBackground = element.fill;
             const currentStrokeStyle = element.strokeStyle;
             const currentStrokeWidth = element.strokeWidth;
+            const currentSharp = element.sharp;
+            const bowing = element.bowing;
+
             setBackground(currentBackground);
             setStrokeStyle(currentStrokeStyle);
             setStrokeWidth(currentStrokeWidth);
+            setSharp(currentSharp);
+            setBowing(bowing);
+        } else if (element.type === 'text') {
+            const currentFontSize = element.fontSize;
+            setFontSize(currentFontSize);
+
         }
 
 
@@ -87,10 +97,10 @@ const PropertiesBar = () => {
                 options = { stroke: stroke, fill: background, strokeStyle: strokeStyle, strokeWidth: strokeWidth, sharp: sharp, bowing: bowing };
                 break;
             case "text":
-                options = { stroke: stroke };
+                options = { stroke: stroke, fontSize: fontSize };
                 break;
             case "pencil":
-                options = { stroke: stroke };
+                options = { stroke: stroke ,strokeWidth : strokeWidth};
                 break;
 
             case "line":
@@ -107,19 +117,44 @@ const PropertiesBar = () => {
 
         let tempCopy = [...elements];
 
+        if (type === "text") {
+            const context = document.getElementById("canvas").getContext('2d');
+            context.font = `${fontSize}px Virgil`;
 
 
 
-        let newElement = { ...element, ...options };
+            let textWidth = element.x1;
+            let textHeight = element.y1;
 
-        tempCopy[id] = newElement;
+            var txt = element.text;
+            var lines = txt.split('\n');
+            var linesLength = lines.length;
+
+            var textWidthVar = 0;
+            for (let i = 0; i < linesLength; i++) {
+                const line = lines[i];
+                textWidthVar = Math.max(textWidthVar, context.measureText(line).width)
+            }
+
+
+            textWidth += textWidthVar;
+            textHeight = textHeight + (linesLength) * (fontSize + 6);
+            let newElement = { ...element, x2: textWidth, y2: textHeight, ...options };
+            tempCopy[id] = newElement;
+        } else {
+
+            let newElement = { ...element, ...options };
+            tempCopy[id] = newElement;
+        }
+
+
         dispatch(setElement([tempCopy, false]));
 
 
 
 
         setChangedByUser(false);
-    }, [stroke, background, strokeStyle, strokeWidth, sharp, bowing])
+    }, [stroke, background, strokeStyle, strokeWidth, sharp, bowing, fontSize])
 
 
     return (
@@ -132,8 +167,9 @@ const PropertiesBar = () => {
                         <div className="flex flex-row">  {solids.map((s) => (
                             <div
                                 key={s}
+
                                 style={{ background: s }}
-                                className="rounded-md h-6 w-6 m-1 cursor-pointer active:scale-105"
+                                className={`rounded-md h-6 w-6 m-1 cursor-pointer active:scale-105  ${stroke === s ? 'border-2 border-black' : null} `}
                                 onClick={() => {
                                     setChangedByUser(true);
                                     setStroke(s);
@@ -158,13 +194,13 @@ const PropertiesBar = () => {
                     </CardContent>
 
 
-               {selectedElement.type != "pencil" && selectedElement.type != 'text' === true ?     <CardContent >
+                    {selectedElement.type != "pencil" && selectedElement.type != 'text' === true ? <CardContent >
                         <span className='text-xs'>Background</span>
                         <div className="flex flex-row">  {solids.map((s) => (
                             <div
                                 key={s}
                                 style={{ background: s }}
-                                className="rounded-md h-6 w-6 m-1 cursor-pointer active:scale-105"
+                                className={`rounded-md h-6 w-6 m-1 cursor-pointer active:scale-105  ${background === s ? 'border-2 border-black' : null} `}
                                 onClick={() => {
                                     setChangedByUser(true);
                                     setBackground(s);
@@ -187,30 +223,42 @@ const PropertiesBar = () => {
 
                     </CardContent>
 
-                           : null }
+                        : null}
 
-{ selectedElement.type === 'text' ?    <CardContent>
+                    {selectedElement.type === 'text' ? <CardContent>
                         <span className='text-xs'>Font size</span>
                         <div className='flex flex-row'>
-                            <Button variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setFontSize(24);
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontSize === 24 ? "bg-[#d4d9d6]" : null} `}>
                                 <span className='text-xl font-normal'>S</span>
                             </Button>
-                            <Button variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setFontSize(32);
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontSize === 32 ? "bg-[#d4d9d6]" : null} `}>
                                 <span className='text-xl font-normal'>M</span>
                             </Button>
-                            <Button variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setFontSize(40);
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontSize === 40 ? "bg-[#d4d9d6]" : null} `}>
                                 <span className='text-xl font-normal'>L</span>
                             </Button>
 
-                            <Button variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setFontSize(48);
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontSize === 48 ? "bg-[#d4d9d6]" : null} `}>
                                 <span className='text-xl font-normal'>XL</span>
                             </Button>
                         </div>
 
                     </CardContent>
-:null }
-     { selectedElement.type === 'text' ?                 <CardContent>
-                        <span className='text-xs'>Text align</span>
+                        : null}
+                    {selectedElement.type === 'text' ? <CardContent>
+                        <span className='text-xs'>Text align (Coming Soon)</span>
                         <div className='flex flex-row'>
 
                             <Button variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
@@ -228,9 +276,9 @@ const PropertiesBar = () => {
                         </div>
 
                     </CardContent>
-                    :null }
+                        : null}
 
-           { selectedElement.type != 'text' ?           <CardContent>
+                    {selectedElement.type != 'text' ? <CardContent>
                         <span className='text-xs'>Stroke width</span>
                         <div className='flex flex-row'>
 
@@ -238,7 +286,7 @@ const PropertiesBar = () => {
 
                                 setChangedByUser(true);
                                 setStrokeWidth(2);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${strokeWidth === 2 ? "bg-[#d4d9d6]" : null} `} >
                                 <span>  <Minus className='h-4 w-4' strokeWidth={1.75} /></span>
 
                             </Button>
@@ -246,14 +294,14 @@ const PropertiesBar = () => {
 
                                 setChangedByUser(true);
                                 setStrokeWidth(4);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${strokeWidth === 4 ? "bg-[#d4d9d6]" : null} `}>
                                 <span>  <Minus className='h-4 w-4' strokeWidth={2.5} /></span>
                             </Button>
                             <Button onClick={() => {
 
                                 setChangedByUser(true);
                                 setStrokeWidth(6);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${strokeWidth === 6 ? "bg-[#d4d9d6]" : null} `}>
                                 <span>  <Minus className='h-4 w-4' strokeWidth={3.25} /></span>
                             </Button>
 
@@ -261,22 +309,22 @@ const PropertiesBar = () => {
                         </div>
 
                     </CardContent>
-  :null }
-             { selectedElement.type != 'text' && selectedElement.type != "pencil" ?               <CardContent>
+                        : null}
+                    {selectedElement.type != 'text' && selectedElement.type != "pencil" ? <CardContent>
                         <span className='text-xs'>Stroke style</span>
                         <div className='flex flex-row'>
 
                             <Button onClick={() => {
                                 setChangedByUser(true);
                                 setStrokeStyle([]);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${JSON.stringify(strokeStyle) === JSON.stringify([]) ? "bg-[#d4d9d6]" : null} `} >
                                 <span>  <Minus className='h-4 w-4' /></span>
 
                             </Button>
                             <Button onClick={() => {
                                 setChangedByUser(true);
                                 setStrokeStyle([20, 10]);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${JSON.stringify(strokeStyle) === JSON.stringify([20, 10]) ? "bg-[#d4d9d6]" : null} `}>
                                 <span className='h-4 w-4 flex flex-row'>
 
                                     <Minus className='h-4 w-2' strokeWidth={5} />
@@ -287,7 +335,7 @@ const PropertiesBar = () => {
                             <Button onClick={() => {
                                 setChangedByUser(true);
                                 setStrokeStyle([10, 10]);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${JSON.stringify(strokeStyle) === JSON.stringify([10, 10]) ? "bg-[#d4d9d6]" : null} `}>
                                 <span className='h-4 w-4 flex flex-row'>
 
                                     <Dot className='h-4 w-3' strokeWidth={5} />
@@ -301,24 +349,24 @@ const PropertiesBar = () => {
                         </div>
 
                     </CardContent>
-                    :null }
+                        : null}
 
 
-{ selectedElement.type != 'text' && selectedElement.type != "pencil" ?   <CardContent>
+                    {selectedElement.type != 'text' && selectedElement.type != "pencil" ? <CardContent>
                         <span className='text-xs'>Sloppiness</span>
                         <div className='flex flex-row'>
 
                             <Button onClick={() => {
                                 setChangedByUser(true);
                                 setBowing(2);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${bowing === 2 ? "bg-[#d4d9d6]" : null} `} >
                                 <span>  <Spline className='h-4 w-4' /></span>
 
                             </Button>
                             <Button onClick={() => {
                                 setChangedByUser(true);
                                 setBowing(10);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${bowing === 10 ? "bg-[#d4d9d6]" : null} `}>
                                 <div className="flex relative">
                                     <span className="">
                                         <Spline className="relative left-2 h-4 w-4" strokeWidth={2} />
@@ -330,7 +378,7 @@ const PropertiesBar = () => {
                             <Button onClick={() => {
                                 setChangedByUser(true);
                                 setBowing(14);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${bowing === 14 ? "bg-[#d4d9d6]" : null} `}>
                                 <div className="flex relative">
 
                                     <Spline className="relative left-4 h-4 w-4" strokeWidth={2} />
@@ -344,8 +392,8 @@ const PropertiesBar = () => {
                         </div>
 
                     </CardContent>
-      :null }
-         { selectedElement.type != 'text' && selectedElement.type != "pencil" ?            <CardContent>
+                        : null}
+                    {selectedElement.type != 'text' && selectedElement.type != "pencil" ? <CardContent>
                         <span className='text-xs'>Edges</span>
 
                         <div className='flex flex-row'>
@@ -353,7 +401,7 @@ const PropertiesBar = () => {
                             <Button onClick={() => {
                                 setChangedByUser(true);
                                 setSharp(true);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100" >
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${sharp === true ? "bg-[#d4d9d6]" : null} `} >
 
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="img" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" strokeWidth="1.5">
@@ -376,7 +424,7 @@ const PropertiesBar = () => {
                             <Button onClick={() => {
                                 setChangedByUser(true);
                                 setSharp(false);
-                            }} variant={"ghost"} className="rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105  bg-indigo-100">
+                            }} variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${sharp === false ? "bg-[#d4d9d6]" : null} `}>
                                 <span>  <MdRoundedCorner className='-scale-x-90 h-4 w-4' /></span>
                             </Button>
 
@@ -384,13 +432,8 @@ const PropertiesBar = () => {
                         </div>
 
                     </CardContent>
-     :null }
-                    <CardContent>
-                        <span className='text-xs'>Opacity</span>
-                        <Slider className="p-2" max={100} step={1} />
+                        : null}
 
-
-                    </CardContent>
 
                 </Card>
 

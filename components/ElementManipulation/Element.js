@@ -14,16 +14,16 @@ export function addElement(id, x1, y1, x2, y2, type) {
     case 'line':
     case 'diamond':
 
-      return { id, x1, x2, y1, y2, type, stroke: "#000000", fill: null, fillStyle: "solid", sharp: false, strokeStyle: null ,strokeWidth : null ,bowing : 2};
+      return { id, x1, x2, y1, y2, type, stroke: "#000000", fill: null, fillStyle: "solid", sharp: false, strokeStyle: [], strokeWidth: 2, bowing: 2, opacity: 0.5 };
 
 
 
     case "pencil":
-      return { id, type, points: [{ x: x1, y: y1 }], stroke: "#000000" };
+      return { id, type, points: [{ x: x1, y: y1 }], stroke: "#000000", strokeWidth: 2 };
 
     case "text":
 
-      return { id, type, x1, y1, x2, y2, text: "", stroke: "#000000" };
+      return { id, type, x1, y1, x2, y2, text: "", stroke: "#000000", fontSize: 24 };
 
     default:
 
@@ -49,6 +49,7 @@ export const getElementObject = (element) => {
   const strokeStyle = element.strokeStyle;
   const strokeWidth = element.strokeWidth;
   const bowing = element.bowing;
+
   switch (type) {
     case 'rectangle':
 
@@ -73,9 +74,9 @@ export const getElementObject = (element) => {
 
         elementObject = root.path(`M ${x1 + r} ${y1} L ${x1 + w - r} ${y1} Q ${x1 + w} ${y1}, ${x1 + w} ${y1 + r} L ${x1 + w} ${y1 + h - r
           } Q ${x1 + w} ${y1 + h}, ${x1 + w - r} ${y1 + h} L ${x1 + r} ${y1 + h} Q ${x1} ${y1 + h}, ${x1} ${y1 + h - r
-          } L ${x1} ${y1 + r} Q ${x1} ${y1}, ${x1 + r} ${y1}`, { seed: 25, strokeWidth: 3, stroke: stroke, fill: fill, fillStyle: fillStyle, strokeLineDash: strokeStyle ,strokeWidth : strokeWidth,bowing : bowing});
+          } L ${x1} ${y1 + r} Q ${x1} ${y1}, ${x1 + r} ${y1}`, { seed: 25, strokeWidth: 3, stroke: stroke, fill: fill, fillStyle: fillStyle, strokeLineDash: strokeStyle, strokeWidth: strokeWidth, bowing: bowing });
       } else {
-        elementObject = root.rectangle(x1, y1, x2 - x1, y2 - y1, { seed: 25, strokeWidth: 3, stroke: stroke, fill: fill, fillStyle: fillStyle, strokeLineDash: strokeStyle ,strokeWidth : strokeWidth,bowing : bowing});
+        elementObject = root.rectangle(x1, y1, x2 - x1, y2 - y1, { seed: 25, strokeWidth: 3, stroke: stroke, fill: fill, fillStyle: fillStyle, strokeLineDash: strokeStyle, strokeWidth: strokeWidth, bowing: bowing });
       }
 
 
@@ -83,11 +84,11 @@ export const getElementObject = (element) => {
 
 
     case 'line':
-      elementObject = root.line(x1, y1, x2, y2, { seed: 12, strokeWidth: 5, stroke: stroke, fill: fill, fillStyle: fillStyle ,strokeLineDash:strokeStyle,strokeWidth : strokeWidth ,bowing : bowing });
+      elementObject = root.line(x1, y1, x2, y2, { seed: 12, strokeWidth: 5, stroke: stroke, fill: fill, fillStyle: fillStyle, strokeLineDash: strokeStyle, strokeWidth: strokeWidth, bowing: bowing });
       break;
 
     case 'pencil':
-      const outlinePoints = getStroke(element.points);
+      const outlinePoints = getStroke(element.points, { size: strokeWidth * 4 });
       const pathData = getSvgPathFromStroke(outlinePoints);
       const path = new Path2D(pathData);
       elementObject = path;
@@ -101,7 +102,7 @@ export const getElementObject = (element) => {
       elementObject = root.ellipse(centerX,
         centerY,
         x2 - x1,
-        (y2 - y1) / 1.1, { seed: 11, strokeWidth: 3, fill: fill, fillStyle: fillStyle, stroke: stroke,strokeLineDash:strokeStyle ,strokeWidth : strokeWidth ,bowing : bowing}
+        (y2 - y1) / 1.1, { seed: 11, strokeWidth: 3, fill: fill, fillStyle: fillStyle, stroke: stroke, strokeLineDash: strokeStyle, strokeWidth: strokeWidth, bowing: bowing }
       );
       break;
 
@@ -139,12 +140,12 @@ export const getElementObject = (element) => {
           } ${leftY - (leftY - topY) * 0.25} 
       L ${topX - (topX - leftX) * 0.25} ${topY + (leftY - topY) * 0.25} 
       C ${topX} ${topY}, ${topX} ${topY}, ${topX + (rightX - topX) * 0.25
-          } ${topY + (rightY - topY) * 0.25}`, { seed: 17, fill: 'grey', fillStyle: "solid", stroke: stroke, fill: fill, fillStyle: fillStyle ,strokeLineDash:strokeStyle,strokeWidth : strokeWidth ,bowing : bowing});
+          } ${topY + (rightY - topY) * 0.25}`, { seed: 17, fill: 'grey', fillStyle: "solid", stroke: stroke, fill: fill, fillStyle: fillStyle, strokeLineDash: strokeStyle, strokeWidth: strokeWidth, bowing: bowing });
       } else {
 
 
 
-        elementObject = root.polygon([top, left, bottom, right], { seed: 17, fill: 'grey', fillStyle: "solid", stroke: stroke, fill: fill, fillStyle: fillStyle ,strokeLineDash:strokeStyle ,strokeWidth : strokeWidth ,bowing : bowing});
+        elementObject = root.polygon([top, left, bottom, right], { seed: 17, fill: 'grey', fillStyle: "solid", stroke: stroke, fill: fill, fillStyle: fillStyle, strokeLineDash: strokeStyle, strokeWidth: strokeWidth, bowing: bowing });
       }
 
 
@@ -302,7 +303,7 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
     case "text":
 
       const context = document.getElementById("canvas").getContext('2d');
-      context.font = '24px Virgil';
+      context.font = `${elements[id].fontSize}px Virgil`;
 
       let { id: textId, x1: textX1, y1: textY1, x2: textX2, y2: textY2, type: textType, text: textStrign, ...otherTextProps } = elements[id];
 
@@ -321,7 +322,7 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
 
 
       textWidth += textWidthVar;
-      textHeight = textHeight + (linesLength) * 30;
+      textHeight = textHeight + (linesLength) * (elements[id].fontSize + 6);
 
       if (store.getState().action.value === 'resizing') {
         tempNewArray[id] = { ...addElement(id, x1, y2, x2, textHeight, type), text: options.text, ...otherTextProps }
