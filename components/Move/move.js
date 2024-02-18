@@ -1,10 +1,14 @@
 import store from "@/app/store";
 import { updateElement } from "../ElementManipulation/Element";
 import { setElement } from "../Redux/features/elementSlice";
+import { GlobalProps } from "../Redux/GlobalProps";
 
 export const move = (event, elements) => {
 
     const selectedElement = store.getState().selectedElement.value;
+    if(selectedElement === null) {
+        return;
+    }
     const { id, x1, x2, y1, y2, type, offSetX, offSetY, rectCoordinatesOffsetX, rectCoordinatesOffsetY, text } = selectedElement;
 
 
@@ -39,6 +43,13 @@ export const move = (event, elements) => {
         };
 
         store.dispatch(setElement([tempNewArray, true]));
+        const roomId =   GlobalProps.room;
+  if(roomId != null) {
+    GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+  }
+
+        
+       
     }
 
 }

@@ -6,7 +6,6 @@ import CircularToolBar from './TopBar/CircularToolBar/CircularToolBar';
 import ExportDialog from '@/export/ExportDialog';
 import { useEffect, useState } from 'react';
 import PropertiesBar from './PropertiesBar/PropertiesBar';
-import { setElement } from './Redux/features/elementSlice';
 
 
 const App = () => {
@@ -19,12 +18,12 @@ const App = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
- 
+
 
   useEffect(() => {
     const syncInterval = setInterval(() => {
       localStorage.setItem('elements', JSON.stringify(elements));
-    }, 5000);
+    }, 2000);
 
 
     return () => clearInterval(syncInterval);

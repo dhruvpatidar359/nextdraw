@@ -23,7 +23,20 @@ import { exportImage } from '@/export/export';
 import ExportDialog from '@/export/ExportDialog';
 import Menu from './Menu/Menu';
 import { setHover } from '../Redux/features/hoverSlice';
-import { Circle, Diamond, ImageDown, LucideImageDown, Minus, Move, Pencil, Square, Type } from 'lucide-react';
+import { Circle, Copy, CopyCheck, CopyIcon, Diamond, ImageDown, LucideImageDown, Minus, Move, Pencil, Square, Type } from 'lucide-react';
+import { GlobalProps } from '../Redux/GlobalProps';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from '../ui/input';
+import { toast } from '../ui/use-toast';
 
 const buttons = [
   { tooltip: 'Rectangle', icon: Square, shortcut: 'Rectangle - 1', tool: 'rectangle' },
@@ -48,6 +61,7 @@ const Topbar = () => {
   const changed = useSelector(state => state.elements.changed);
   const toolWheel = useSelector(state => state.tool.toolWheel);
   const [open, changeOpen] = useState(false);
+  const [inputRoom, setInputRoom] = useState(null);
 
 
 
@@ -110,12 +124,17 @@ const Topbar = () => {
         dispatch(setSelectedElement(null));
         dispatch(redo());
 
+
+
+
       } else if (event.ctrlKey && (event.key === 'z' || event.key === 'Z')) {
         if (store.getState().action.value === 'writing') {
           return;
         }
         dispatch(setSelectedElement(null));
         dispatch(undo());
+
+
       } else if (event.key === 'Delete') {
 
         if (selectedElement != null) {
@@ -151,12 +170,21 @@ const Topbar = () => {
             }
 
           });
+          const tempNewArray = elementsCopy;
           if (!changed) {
             dispatch(setElement([elementsCopy, true]));
             dispatch(setChanged(true));
+
+
           } else {
+
+
             dispatch(setElement([elementsCopy]));
 
+          }
+          const roomId = GlobalProps.room;
+          if (roomId != null) {
+            GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
           }
 
 
@@ -178,14 +206,23 @@ const Topbar = () => {
 
 
 
+  const [room, setRoom] = useState(GlobalProps.room);
 
-
+  const copyRoomId = () => {
+    if (room) {
+      navigator.clipboard.writeText(room); // Copy room ID to clipboard
+      toast({
+        title: "Copied Successfully",
+        duration: 3000
+      });
+    }
+  };
 
 
 
 
   return (
-    <div className='flex flex-row'>
+    <div className='flex flex-row '>
       <Menu ></Menu>
       <div className='flex flex-row absolute left-1/2 transform -translate-x-1/2 rounded-md bg-white  my-1 shadow-md'>
 
@@ -228,6 +265,98 @@ const Topbar = () => {
 
 
       </div>
+
+
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button onClick={() => {
+
+            // GlobalProps.socket.emit('join-room', GlobalProps.room);
+
+            // GlobalProps.socket.emit('create-room', GlobalProps.room)
+            // GlobalProps.socket.on('room-created', roomId => {
+            //   GlobalProps.room = roomId;
+
+            // });
+
+
+          }} variant="outline" className='absolute right-2 top-2'>Collaborate</Button>
+
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>
+              Speed up by using Collaboration</DialogTitle>
+
+
+
+          </DialogHeader>
+          <text className=''>Create Your Own Room</text>
+          {room && (
+            <div className="room-id-container">
+              <span>{room}</span>
+              <Button onClick={copyRoomId} variant="outline" className="m-2">
+                <CopyIcon className='h-4 w-4' />
+              </Button>
+            </div>
+          )}
+
+          <Button onClick={() => {
+
+            if (GlobalProps.socket === null) {
+              GlobalProps.socket = io('http://localhost:3001');
+            }
+
+            GlobalProps.socket.emit('create-room', GlobalProps.room)
+            GlobalProps.socket.on('room-created', roomId => {
+              GlobalProps.room = roomId;
+              setRoom(roomId);
+
+            });
+
+
+          }} variant="outline" className=''>Create Room</Button>
+
+          <text className=''>Join a Room</text>
+
+          <div className="grid gap-4 ">
+
+
+            <Input
+              id="username"
+              placeholder="Room-Id"
+              value={inputRoom}
+              onChange={(e) => {
+                setInputRoom(e.currentTarget.value)
+              }}
+              className="col-span-3"
+            />
+
+
+          </div>
+          <DialogFooter>
+            <Button onClick={() => {
+
+
+
+              if (GlobalProps.socket === null) {
+                GlobalProps.socket = io('http://localhost:3001');
+              }
+
+              GlobalProps.socket.emit('join-room', inputRoom);
+              GlobalProps.socket.on('error', error => {
+                toast({
+                  title: "Uh oh! Something went wrong.",
+                  description: error,
+                  duration: 3000
+                });
+              })
+              GlobalProps.room = inputRoom;
+            }} type="submit">Join Room</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   )
 }

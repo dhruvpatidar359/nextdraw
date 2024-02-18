@@ -29,6 +29,8 @@ import {
 import ExportDialog from '@/export/ExportDialog';
 import { Input } from './ui/input';
 import { GlobalProps } from './Redux/GlobalProps';
+import { io } from 'socket.io-client';
+import useFontFaceObserver from 'use-font-face-observer';
 
 
 
@@ -62,6 +64,14 @@ const Canvas = () => {
   const textAreaRef = useRef();
 
 
+  const isFontLoaded = useFontFaceObserver([
+    { family: 'Virgil' }, // Same name you have in your CSS
+  ]);
+
+
+
+
+
   const CLICK_INTERVAL = 500;
   let lastClick = (new Date()).getTime();
 
@@ -76,13 +86,31 @@ const Canvas = () => {
 
     if (storedData) {
       const data = JSON.parse(storedData);
-     
-      dispatch(setElement([data, true]));
-     
-      // dispatch(setElement([JSON.parse(storedData), true]));
+      if (data.length != 0) {
+        dispatch(setElement([data, true]));
+      }
+
+
 
     }
   }, [roughCanvasRef]);
+
+
+
+
+  useEffect(() => {
+    if (GlobalProps.socket === null) {
+      return;
+    }
+    GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
+    
+      dispatch(setElement([tempNewArray, true]));
+    })
+  }, [roughCanvasRef])
+
+
+
+
 
   useEffect(() => {
     const textArea = textAreaRef.current;
@@ -226,7 +254,7 @@ const Canvas = () => {
 
     // console.log(ShapeCache.cache);
 
-  }, [elements, selectedElement, action, panOffset, scale, canvasBackground]);
+  }, [elements, selectedElement, action, panOffset, scale, canvasBackground,isFontLoaded]);
 
 
   // scale and pan
@@ -504,12 +532,14 @@ const Canvas = () => {
 
       if (action === 'moving') {
 
-
+        if(selectedElement === null) {
+          return;
+      }
         if (ShapeCache.cache.has(oldElement)) {
           ShapeCache.cache.delete(oldElement);
           // console.log("ker deya delete move🔥");
         }
-
+       
         const newElement = elements[selectedElement.id];
 
         const { type } = newElement;

@@ -8,6 +8,8 @@ export class GlobalProps {
     static strokeWidth = 2;
     static bowing = 2;
     static fontSize = 24;
+    static socket = null;
+    static room = null;
     
 
 

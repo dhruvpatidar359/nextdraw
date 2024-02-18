@@ -3,6 +3,11 @@ import getStroke from "perfect-freehand";
 import { onLine } from "../Mouse/mouse";
 import { setElement } from "../Redux/features/elementSlice";
 import { setSelectedElement } from "../Redux/features/selectedElementSlice";
+import { io } from 'socket.io-client';
+import { GlobalProps } from "../Redux/GlobalProps";
+
+
+
 
 
 
@@ -338,9 +343,13 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
       break;
   }
 
+  const roomId =   GlobalProps.room;
+  if(roomId != null) {
+    GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+  }
+
+
   store.dispatch(setElement([tempNewArray, true]));
-
-
 
 
 

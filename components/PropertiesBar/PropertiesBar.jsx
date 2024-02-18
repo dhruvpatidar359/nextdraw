@@ -64,7 +64,7 @@ const PropertiesBar = () => {
 
             const currentStroke = element.stroke
 
-            if (element.type != "pencil" || element.type != "text") {
+            if (element.type != "pencil" && element.type != "text") {
                 const currentBackground = element.fill;
                 const currentStrokeStyle = element.strokeStyle;
                 const currentStrokeWidth = element.strokeWidth;
@@ -98,6 +98,7 @@ const PropertiesBar = () => {
             const currentStrokeWidth = GlobalProps.strokeWidth;
             const currentSharp = GlobalProps.sharp;
             const bowing = GlobalProps.bowing;
+            const currentFontSize = GlobalProps.fontSize;
 
             setBackground(currentBackground);
             setStrokeStyle(currentStrokeStyle);
@@ -105,7 +106,7 @@ const PropertiesBar = () => {
             setSharp(currentSharp);
             setBowing(bowing);
 
-            const currentFontSize = GlobalProps.fontSize;
+       
             setFontSize(currentFontSize);
 
 
@@ -169,7 +170,7 @@ const PropertiesBar = () => {
 
 
 
-        let tempCopy = [...elements];
+        let tempNewArray = [...elements];
 
         if (type === "text") {
             const context = document.getElementById("canvas").getContext('2d');
@@ -194,17 +195,21 @@ const PropertiesBar = () => {
             textWidth += textWidthVar;
             textHeight = textHeight + (linesLength) * (fontSize + 6);
             let newElement = { ...element, x2: textWidth, y2: textHeight, ...options };
-            tempCopy[id] = newElement;
+            tempNewArray[id] = newElement;
         } else {
 
             let newElement = { ...element, ...options };
-            tempCopy[id] = newElement;
+            tempNewArray[id] = newElement;
         }
 
 
-        dispatch(setElement([tempCopy, false]));
+        dispatch(setElement([tempNewArray, false]));
 
-
+        const roomId =   GlobalProps.room;
+        if(roomId != null) {
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+        }
+      
 
 
         setChangedByUser(false);
@@ -248,7 +253,7 @@ const PropertiesBar = () => {
                     </CardContent>
 
 
-                    {(tool != 'pencil' && tool != 'text'  && selectedElement === null) || (selectedElement != null && selectedElement.type != "pencil" && selectedElement.type != 'text' === true) ? <CardContent >
+                    {(tool != 'pencil' && tool != 'text' && tool != 'line' && selectedElement === null) || (selectedElement != null && selectedElement.type != "pencil" && selectedElement.type != 'text' && selectedElement.type != "line" === true) ? <CardContent >
                         <span className='text-xs'>Background</span>
                         <div className="flex flex-row">  {solids.map((s) => (
                             <div
@@ -364,7 +369,7 @@ const PropertiesBar = () => {
 
                     </CardContent>
                         : null}
-                    {(tool != 'pencil' && tool != 'text'&& selectedElement === null) || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
+                    {(tool != 'pencil' && tool != 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
                         <span className='text-xs'>Stroke style</span>
                         <div className='flex flex-row'>
 
@@ -406,7 +411,7 @@ const PropertiesBar = () => {
                         : null}
 
 
-                    {(tool != 'pencil' && tool != 'text'&& selectedElement === null) || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
+                    {(tool != 'pencil' && tool != 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
                         <span className='text-xs'>Sloppiness</span>
                         <div className='flex flex-row'>
 
@@ -447,7 +452,7 @@ const PropertiesBar = () => {
 
                     </CardContent>
                         : null}
-                    {(tool != 'pencil' && tool != 'text'&& selectedElement === null) || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
+                    {(tool != 'pencil' && tool != 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type != 'text' && selectedElement.type != "pencil") ? <CardContent>
                         <span className='text-xs'>Edges</span>
 
                         <div className='flex flex-row'>

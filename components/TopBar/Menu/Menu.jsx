@@ -102,6 +102,7 @@ const Menu = () => {
                             store.dispatch(setElement([[], false]));
                             ShapeCache.cache = new WeakMap();
                             store.dispatch(setCanvasBackground("#FFFFFF"))
+                            localStorage.setItem('elements', "");
                         }}>
                             <Delete className="mr-2 h-4 w-4" />
                             <span>Reset The Canvas</span>

@@ -1,6 +1,7 @@
 import store from "@/app/store";
 import { distance } from "@/utils/common";
 import { setElement } from "../Redux/features/elementSlice";
+import { GlobalProps } from "../Redux/GlobalProps";
 
 let threshold = 6;
 
@@ -129,7 +130,7 @@ export const resizeElement = (event, elements) => {
         break;
     }
   } else if (type === 'pencil') {
-
+    const roomId =   GlobalProps.room;
     switch (resizeDirection) {
 
 
@@ -166,6 +167,11 @@ export const resizeElement = (event, elements) => {
           };
 
           store.dispatch(setElement([tempNewArray, true]));
+        
+          if(roomId != null) {
+            GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+          }
+        
         }
 
         break;
@@ -198,6 +204,11 @@ export const resizeElement = (event, elements) => {
           };
 
           store.dispatch(setElement([tempNewArray, true]));
+ 
+          if(roomId != null) {
+            GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+          }
+        
         }
         break;
 
@@ -228,6 +239,7 @@ export const resizeElement = (event, elements) => {
           };
 
           store.dispatch(setElement([tempNewArray, true]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
         }
 
         break;
@@ -260,6 +272,7 @@ export const resizeElement = (event, elements) => {
           };
 
           store.dispatch(setElement([tempNewArray, true]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
 
         }
         break;
@@ -291,6 +304,7 @@ export const resizeElement = (event, elements) => {
           };
 
           store.dispatch(setElement([tempNewArray, true]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
         }
 
         break;
@@ -323,6 +337,7 @@ export const resizeElement = (event, elements) => {
           };
 
           store.dispatch(setElement([tempNewArray, true]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
         }
         break;
       case 7:
@@ -352,6 +367,7 @@ export const resizeElement = (event, elements) => {
           };
 
           store.dispatch(setElement([tempNewArray, true]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
         }
 
         break;
@@ -384,6 +400,7 @@ export const resizeElement = (event, elements) => {
           };
 
           store.dispatch(setElement([tempNewArray, true]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
         }
 
         break;
