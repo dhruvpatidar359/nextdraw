@@ -340,7 +340,8 @@ const Topbar = () => {
 
 
               if (GlobalProps.socket === null) {
-                GlobalProps.socket = io('http://localhost:3001');
+              
+                GlobalProps.socket = io('https://nextdraw.onrender.com:3001');
               }
 
               GlobalProps.socket.emit('join-room', inputRoom);
