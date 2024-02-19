@@ -52,7 +52,8 @@ const Canvas = () => {
   const dupState = useSelector(state => state.elements.dupState);
   const canvasBackground = useSelector(state => state.canvas.background);
   const roughCanvasRef = store.getState().canvas.value;
-  // const toolWheel = useSelector(state => state.tool.toolWheel);
+
+
 
 
   // useState for local height and width of canvas
@@ -96,9 +97,7 @@ const Canvas = () => {
   }, [roughCanvasRef]);
 
 
-
-
-
+ 
 
 
 

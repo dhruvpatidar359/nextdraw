@@ -39,6 +39,7 @@ import { Input } from '../ui/input';
 import { toast } from '../ui/use-toast';
 import { io } from 'socket.io-client';
 
+
 const buttons = [
   { tooltip: 'Rectangle', icon: Square, shortcut: 'Rectangle - 1', tool: 'rectangle' },
   { tooltip: 'Line', icon: Minus, shortcut: 'Line - 2', tool: 'line' },
@@ -306,6 +307,7 @@ const Topbar = () => {
 
             if (GlobalProps.socket === null) {
               GlobalProps.socket = io('https://nextdraw.onrender.com');
+
             }
 
             GlobalProps.socket.emit('create-room', GlobalProps.room)
@@ -313,23 +315,22 @@ const Topbar = () => {
               GlobalProps.room = roomId;
               setRoom(roomId);
 
-              GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-                const id = tempNewArray.id;
-                const elementCopy = [...elements];
-                if(elements.length > tempNewArray.id) {
-                  elementCopy[id] = tempNewArray;
-                } else {
-                  elementCopy.push(tempNewArray);
-                }
-               
-
-              
-                dispatch(setElement([elementCopy, true]));
-              });
-
             });
 
-
+            GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
+              const id = tempNewArray.id;
+              const i = store.getState().elements.index;
+              const e = store.getState().elements.value[i];
+              let elementCopy = [...e];
+              console.log(e);
+              if (e.length > tempNewArray.id) {
+                elementCopy[id] = tempNewArray;
+              } else {
+                elementCopy.push(tempNewArray);
+              }
+              console.log(elementCopy);
+              dispatch(setElement([elementCopy, true]));
+            });
           }} variant="outline" className=''>Create Room</Button>
 
           {/* <text className=''>Join a Room</text> */}
@@ -357,6 +358,7 @@ const Topbar = () => {
               if (GlobalProps.socket === null) {
 
                 GlobalProps.socket = io('https://nextdraw.onrender.com');
+
               }
 
               GlobalProps.socket.emit('join-room', inputRoom);
@@ -368,17 +370,24 @@ const Topbar = () => {
                 });
               })
               GlobalProps.room = inputRoom;
+
+
               GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
                 const id = tempNewArray.id;
-                const elementCopy = [...elements];
-                if(elements.length > tempNewArray.id) {
+                const i = store.getState().elements.index;
+                const e = store.getState().elements.value[i];
+                let elementCopy = [...e];
+                console.log(e);
+                if (e.length > tempNewArray.id) {
                   elementCopy[id] = tempNewArray;
                 } else {
                   elementCopy.push(tempNewArray);
                 }
-             
+                console.log(elementCopy);
                 dispatch(setElement([elementCopy, true]));
               });
+
+
             }} type="submit">Join Room</Button>
           </DialogFooter>
         </DialogContent>
