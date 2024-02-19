@@ -362,9 +362,12 @@ const Topbar = () => {
               })
               GlobalProps.room = inputRoom;
               GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-     
-                dispatch(setElement([tempNewArray, true]));
+                const id = tempNewArray.id;
+                const elementCopy = [...elements];
+                elementCopy[id] = tempNewArray;
+                dispatch(setElement([elementCopy, true]));
               });
+
             }} type="submit">Join Room</Button>
           </DialogFooter>
         </DialogContent>
