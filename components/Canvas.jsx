@@ -98,16 +98,6 @@ const Canvas = () => {
 
 
 
-  useEffect(() => {
-    if (GlobalProps.socket === null) {
-      return;
-    }
-    GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-    
-      dispatch(setElement([tempNewArray, true]));
-    })
-  }, [roughCanvasRef])
-
 
 
 
@@ -254,7 +244,7 @@ const Canvas = () => {
 
     // console.log(ShapeCache.cache);
 
-  }, [elements, selectedElement, action, panOffset, scale, canvasBackground,isFontLoaded]);
+  }, [elements, selectedElement, action, panOffset, scale, canvasBackground, isFontLoaded]);
 
 
   // scale and pan
@@ -532,14 +522,14 @@ const Canvas = () => {
 
       if (action === 'moving') {
 
-        if(selectedElement === null) {
+        if (selectedElement === null) {
           return;
-      }
+        }
         if (ShapeCache.cache.has(oldElement)) {
           ShapeCache.cache.delete(oldElement);
           // console.log("ker deya delete move🔥");
         }
-       
+
         const newElement = elements[selectedElement.id];
 
         const { type } = newElement;
