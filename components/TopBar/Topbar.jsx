@@ -62,7 +62,7 @@ const Topbar = () => {
   const changed = useSelector(state => state.elements.changed);
   const toolWheel = useSelector(state => state.tool.toolWheel);
   const [open, changeOpen] = useState(false);
-  const [inputRoom, setInputRoom] = useState(null);
+  const [inputRoom, setInputRoom] = useState("");
 
 
 
@@ -292,7 +292,7 @@ const Topbar = () => {
 
 
           </DialogHeader>
-          <text className=''>Create Your Own Room</text>
+          {/* <text className=''>Create Your Own Room</text> */}
           {room && (
             <div className="room-id-container">
               <span>{room}</span>
@@ -305,7 +305,7 @@ const Topbar = () => {
           <Button onClick={() => {
 
             if (GlobalProps.socket === null) {
-              GlobalProps.socket = io('http://localhost:3001');
+              GlobalProps.socket = io('https://nextdraw.onrender.com');
             }
 
             GlobalProps.socket.emit('create-room', GlobalProps.room)
@@ -318,7 +318,7 @@ const Topbar = () => {
 
           }} variant="outline" className=''>Create Room</Button>
 
-          <text className=''>Join a Room</text>
+          {/* <text className=''>Join a Room</text> */}
 
           <div className="grid gap-4 ">
 
@@ -341,8 +341,8 @@ const Topbar = () => {
 
 
               if (GlobalProps.socket === null) {
-              
-                GlobalProps.socket = io('https://nextdraw.onrender.com:3001');
+
+                GlobalProps.socket = io('https://nextdraw.onrender.com');
               }
 
               GlobalProps.socket.emit('join-room', inputRoom);
