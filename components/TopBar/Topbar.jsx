@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from '../ui/input';
 import { toast } from '../ui/use-toast';
+import { io } from 'socket.io-client';
 
 const buttons = [
   { tooltip: 'Rectangle', icon: Square, shortcut: 'Rectangle - 1', tool: 'rectangle' },

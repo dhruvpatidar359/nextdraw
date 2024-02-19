@@ -29,7 +29,7 @@ import {
 import ExportDialog from '@/export/ExportDialog';
 import { Input } from './ui/input';
 import { GlobalProps } from './Redux/GlobalProps';
-import { io } from 'socket.io-client';
+
 import useFontFaceObserver from 'use-font-face-observer';
 
 
