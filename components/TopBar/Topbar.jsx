@@ -316,7 +316,14 @@ const Topbar = () => {
               GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
                 const id = tempNewArray.id;
                 const elementCopy = [...elements];
-                elementCopy[id] = tempNewArray;
+                if(elements.length > tempNewArray.id) {
+                  elementCopy[id] = tempNewArray;
+                } else {
+                  elementCopy.push(tempNewArray);
+                }
+               
+
+              
                 dispatch(setElement([elementCopy, true]));
               });
 
@@ -364,10 +371,14 @@ const Topbar = () => {
               GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
                 const id = tempNewArray.id;
                 const elementCopy = [...elements];
-                elementCopy[id] = tempNewArray;
+                if(elements.length > tempNewArray.id) {
+                  elementCopy[id] = tempNewArray;
+                } else {
+                  elementCopy.push(tempNewArray);
+                }
+             
                 dispatch(setElement([elementCopy, true]));
               });
-
             }} type="submit">Join Room</Button>
           </DialogFooter>
         </DialogContent>
