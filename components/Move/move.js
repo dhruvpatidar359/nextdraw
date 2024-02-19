@@ -30,7 +30,7 @@ export const move = (event, elements) => {
             })
         });
 
-        const tempNewArray = [...elements];
+        let tempNewArray = [...elements];
 
 
         const width = x2 - x1;
@@ -45,6 +45,7 @@ export const move = (event, elements) => {
         store.dispatch(setElement([tempNewArray, true]));
         const roomId =   GlobalProps.room;
   if(roomId != null) {
+    tempNewArray = tempNewArray[id];
     GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
   }
 

@@ -267,7 +267,7 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
   const histIndex = store.getState().elements.index;
   const elements = store.getState().elements.value[histIndex];
   const action = store.getState().action.value;
-  const tempNewArray = [...elements];
+  let tempNewArray = [...elements];
 
 
 
@@ -342,14 +342,16 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
     default:
       break;
   }
-
+  store.dispatch(setElement([tempNewArray, true]));
   const roomId =   GlobalProps.room;
   if(roomId != null) {
+    const toSend = tempNewArray[id];
+    tempNewArray=toSend;
     GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
   }
 
 
-  store.dispatch(setElement([tempNewArray, true]));
+ 
 
 
 
