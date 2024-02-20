@@ -302,16 +302,17 @@ const Topbar = () => {
 
             if (GlobalProps.socket === null) {
               GlobalProps.socket = io('https://nextdraw.onrender.com');
-
             }
 
+
             GlobalProps.socket.emit('create-room', GlobalProps.room)
-            GlobalProps.socket.on('new-element-id', roomId => {
+            GlobalProps.socket.on('room-created', roomId => {
               GlobalProps.room = roomId;
               setRoom(roomId);
+              console.log(roomId);
 
             });
-
+            console.log(GlobalProps.socket);
             GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
               const id = tempNewArray.id;
               const i = store.getState().elements.index;
