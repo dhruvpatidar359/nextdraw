@@ -427,40 +427,40 @@ const Canvas = () => {
       }
 
 
-        const elementId = GlobalProps.username + Date.now();
+      const elementId = GlobalProps.username + Date.now();
+      console.log(elementId);
+      GlobalProps.indexMap.set(elementId, elements.length);
 
-        GlobalProps.indexMap.set(elementId,elements.length);
-
-        const newElement = {
-          ...addElement(elementId +"#"+ elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool), stroke: GlobalProps.stroke, fill: GlobalProps.fill,
-          fillStyle: GlobalProps.fillStyle, sharp: GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle, strokeWidth: GlobalProps.strokeWidth, bowing: GlobalProps.bowing, fontSize: GlobalProps.fontSize
-        };
-
-        if (dupState === false) {
+      const newElement = {
+        ...addElement(elementId + "#" + elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool), stroke: GlobalProps.stroke, fill: GlobalProps.fill,
+        fillStyle: GlobalProps.fillStyle, sharp: GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle, strokeWidth: GlobalProps.strokeWidth, bowing: GlobalProps.bowing, fontSize: GlobalProps.fontSize
+      };
+      console.log(newElement);
+      if (dupState === false) {
+        dispatch(setElement([[...elements, newElement]]));
+      } else {
+        if (changed) {
           dispatch(setElement([[...elements, newElement]]));
         } else {
-          if (changed) {
-            dispatch(setElement([[...elements, newElement]]));
-          } else {
-            dispatch(setElement([[...elements, newElement], true]));
+          dispatch(setElement([[...elements, newElement], true]));
 
-            dispatch(setChanged(true));
+          dispatch(setChanged(true));
 
-          }
-
-          dispatch(setDupState(false));
         }
 
-
-        dispatch(setOldElement(newElement));
-
-        // we don't want the bounding box if it is a pencil and it is drawn afresh
-        if (newElement.type != 'pencil') {
-          dispatch(setSelectedElement(newElement));
-        }
+        dispatch(setDupState(false));
+      }
 
 
-   
+      dispatch(setOldElement(newElement));
+
+      // we don't want the bounding box if it is a pencil and it is drawn afresh
+      if (newElement.type != 'pencil') {
+        dispatch(setSelectedElement(newElement));
+      }
+
+
+
 
     }
 

@@ -302,30 +302,46 @@ const Topbar = () => {
 
             if (GlobalProps.socket === null) {
               GlobalProps.socket = io('https://nextdraw.onrender.com');
-
             }
 
+
             GlobalProps.socket.emit('create-room', GlobalProps.room)
-            GlobalProps.socket.on('new-element-id', roomId => {
+            GlobalProps.socket.on('room-created', roomId => {
               GlobalProps.room = roomId;
               setRoom(roomId);
+              console.log(roomId);
 
             });
+            console.log(GlobalProps.socket);
 
             GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-              const id = tempNewArray.id;
+              let id = tempNewArray.id.split("#")[0];
               const i = store.getState().elements.index;
               const e = store.getState().elements.value[i];
               let elementCopy = [...e];
-              console.log(e);
-              if (e.length > tempNewArray.id) {
-                elementCopy[id] = tempNewArray;
-              } else {
-                elementCopy.push(tempNewArray);
-              }
-              console.log(elementCopy);
-              dispatch(setElement([elementCopy, true]));
+              
+              console.log(GlobalProps.indexMap);
+
+              indexMutex.runExclusive(async () => {
+                if (GlobalProps.indexMap.has(id)) {
+
+
+                  const index = GlobalProps.indexMap.get(id);
+                  tempNewArray = { ...tempNewArray, id: id +"#"+ index };
+                  elementCopy[index] = tempNewArray;
+                } else {
+                  console.log("na mela");
+                  const index = e.length;
+                  GlobalProps.indexMap.set(id, index);
+                  tempNewArray = {...tempNewArray , id: id + "#" + index};
+                  elementCopy.push(tempNewArray);
+                }
+                console.log(elementCopy);
+                dispatch(setElement([elementCopy, true]));
+              })
+
             });
+
           }} variant="outline" className=''>Create Room</Button>
 
           {/* <text className=''>Join a Room</text> */}
@@ -373,15 +389,17 @@ const Topbar = () => {
                 const e = store.getState().elements.value[i];
                 let elementCopy = [...e];
                 console.log(e);
-
+                console.log(GlobalProps.indexMap);
                 indexMutex.runExclusive(async () => {
                   if (GlobalProps.indexMap.has(id)) {
                     const index = GlobalProps.indexMap.get(id);
-                    tempNewArray = { ...tempNewArray, id: id + index };
+                    tempNewArray = { ...tempNewArray, id: id +"#"+ index};
                     elementCopy[index] = tempNewArray;
                   } else {
-                    const index = elements.length;
-                    GlobalProps.indexMap.set(id + index, index);
+                    console.log(e.length);
+                    const index = e.length;
+                    GlobalProps.indexMap.set(id, index);
+                    tempNewArray = {...tempNewArray , id: id + "#" + index};
                     elementCopy.push(tempNewArray);
                   }
                   console.log(elementCopy);
