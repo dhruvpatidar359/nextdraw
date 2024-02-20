@@ -395,6 +395,7 @@ const Topbar = () => {
                     tempNewArray = { ...tempNewArray, id: id +"#"+ index};
                     elementCopy[index] = tempNewArray;
                   } else {
+                    console.log(e.length);
                     const index = e.length;
                     GlobalProps.indexMap.set(id, index);
                     elementCopy.push(tempNewArray);
