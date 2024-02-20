@@ -333,6 +333,7 @@ const Topbar = () => {
                   console.log("na mela");
                   const index = e.length;
                   GlobalProps.indexMap.set(id, index);
+                  tempNewArray = {...tempNewArray , id: id + "#" + index};
                   elementCopy.push(tempNewArray);
                 }
                 console.log(elementCopy);
@@ -398,6 +399,7 @@ const Topbar = () => {
                     console.log(e.length);
                     const index = e.length;
                     GlobalProps.indexMap.set(id, index);
+                    tempNewArray = {...tempNewArray , id: id + "#" + index};
                     elementCopy.push(tempNewArray);
                   }
                   console.log(elementCopy);
