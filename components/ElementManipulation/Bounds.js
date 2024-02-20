@@ -13,7 +13,12 @@ export const drawBounds = (Canvas2DContext, element, action, scale) => {
   if (type === 'rectangle' || type === 'pencil' || type === 'ellipse' || type === 'diamond') {
     // Calculate dimensions and positions
 
-
+    // we don't need box when we draw the box afresh
+    if (type === 'pencil') {
+      if (store.getState().tool.value != 'selection') {
+        return;
+      }
+    }
 
     const minX = Math.min(x1, x2);
     const minY = Math.min(y1, y2);
@@ -21,12 +26,12 @@ export const drawBounds = (Canvas2DContext, element, action, scale) => {
     const maxY = Math.max(y1, y2);
 
     // Calculate padding for the bounding box
-    const paddingX = 6  ;
-    const paddingY = 6  ;
+    const paddingX = 6;
+    const paddingY = 6;
 
     // Draw the bounding box
     Canvas2DContext.strokeStyle = '#27ae60'; // Change the color to a nice green, you can use any valid color code
-    Canvas2DContext.lineWidth = 2 ; // Change the line width if needed
+    Canvas2DContext.lineWidth = 2; // Change the line width if needed
     Canvas2DContext.strokeRect((minX - paddingX), minY - paddingY, maxX - minX + 2 * paddingX, maxY - minY + 2 * paddingY);
 
     // Draw handles at corners with curved rectangles
@@ -77,9 +82,9 @@ export const drawBounds = (Canvas2DContext, element, action, scale) => {
 
 // Helper function to draw a curved rectangle handle at a specific position
 const drawCurvyRectHandle = (context, x, y, scale) => {
-  const handleSize = 10  ;
-  const borderRadius = 3  ;
-  const borderSize = 2 ;
+  const handleSize = 10;
+  const borderRadius = 3;
+  const borderSize = 2;
 
   // Draw the curved rectangle
   context.fillStyle = '#27ae60'; // Use the same color as the bounding box

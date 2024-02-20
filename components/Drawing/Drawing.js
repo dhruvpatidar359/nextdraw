@@ -14,12 +14,14 @@ export const draw = (event) => {
   const elements = store.getState().elements.value[histIndex];
   const selectedElement = store.getState().selectedElement.value;
 
+  if(selectedElement != null) {
+    const index = selectedElement.id.split("#")[1];
 
-  const index = selectedElement.id.split("#")[1];
+    const { id,x1, y1, type } = elements[index];
+  
+    updateElement(id, x1, y1, event.clientX, event.clientY, type)
+  }
 
-  const { id,x1, y1, type } = elements[index];
-
-  updateElement(id, x1, y1, event.clientX, event.clientY, type)
 
 
 

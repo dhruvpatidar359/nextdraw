@@ -453,11 +453,9 @@ const Canvas = () => {
 
 
       dispatch(setOldElement(newElement));
-
-      // we don't want the bounding box if it is a pencil and it is drawn afresh
-      if (newElement.type != 'pencil') {
-        dispatch(setSelectedElement(newElement));
-      }
+  
+       dispatch(setSelectedElement(newElement));
+   
 
 
 

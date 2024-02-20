@@ -207,6 +207,7 @@ const PropertiesBar = () => {
 
         const roomId =   GlobalProps.room;
         if(roomId != null) {
+            tempNewArray = tempNewArray[id];
           GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
         }
       
