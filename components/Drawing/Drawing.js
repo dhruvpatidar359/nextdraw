@@ -3,6 +3,7 @@ import store from "@/app/store";
 import { drawBounds } from "../ElementManipulation/Bounds";
 import { getElementObject, updateElement } from "../ElementManipulation/Element";
 import { ShapeCache } from "../Redux/ShapeCache";
+import { GlobalProps } from "../Redux/GlobalProps";
 
 
 
@@ -16,7 +17,8 @@ export const draw = (event) => {
   const index = elements.length - 1;
 
   const { x1, y1, type } = elements[index];
-  updateElement(index, x1, y1, event.clientX, event.clientY, type)
+
+  updateElement(GlobalProps.username + "#" + index, x1, y1, event.clientX, event.clientY, type)
 
 
 

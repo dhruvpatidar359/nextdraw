@@ -38,6 +38,7 @@ import {
 import { Input } from '../ui/input';
 import { toast } from '../ui/use-toast';
 import { io } from 'socket.io-client';
+import { Mutex } from 'async-mutex';
 
 
 const buttons = [
@@ -64,6 +65,7 @@ const Topbar = () => {
   const toolWheel = useSelector(state => state.tool.toolWheel);
   const [open, changeOpen] = useState(false);
   const [inputRoom, setInputRoom] = useState("");
+  const indexMutex = new Mutex();
 
 
 
@@ -273,13 +275,6 @@ const Topbar = () => {
         <DialogTrigger asChild>
           <Button onClick={() => {
 
-            // GlobalProps.socket.emit('join-room', GlobalProps.room);
-
-            // GlobalProps.socket.emit('create-room', GlobalProps.room)
-            // GlobalProps.socket.on('room-created', roomId => {
-            //   GlobalProps.room = roomId;
-
-            // });
 
 
           }} variant="outline" className='absolute right-2 top-2'>Collaborate</Button>
@@ -311,7 +306,7 @@ const Topbar = () => {
             }
 
             GlobalProps.socket.emit('create-room', GlobalProps.room)
-            GlobalProps.socket.on('room-created', roomId => {
+            GlobalProps.socket.on('new-element-id', roomId => {
               GlobalProps.room = roomId;
               setRoom(roomId);
 
@@ -373,22 +368,37 @@ const Topbar = () => {
 
 
               GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-                const id = tempNewArray.id;
+                let id = tempNewArray.id.split("#")[0];
                 const i = store.getState().elements.index;
                 const e = store.getState().elements.value[i];
                 let elementCopy = [...e];
                 console.log(e);
-                if (e.length > tempNewArray.id) {
-                  elementCopy[id] = tempNewArray;
-                } else {
-                  elementCopy.push(tempNewArray);
-                }
-                console.log(elementCopy);
-                dispatch(setElement([elementCopy, true]));
+
+                indexMutex.runExclusive(async () => {
+                  if (GlobalProps.indexMap.has(id)) {
+                    const index = GlobalProps.indexMap.get(id);
+                    tempNewArray = { ...tempNewArray, id: id + index };
+                    elementCopy[index] = tempNewArray;
+                  } else {
+                    const index = elements.length;
+                    GlobalProps.indexMap.set(id + index, index);
+                    elementCopy.push(tempNewArray);
+                  }
+                  console.log(elementCopy);
+                  dispatch(setElement([elementCopy, true]));
+                })
+
               });
 
 
             }} type="submit">Join Room</Button>
+
+
+            <Button onClick={() => {
+              // for just testing this is done , not for real
+              GlobalProps.username = inputRoom;
+
+            }} type="submit">Username</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

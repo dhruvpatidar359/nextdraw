@@ -97,7 +97,7 @@ const Canvas = () => {
   }, [roughCanvasRef]);
 
 
- 
+
 
 
 
@@ -427,35 +427,40 @@ const Canvas = () => {
       }
 
 
-      const newElement = {
-        ...addElement(elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool), stroke: GlobalProps.stroke, fill: GlobalProps.fill,
-        fillStyle: GlobalProps.fillStyle, sharp: GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle, strokeWidth: GlobalProps.strokeWidth, bowing: GlobalProps.bowing, fontSize: GlobalProps.fontSize
-      };
+        const elementId = GlobalProps.username + Date.now();
 
-      if (dupState === false) {
-        dispatch(setElement([[...elements, newElement]]));
-      } else {
-        if (changed) {
+        GlobalProps.indexMap.set(elementId,elements.length);
+
+        const newElement = {
+          ...addElement(elementId +"#"+ elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool), stroke: GlobalProps.stroke, fill: GlobalProps.fill,
+          fillStyle: GlobalProps.fillStyle, sharp: GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle, strokeWidth: GlobalProps.strokeWidth, bowing: GlobalProps.bowing, fontSize: GlobalProps.fontSize
+        };
+
+        if (dupState === false) {
           dispatch(setElement([[...elements, newElement]]));
         } else {
-          dispatch(setElement([[...elements, newElement], true]));
+          if (changed) {
+            dispatch(setElement([[...elements, newElement]]));
+          } else {
+            dispatch(setElement([[...elements, newElement], true]));
 
-          dispatch(setChanged(true));
+            dispatch(setChanged(true));
 
+          }
+
+          dispatch(setDupState(false));
         }
 
-        dispatch(setDupState(false));
-      }
+
+        dispatch(setOldElement(newElement));
+
+        // we don't want the bounding box if it is a pencil and it is drawn afresh
+        if (newElement.type != 'pencil') {
+          dispatch(setSelectedElement(newElement));
+        }
 
 
-      dispatch(setOldElement(newElement));
-
-      // we don't want the bounding box if it is a pencil and it is drawn afresh
-      if (newElement.type != 'pencil') {
-        dispatch(setSelectedElement(newElement));
-      }
-
-
+   
 
     }
 
@@ -491,8 +496,8 @@ const Canvas = () => {
 
         const tempNewArray = [...elements];
 
-        tempNewArray[element.id] = {
-          ...tempNewArray[element.id],
+        tempNewArray[parseInt(element.id.split("#")[1])] = {
+          ...tempNewArray[parseInt(element.id.split("#")[1])],
           x1: minX, y1: minY, x2: maxX, y2: maxY
         };
 
@@ -529,7 +534,7 @@ const Canvas = () => {
           // console.log("ker deya delete move🔥");
         }
 
-        const newElement = elements[selectedElement.id];
+        const newElement = elements[parseInt(selectedElement.id.split("#")[1])];
 
         const { type } = newElement;
 
@@ -538,8 +543,8 @@ const Canvas = () => {
 
           const tempNewArray = [...elements];
 
-          tempNewArray[newElement.id] = {
-            ...tempNewArray[newElement.id],
+          tempNewArray[parseInt(newElement.id.split("#")[1])] = {
+            ...tempNewArray[parseInt(newElement.id.split("#")[1])],
             x1: minX, y1: minY, x2: maxX, y2: maxY
           };
 
@@ -549,7 +554,7 @@ const Canvas = () => {
 
         const currentStateElement = store.getState().elements.value[index];
 
-        const key = currentStateElement[newElement.id];
+        const key = currentStateElement[parseInt(newElement.id.split("#")[1])];
         const shape = getElementObject(key);
 
 
@@ -565,7 +570,7 @@ const Canvas = () => {
           // console.log("🔥Ker deya delete resize se");
         }
 
-        const element = elements[selectedElement.id];
+        const element = elements[parseInt(selectedElement.id.split("#")[1])];
         const adjustedElement = adjustElementCoordinates(element);
 
         if (element.type != 'pencil') {
@@ -576,8 +581,8 @@ const Canvas = () => {
 
           const tempNewArray = [...elements];
 
-          tempNewArray[element.id] = {
-            ...tempNewArray[element.id],
+          tempNewArray[parseInt(element.id.split("#")[1])] = {
+            ...tempNewArray[parseInt(element.id.split("#")[1])],
             x1: minX, y1: minY, x2: maxX, y2: maxY
           };
 
@@ -586,7 +591,7 @@ const Canvas = () => {
 
         const currentStateElement = store.getState().elements.value[index];
 
-        const key = currentStateElement[selectedElement.id];
+        const key = currentStateElement[parseInt(selectedElement.id.split("#")[1])];
 
 
         const shape = getElementObject(key);

@@ -181,10 +181,11 @@ export const getElementBelow = (event, selectedElement, scale) => {
 
     let found = false;
 
+    
 
     if (selectedElement != null && selectedElement.type != 'line') {
-
-      const { x1, y1, x2, y2 } = elements[selectedElement.id];
+      const elementID = parseInt(selectedElement.id.split("#")[1]);
+      const { x1, y1, x2, y2 } = elements[elementID];
 
       const minX = Math.min(x1, x2);
       const maxX = Math.max(x1, x2);
@@ -193,7 +194,7 @@ export const getElementBelow = (event, selectedElement, scale) => {
 
       if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
 
-        return elements[selectedElement.id];
+        return elements[elementID];
       }
 
 
@@ -269,6 +270,8 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
   const action = store.getState().action.value;
   let tempNewArray = [...elements];
 
+  const integerId = parseInt(id.split("#")[1]);
+
 
 
   switch (type) {
@@ -278,12 +281,12 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
     case "diamond":
 
 
-      let { id: elementId, x1: elementX1, y1: elementY1, x2: elementX2, y2: elementY2, type: elementType, ...otherProps } = elements[id];
+      let { id: elementId, x1: elementX1, y1: elementY1, x2: elementX2, y2: elementY2, type: elementType, ...otherProps } = elements[integerId];
       const updatedElement = { ...addElement(id, x1, y1, x2, y2, type), ...otherProps }
 
 
 
-      tempNewArray[id] = updatedElement;
+      tempNewArray[integerId] = updatedElement;
 
 
 
@@ -296,11 +299,11 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
     case "pencil":
 
 
-      let { id: pencilId, x1: pencilX1, y1: pencilY1, x2: pencilX2, y2: pencilY2, type: pencilType, points: pencilPoints, ...otherPencilProps } = elements[id];
+      let { id: pencilId, x1: pencilX1, y1: pencilY1, x2: pencilX2, y2: pencilY2, type: pencilType, points: pencilPoints, ...otherPencilProps } = elements[integerId];
 
-      tempNewArray[id] = {
-        ...tempNewArray[id],
-        points: [...tempNewArray[id].points, { x: x2, y: y2 }], ...otherPencilProps
+      tempNewArray[integerId] = {
+        ...tempNewArray[integerId],
+        points: [...tempNewArray[integerId].points, { x: x2, y: y2 }], ...otherPencilProps
       };
       break;
 
@@ -308,9 +311,9 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
     case "text":
 
       const context = document.getElementById("canvas").getContext('2d');
-      context.font = `${elements[id].fontSize}px Virgil`;
+      context.font = `${elements[integerId].fontSize}px Virgil`;
 
-      let { id: textId, x1: textX1, y1: textY1, x2: textX2, y2: textY2, type: textType, text: textStrign, ...otherTextProps } = elements[id];
+      let { id: textId, x1: textX1, y1: textY1, x2: textX2, y2: textY2, type: textType, text: textStrign, ...otherTextProps } = elements[integerId];
 
       let textWidth = x1;
       let textHeight = y1;
@@ -327,12 +330,12 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
 
 
       textWidth += textWidthVar;
-      textHeight = textHeight + (linesLength) * (elements[id].fontSize + 6);
+      textHeight = textHeight + (linesLength) * (elements[integerId].fontSize + 6);
 
       if (store.getState().action.value === 'resizing') {
-        tempNewArray[id] = { ...addElement(id, x1, y2, x2, textHeight, type), text: options.text, ...otherTextProps }
+        tempNewArray[integerId] = { ...addElement(id, x1, y2, x2, textHeight, type), text: options.text, ...otherTextProps }
       } else {
-        tempNewArray[id] = { ...addElement(id, x1, y1, textWidth, textHeight, type), text: options.text, ...otherTextProps }
+        tempNewArray[integerId] = { ...addElement(id, x1, y1, textWidth, textHeight, type), text: options.text, ...otherTextProps }
       }
 
 
@@ -343,15 +346,15 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
       break;
   }
   store.dispatch(setElement([tempNewArray, true]));
-  const roomId =   GlobalProps.room;
-  if(roomId != null) {
-    const toSend = tempNewArray[id];
-    tempNewArray=toSend;
+  const roomId = GlobalProps.room;
+  if (roomId != null) {
+    const toSend = tempNewArray[integerId];
+    tempNewArray = toSend;
     GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
   }
 
 
- 
+
 
 
 

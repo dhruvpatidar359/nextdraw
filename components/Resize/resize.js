@@ -15,7 +15,7 @@ export const resizeElement = (event, elements) => {
   const cx = event.clientX;
   const cy = event.clientY;
 
-  const { id, x1, x2, y1, y2, type, text } = selectedElement;
+  let { id, x1, x2, y1, y2, type, text } = selectedElement;
   if (type === 'rectangle' || type === 'ellipse' || type === 'diamond') {
 
     switch (resizeDirection) {
@@ -131,6 +131,7 @@ export const resizeElement = (event, elements) => {
     }
   } else if (type === 'pencil') {
     const roomId =   GlobalProps.room;
+    id = parseInt(id.split("#")[1]);
     switch (resizeDirection) {
 
 
@@ -139,7 +140,7 @@ export const resizeElement = (event, elements) => {
       //    case 1:
 
       //      return {id : id ,x1 : cx + threshold ,y1 : cy + threshold  ,x2 : x2,y2 : y2,type : type};
-
+    
       case 1:
         {
           const newPoints = [];

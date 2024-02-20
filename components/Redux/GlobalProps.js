@@ -10,7 +10,10 @@ export class GlobalProps {
     static fontSize = 24;
     static socket = null;
     static room = null;
+    static username = null;
+    static indexMap = new Map();
     
+
 
 
 }

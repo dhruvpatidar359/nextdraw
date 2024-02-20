@@ -35,17 +35,18 @@ export const move = (event, elements) => {
 
         const width = x2 - x1;
         const height = y2 - y1;
+        const newId = parseInt(id.split("#")[1]);
 
 
-        tempNewArray[id] = {
-            ...tempNewArray[id],
+        tempNewArray[newId] = {
+            ...tempNewArray[newId],
             points: newPoints, x1: event.clientX - rectCoordinatesOffsetX, y1: event.clientY - rectCoordinatesOffsetY, x2: event.clientX - rectCoordinatesOffsetX + width, y2: event.clientY - rectCoordinatesOffsetY + height
         };
 
         store.dispatch(setElement([tempNewArray, true]));
         const roomId =   GlobalProps.room;
   if(roomId != null) {
-    tempNewArray = tempNewArray[id];
+    tempNewArray = tempNewArray[newId];
     GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
   }
 

@@ -27,7 +27,7 @@ export const mouseCursorChange = (event, elements, selectedElement, scale) => {
 
     if (selectedElement != null && selectedElement.type != 'line') {
 
-      const { x1, y1, x2, y2 } = elements[selectedElement.id];
+      const { x1, y1, x2, y2 } = elements[parseInt(selectedElement.id.split("#")[1])];
 
       const minX = Math.min(x1, x2);
       const maxX = Math.max(x1, x2);
@@ -36,7 +36,7 @@ export const mouseCursorChange = (event, elements, selectedElement, scale) => {
 
       if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
       
-        const onResizeNode = getCurrentResizingNode(event, elements[selectedElement.id], scale);
+        const onResizeNode = getCurrentResizingNode(event, elements[parseInt(selectedElement.id.split("#")[1])], scale);
         if (onResizeNode[0] === 1) {
 
           resizerFound = onResizeNode;

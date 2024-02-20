@@ -60,7 +60,7 @@ const PropertiesBar = () => {
 
 
         if (selectedElement != null) {
-            element = elements[selectedElement.id];
+            element = elements[parseInt(selectedElement.id.split("#")[1])];
 
             const currentStroke = element.stroke
 
@@ -129,7 +129,7 @@ const PropertiesBar = () => {
             GlobalProps.fontSize = fontSize;
             return;
         }
-        element = elements[selectedElement.id];
+        element = elements[parseInt(selectedElement.id.split("#")[1])];
         console.log("chingin");
         if (!changedByUser) {
             return; // Exit early if stroke hasn't changed by user
@@ -139,7 +139,7 @@ const PropertiesBar = () => {
         }
 
 
-        const id = element.id;
+        const id = parseInt(element.id.split("#")[1]);
         const type = element.type;
 
         let options;
