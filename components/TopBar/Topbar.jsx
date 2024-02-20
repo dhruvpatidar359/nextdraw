@@ -313,20 +313,30 @@ const Topbar = () => {
 
             });
             console.log(GlobalProps.socket);
+         
             GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-              const id = tempNewArray.id;
+              let id = tempNewArray.id.split("#")[0];
               const i = store.getState().elements.index;
               const e = store.getState().elements.value[i];
               let elementCopy = [...e];
               console.log(e);
-              if (e.length > tempNewArray.id) {
-                elementCopy[id] = tempNewArray;
-              } else {
-                elementCopy.push(tempNewArray);
-              }
-              console.log(elementCopy);
-              dispatch(setElement([elementCopy, true]));
+
+              indexMutex.runExclusive(async () => {
+                if (GlobalProps.indexMap.has(id)) {
+                  const index = GlobalProps.indexMap.get(id);
+                  tempNewArray = { ...tempNewArray, id: id + index };
+                  elementCopy[index] = tempNewArray;
+                } else {
+                  const index = elements.length;
+                  GlobalProps.indexMap.set(id + index, index);
+                  elementCopy.push(tempNewArray);
+                }
+                console.log(elementCopy);
+                dispatch(setElement([elementCopy, true]));
+              })
+
             });
+
           }} variant="outline" className=''>Create Room</Button>
 
           {/* <text className=''>Join a Room</text> */}
