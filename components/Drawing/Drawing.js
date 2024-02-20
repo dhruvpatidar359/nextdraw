@@ -12,9 +12,10 @@ import { GlobalProps } from "../Redux/GlobalProps";
 export const draw = (event) => {
   const histIndex = store.getState().elements.index;
   const elements = store.getState().elements.value[histIndex];
+  const selectedElement = store.getState().selectedElement.value;
 
 
-  const index = elements.length - 1;
+  const index = selectedElement.id.split("#")[1];
 
   const { id,x1, y1, type } = elements[index];
 
