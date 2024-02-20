@@ -16,9 +16,9 @@ export const draw = (event) => {
 
   const index = elements.length - 1;
 
-  const { x1, y1, type } = elements[index];
+  const { id,x1, y1, type } = elements[index];
 
-  updateElement(GlobalProps.username + "#" + index, x1, y1, event.clientX, event.clientY, type)
+  updateElement(id, x1, y1, event.clientX, event.clientY, type)
 
 
 

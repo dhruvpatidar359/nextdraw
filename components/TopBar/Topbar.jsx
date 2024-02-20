@@ -313,22 +313,26 @@ const Topbar = () => {
 
             });
             console.log(GlobalProps.socket);
-         
+
             GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
               let id = tempNewArray.id.split("#")[0];
               const i = store.getState().elements.index;
               const e = store.getState().elements.value[i];
               let elementCopy = [...e];
-              console.log(e);
+              
+              console.log(GlobalProps.indexMap);
 
               indexMutex.runExclusive(async () => {
                 if (GlobalProps.indexMap.has(id)) {
+
+
                   const index = GlobalProps.indexMap.get(id);
-                  tempNewArray = { ...tempNewArray, id: id + index };
+                  tempNewArray = { ...tempNewArray, id: id +"#"+ index };
                   elementCopy[index] = tempNewArray;
                 } else {
-                  const index = elements.length;
-                  GlobalProps.indexMap.set(id + index, index);
+                  console.log("na mela");
+                  const index = e.length;
+                  GlobalProps.indexMap.set(id, index);
                   elementCopy.push(tempNewArray);
                 }
                 console.log(elementCopy);
@@ -384,15 +388,15 @@ const Topbar = () => {
                 const e = store.getState().elements.value[i];
                 let elementCopy = [...e];
                 console.log(e);
-
+                console.log(GlobalProps.indexMap);
                 indexMutex.runExclusive(async () => {
                   if (GlobalProps.indexMap.has(id)) {
                     const index = GlobalProps.indexMap.get(id);
-                    tempNewArray = { ...tempNewArray, id: id + index };
+                    tempNewArray = { ...tempNewArray, id: id +"#"+ index};
                     elementCopy[index] = tempNewArray;
                   } else {
-                    const index = elements.length;
-                    GlobalProps.indexMap.set(id + index, index);
+                    const index = e.length;
+                    GlobalProps.indexMap.set(id, index);
                     elementCopy.push(tempNewArray);
                   }
                   console.log(elementCopy);
