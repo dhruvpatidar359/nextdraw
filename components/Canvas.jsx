@@ -646,7 +646,7 @@ const Canvas = () => {
         if (selectedElement.type === 'pencil') {
           resizeElement(event, elements);
         } else {
-          if (type === 'text') return;
+          if (selectedElement.type === 'text') return;
           const { id, x1, y1, x2, y2, type, text } = resizeElement(event, elements);
           if (type != 'pencil') {
             if (type != 'text') {
