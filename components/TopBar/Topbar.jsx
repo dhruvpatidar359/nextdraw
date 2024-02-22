@@ -282,7 +282,7 @@ const Topbar = () => {
           <Button onClick={() => {
 
             if (GlobalProps.socket === null) {
-              GlobalProps.socket = io('http://localhost:3001/');
+              GlobalProps.socket = io('https://nextdraw.onrender.com');
             }
 
 
@@ -390,7 +390,7 @@ const Topbar = () => {
 
               if (GlobalProps.socket === null) {
 
-                GlobalProps.socket = io('http://localhost:3001/');
+                GlobalProps.socket = io('https://nextdraw.onrender.com');
 
               }
               const roomId = inputRoom;
