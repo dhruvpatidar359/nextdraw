@@ -122,6 +122,7 @@ const Topbar = () => {
       }
 
       else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
+        if (GlobalProps.room != null) return;
         if (store.getState().action.value === 'writing') {
           return;
         }
@@ -267,7 +268,7 @@ const Topbar = () => {
           </DialogHeader>
           {/* <text className=''>Create Your Own Room</text> */}
           {
-            createClicked === true && room === null ? <span>{Generating}</span> : null}
+            createClicked === true && room === null ? <span>Generating...</span> : null}
 
           {room && (
             <div className="room-id-container">
@@ -289,14 +290,12 @@ const Topbar = () => {
             let i = store.getState().elements.index;
             let e = store.getState().elements.value[i][0];
             GlobalProps.socket.emit('create-room', e)
+            setCreateClicked(true);
             GlobalProps.socket.on('room-created', roomId => {
               GlobalProps.room = roomId;
               setRoom(roomId);
-              setCreateClicked(true);
-
 
             });
-            console.log(GlobalProps.socket);
 
             GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
               console.log("receing from the ");
@@ -376,6 +375,7 @@ const Topbar = () => {
 
               GlobalProps.room = null;
               GlobalProps.socket = null;
+              setRoom(null);
               setCreateClicked(false);
               toast({
                 title: "Session has been stopped",
