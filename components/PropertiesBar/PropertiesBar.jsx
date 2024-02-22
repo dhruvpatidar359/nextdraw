@@ -37,7 +37,7 @@ const PropertiesBar = () => {
     const index = useSelector(state => state.elements.index);
     const tool = useSelector(state => state.tool.value);
     let element;
-    const elements = useSelector(state => state.elements.value[index], shallowEqual);
+    const elements = useSelector(state => state.elements.value[index][0], shallowEqual);
     const [changedByUser, setChangedByUser] = useState(false);
 
 
@@ -61,7 +61,7 @@ const PropertiesBar = () => {
 
         if (selectedElement != null) {
             element = elements[parseInt(selectedElement.id.split("#")[1])];
-
+            console.log(selectedElement.id.split("#")[1]);
             const currentStroke = element.stroke
 
             if (element.type != "pencil" && element.type != "text") {
@@ -106,7 +106,7 @@ const PropertiesBar = () => {
             setSharp(currentSharp);
             setBowing(bowing);
 
-       
+
             setFontSize(currentFontSize);
 
 
@@ -139,7 +139,9 @@ const PropertiesBar = () => {
         }
 
 
-        const id = parseInt(element.id.split("#")[1]);
+        let id = element.id.split("#");
+        const key = id[0];
+        id = parseInt(id[1]);
         const type = element.type;
 
         let options;
@@ -203,14 +205,14 @@ const PropertiesBar = () => {
         }
 
 
-        dispatch(setElement([tempNewArray, false]));
+        dispatch(setElement([tempNewArray, false, key]));
 
-        const roomId =   GlobalProps.room;
-        if(roomId != null) {
+        const roomId = GlobalProps.room;
+        if (roomId != null) {
             tempNewArray = tempNewArray[id];
-          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+            GlobalProps.socket.emit("render-elements", { tempNewArray, roomId, key });
         }
-      
+
 
 
         setChangedByUser(false);

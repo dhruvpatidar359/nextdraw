@@ -168,10 +168,13 @@ export const getElementObject = (element) => {
 
 export const getElementBelow = (event, selectedElement, scale) => {
   const histIndex = store.getState().elements.index;
-  const elements = store.getState().elements.value[histIndex];
+  const elements = store.getState().elements.value[histIndex][0];
 
   for (var i = elements.length - 1; i >= 0; i--) {
     const element = elements[i];
+    if (element === null) {
+      continue;
+    }
     const { x1, y1, x2, y2, type } = element;
 
     const minX = Math.min(x1, x2);
@@ -185,18 +188,22 @@ export const getElementBelow = (event, selectedElement, scale) => {
 
     if (selectedElement != null && selectedElement.type != 'line') {
       const elementID = parseInt(selectedElement.id.split("#")[1]);
-      const { x1, y1, x2, y2 } = elements[elementID];
+      const selectedElementFromElements = elements[elementID];
+      if(selectedElementFromElements != null) {
+        const { x1, y1, x2, y2 } = elements[elementID];
 
-      const minX = Math.min(x1, x2);
-      const maxX = Math.max(x1, x2);
-      const minY = Math.min(y1, y2);
-      const maxY = Math.max(y1, y2);
-
-      if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
-
-        return elements[elementID];
+        const minX = Math.min(x1, x2);
+        const maxX = Math.max(x1, x2);
+        const minY = Math.min(y1, y2);
+        const maxY = Math.max(y1, y2);
+  
+        if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
+  
+          return elements[elementID];
+        }
+  
       }
-
+ 
 
     }
 
@@ -266,7 +273,7 @@ export const getElementBelow = (event, selectedElement, scale) => {
 export const updateElement = (id, x1, y1, x2, y2, type, options) => {
 
   const histIndex = store.getState().elements.index;
-  const elements = store.getState().elements.value[histIndex];
+  const elements = store.getState().elements.value[histIndex][0];
   const action = store.getState().action.value;
   let tempNewArray = [...elements];
 
@@ -345,12 +352,13 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
     default:
       break;
   }
-  store.dispatch(setElement([tempNewArray, true]));
+  store.dispatch(setElement([tempNewArray, true,id.split("#")[0]]));
   const roomId = GlobalProps.room;
   if (roomId != null) {
     const toSend = tempNewArray[integerId];
     tempNewArray = toSend;
-    GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+    const key = id.split("#")[0];
+    GlobalProps.socket.emit("render-elements", { tempNewArray, roomId ,key});
   }
 
 

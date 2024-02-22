@@ -131,7 +131,10 @@ export const resizeElement = (event, elements) => {
     }
   } else if (type === 'pencil') {
     const roomId =   GlobalProps.room;
-    id = parseInt(id.split("#")[1]);
+    id = (id.split("#"));
+    const key = id[0];
+    id = parseInt(id[1]);
+  
     switch (resizeDirection) {
 
 
@@ -167,10 +170,11 @@ export const resizeElement = (event, elements) => {
             y2: y2,
           };
 
-          store.dispatch(setElement([tempNewArray, true]));
+          store.dispatch(setElement([tempNewArray, true,key]));
         
           if(roomId != null) {
-            GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+        
+            GlobalProps.socket.emit("render-elements", { tempNewArray, roomId,key });
           }
         
         }
@@ -204,10 +208,10 @@ export const resizeElement = (event, elements) => {
             y2: y2,
           };
 
-          store.dispatch(setElement([tempNewArray, true]));
+          store.dispatch(setElement([tempNewArray, true,key]));
  
           if(roomId != null) {
-            GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+            GlobalProps.socket.emit("render-elements", { tempNewArray, roomId,key });
           }
         
         }
@@ -239,8 +243,8 @@ export const resizeElement = (event, elements) => {
             y2: y2,
           };
 
-          store.dispatch(setElement([tempNewArray, true]));
-          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+          store.dispatch(setElement([tempNewArray, true,key]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId ,key});
         }
 
         break;
@@ -272,8 +276,8 @@ export const resizeElement = (event, elements) => {
             y2: y2,
           };
 
-          store.dispatch(setElement([tempNewArray, true]));
-          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+          store.dispatch(setElement([tempNewArray, true,key]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId ,key});
 
         }
         break;
@@ -304,8 +308,8 @@ export const resizeElement = (event, elements) => {
             y2: cy - threshold,
           };
 
-          store.dispatch(setElement([tempNewArray, true]));
-          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+          store.dispatch(setElement([tempNewArray, true,key]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId ,key});
         }
 
         break;
@@ -337,8 +341,8 @@ export const resizeElement = (event, elements) => {
             y2: cy - threshold,
           };
 
-          store.dispatch(setElement([tempNewArray, true]));
-          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+          store.dispatch(setElement([tempNewArray, true,key]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId ,key});
         }
         break;
       case 7:
@@ -367,8 +371,8 @@ export const resizeElement = (event, elements) => {
             y2: cy - threshold,
           };
 
-          store.dispatch(setElement([tempNewArray, true]));
-          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+          store.dispatch(setElement([tempNewArray, true,key]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId ,key});
         }
 
         break;
@@ -400,8 +404,8 @@ export const resizeElement = (event, elements) => {
             y2: y2,
           };
 
-          store.dispatch(setElement([tempNewArray, true]));
-          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+          store.dispatch(setElement([tempNewArray, true,key]));
+          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId,key });
         }
 
         break;

@@ -11,14 +11,14 @@ import { GlobalProps } from "../Redux/GlobalProps";
 
 export const draw = (event) => {
   const histIndex = store.getState().elements.index;
-  const elements = store.getState().elements.value[histIndex];
+  const elements = store.getState().elements.value[histIndex][0];
   const selectedElement = store.getState().selectedElement.value;
 
-  if(selectedElement != null) {
+  if (selectedElement != null) {
     const index = selectedElement.id.split("#")[1];
 
-    const { id,x1, y1, type } = elements[index];
-  
+    const { id, x1, y1, type } = elements[index];
+
     updateElement(id, x1, y1, event.clientX, event.clientY, type)
   }
 
@@ -34,7 +34,7 @@ export const drawElements = (ctx, element) => {
 
 
 
- 
+
   switch (element.type) {
     case "line":
     case "rectangle":
@@ -45,7 +45,7 @@ export const drawElements = (ctx, element) => {
 
         roughCanvasRef.draw(ShapeCache.cache.get(element));
       } else {
-       
+
         roughCanvasRef.draw(getElementObject(element));
       }
       break;
@@ -85,9 +85,12 @@ export const drawElements = (ctx, element) => {
 export const renderer = (ctx, elements, selectedElement, action, scale) => {
 
   let boundedElement = null;
-
+  console.log(elements.length);
   elements.forEach((element) => {
 
+    if (element === null) {
+      return;
+    }
     if (selectedElement != null && selectedElement.id === element.id) {
       boundedElement = element;
     }

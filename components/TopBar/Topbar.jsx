@@ -59,7 +59,7 @@ const Topbar = () => {
   const toolIndex = useSelector(state => state.tool.index);
   const action = useSelector(state => state.action.value);
   const index = useSelector(state => state.elements.index);
-  const elements = useSelector(state => state.elements.value[index], shallowEqual);
+  const elements = useSelector(state => state.elements.value[index][0], shallowEqual);
   const selectedElement = useSelector(state => state.selectedElement.value);
   const changed = useSelector(state => state.elements.changed);
   const toolWheel = useSelector(state => state.tool.toolWheel);
@@ -142,53 +142,33 @@ const Topbar = () => {
       } else if (event.key === 'Delete') {
 
         if (selectedElement != null) {
-          let elementsCopy = [];
-          const id = selectedElement.id;
+          let elementsCopy = [...elements];
+          const key = selectedElement.id.split("#")[0];
+          const id = parseInt(selectedElement.id.split("#")[1]);
+
+          if (ShapeCache.cache.has(elements[id])) {
+
+            ShapeCache.cache.delete(elements[id]);
+          }
+
+          elementsCopy[id] = null;
 
 
-          elements.forEach((element, index) => {
-
-            if (index < id) {
-              elementsCopy.push(element);
-            } else if (index === id) {
-
-              const elementToDelete = elements[index];
-
-              if (ShapeCache.cache.has(elementToDelete)) {
-
-                ShapeCache.cache.delete(elementToDelete);
-              }
-            } else {
-
-              const newElement = { ...element, id: index - 1 };
-
-
-              ShapeCache.cache.set(newElement, ShapeCache.cache.get(element));
-
-              if (ShapeCache.cache.has(element)) {
-
-                ShapeCache.cache.delete(element);
-              }
-              elementsCopy.push(newElement);
-
-            }
-
-          });
-          const tempNewArray = elementsCopy;
           if (!changed) {
-            dispatch(setElement([elementsCopy, true]));
+            dispatch(setElement([elementsCopy, true, key]));
             dispatch(setChanged(true));
 
 
           } else {
 
 
-            dispatch(setElement([elementsCopy]));
+            dispatch(setElement([elementsCopy, false, key]));
 
           }
           const roomId = GlobalProps.room;
           if (roomId != null) {
-            GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+            GlobalProps.socket.emit("delete-element", { roomId, key });
+
           }
 
 
@@ -264,10 +244,6 @@ const Topbar = () => {
         </TooltipProvider>
 
         <ExportDialog open={open} changeOpen={changeOpen} ></ExportDialog>
-
-
-
-
       </div>
 
 
@@ -301,25 +277,28 @@ const Topbar = () => {
           <Button onClick={() => {
 
             if (GlobalProps.socket === null) {
-              GlobalProps.socket = io('https://nextdraw.onrender.com');
+              GlobalProps.socket = io('http://localhost:3001/');
             }
 
 
-            GlobalProps.socket.emit('create-room', GlobalProps.room)
+            let i = store.getState().elements.index;
+            let e = store.getState().elements.value[i][0];
+            GlobalProps.socket.emit('create-room', e)
             GlobalProps.socket.on('room-created', roomId => {
               GlobalProps.room = roomId;
               setRoom(roomId);
-              console.log(roomId);
+
 
             });
             console.log(GlobalProps.socket);
 
             GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
+              console.log("receing from the ");
               let id = tempNewArray.id.split("#")[0];
-              const i = store.getState().elements.index;
-              const e = store.getState().elements.value[i];
+              let i = store.getState().elements.index;
+              let e = store.getState().elements.value[i][0];
               let elementCopy = [...e];
-              
+
               console.log(GlobalProps.indexMap);
 
               indexMutex.runExclusive(async () => {
@@ -327,20 +306,44 @@ const Topbar = () => {
 
 
                   const index = GlobalProps.indexMap.get(id);
-                  tempNewArray = { ...tempNewArray, id: id +"#"+ index };
+                  tempNewArray = { ...tempNewArray, id: id + "#" + index };
                   elementCopy[index] = tempNewArray;
                 } else {
-                  console.log("na mela");
+
                   const index = e.length;
+
                   GlobalProps.indexMap.set(id, index);
-                  tempNewArray = {...tempNewArray , id: id + "#" + index};
+                  tempNewArray = { ...tempNewArray, id: id + "#" + index };
                   elementCopy.push(tempNewArray);
                 }
-                console.log(elementCopy);
-                dispatch(setElement([elementCopy, true]));
+
+                dispatch(setElement([elementCopy, true, null]));
               })
 
             });
+
+            GlobalProps.socket.on("delete-element-socket", ({ key }) => {
+              const index = GlobalProps.indexMap.get(key);
+
+              let i = store.getState().elements.index;
+              let e = store.getState().elements.value[i][0];
+              let elementCopy = [...e];
+
+              if (ShapeCache.cache.has(elementCopy[index])) {
+                ShapeCache.cache.delete(elementCopy[index]);
+              }
+              console.log(elementCopy[index]);
+              elementCopy[index] = null;
+              dispatch(setElement([elementCopy, true, null]));
+            });
+
+            // TODO
+            // GlobalProps.socket.on('undo-element-socket',({undoElement,key})=> {
+            //   let i = store.getState().elements.index;
+            //   let e = store.getState().elements.value[i][0];
+
+            //   e.forEach()
+            // })
 
           }} variant="outline" className=''>Create Room</Button>
 
@@ -364,15 +367,13 @@ const Topbar = () => {
           <DialogFooter>
             <Button onClick={() => {
 
-
-
               if (GlobalProps.socket === null) {
 
-                GlobalProps.socket = io('https://nextdraw.onrender.com');
+                GlobalProps.socket = io('http://localhost:3001/');
 
               }
-
-              GlobalProps.socket.emit('join-room', inputRoom);
+              const roomId = inputRoom;
+              GlobalProps.socket.emit('join-room', {roomId});
               GlobalProps.socket.on('error', error => {
                 toast({
                   title: "Uh oh! Something went wrong.",
@@ -384,29 +385,44 @@ const Topbar = () => {
 
 
               GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
+                console.log("receing from the ");
                 let id = tempNewArray.id.split("#")[0];
-                const i = store.getState().elements.index;
-                const e = store.getState().elements.value[i];
+                let i = store.getState().elements.index;
+                let e = store.getState().elements.value[i][0];
                 let elementCopy = [...e];
-                console.log(e);
-                console.log(GlobalProps.indexMap);
+
                 indexMutex.runExclusive(async () => {
                   if (GlobalProps.indexMap.has(id)) {
                     const index = GlobalProps.indexMap.get(id);
-                    tempNewArray = { ...tempNewArray, id: id +"#"+ index};
+                    tempNewArray = { ...tempNewArray, id: id + "#" + index };
                     elementCopy[index] = tempNewArray;
                   } else {
-                    console.log(e.length);
+
                     const index = e.length;
                     GlobalProps.indexMap.set(id, index);
-                    tempNewArray = {...tempNewArray , id: id + "#" + index};
+                    tempNewArray = { ...tempNewArray, id: id + "#" + index };
                     elementCopy.push(tempNewArray);
                   }
-                  console.log(elementCopy);
-                  dispatch(setElement([elementCopy, true]));
+
+                  dispatch(setElement([elementCopy, true, null]));
                 })
 
               });
+
+
+              GlobalProps.socket.on("delete-element-socket", ({ key }) => {
+
+                let i = store.getState().elements.index;
+                let e = store.getState().elements.value[i][0];
+                const index = GlobalProps.indexMap.get(key);
+                let elementCopy = [...e];
+
+                if (ShapeCache.cache.has(elementCopy[index])) {
+                  ShapeCache.cache.delete(elementCopy[index]);
+                }
+                elementCopy[index] = null;
+                dispatch(setElement([elementCopy, true, null]));
+              })
 
 
             }} type="submit">Join Room</Button>

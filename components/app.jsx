@@ -13,7 +13,7 @@ const App = () => {
   const toolWheel = useSelector(state => state.tool.toolWheel);
   const selectedElemenet = useSelector(state => state.selectedElement.value);
   const index = useSelector(state => state.elements.index);
-  const elements = useSelector(state => state.elements.value[index], shallowEqual);
+  const elements = useSelector(state => state.elements.value[index][0], shallowEqual);
   const tool = useSelector(state => state.tool.value);
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();

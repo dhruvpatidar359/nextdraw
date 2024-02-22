@@ -60,7 +60,7 @@ export const open = async () => {
 
         const fileContent = await readFileAsync(file);
         // console.log();
-        store.dispatch(setElement([JSON.parse(fileContent), true]))
+        store.dispatch(setElement([JSON.parse(fileContent), true,null]))
         // josnObj.map(val => {
         //   console.log(val)
         // })

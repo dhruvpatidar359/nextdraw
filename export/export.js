@@ -10,7 +10,7 @@ export const exportImage = (backgroundExport, toast) => {
 
 
         const index = store.getState().elements.index;
-        const elements = store.getState().elements.value[index];
+        const elements = store.getState().elements.value[index][0];
         const canvasBackground = store.getState().canvas.background;
 
         if (elements.length == 0) {

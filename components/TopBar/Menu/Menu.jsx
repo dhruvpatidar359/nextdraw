@@ -51,7 +51,7 @@ import { setCanvasBackground } from '@/components/Redux/features/canvasSlice'
 const Menu = () => {
 
     const index = useSelector(state => state.elements.index);
-    const elements = useSelector(state => state.elements.value[index], shallowEqual);
+    const elements = useSelector(state => state.elements.value[index][0], shallowEqual);
     const canvas = useSelector(state => state.canvas.value);
     const [background, setBackground] = useState('#FFFFFF');
     const dispatch = useDispatch();
@@ -99,7 +99,7 @@ const Menu = () => {
                             <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => {
-                            store.dispatch(setElement([[], false]));
+                            store.dispatch(setElement([[], false,null]));
                             ShapeCache.cache = new WeakMap();
                             store.dispatch(setCanvasBackground("#FFFFFF"))
                             localStorage.setItem('elements', "");

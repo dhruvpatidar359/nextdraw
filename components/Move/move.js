@@ -43,11 +43,12 @@ export const move = (event, elements) => {
             points: newPoints, x1: event.clientX - rectCoordinatesOffsetX, y1: event.clientY - rectCoordinatesOffsetY, x2: event.clientX - rectCoordinatesOffsetX + width, y2: event.clientY - rectCoordinatesOffsetY + height
         };
 
-        store.dispatch(setElement([tempNewArray, true]));
+        store.dispatch(setElement([tempNewArray, true,id.split("#")[0]]));
         const roomId =   GlobalProps.room;
   if(roomId != null) {
     tempNewArray = tempNewArray[newId];
-    GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+    const key = id.split("#")[0];
+    GlobalProps.socket.emit("render-elements", { tempNewArray, roomId,key });
   }
 
         

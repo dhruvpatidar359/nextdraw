@@ -5,7 +5,7 @@ import { GlobalProps } from "../GlobalProps";
 export const elementSlice = createSlice({
     name: 'elements',
     initialState: {
-        value: [[]],
+        value: [[[],null]],
         index: 0,
         changed: false,
         dupState: false
@@ -30,17 +30,22 @@ export const elementSlice = createSlice({
            
             const newState = action.payload[0];
 
-            let overwrite = false;
-            if (action.payload.length === 2) {
+            let overwrite = action.payload[1];
 
-                overwrite = action.payload[1];
-            }
-
-
+            let changedElementId = action.payload[2];
+         
             if (overwrite) {
-                const histroyCopy = [...state.value];
-                histroyCopy[state.index] = newState;
-                state.value = histroyCopy;
+                const historyCopy = [...state.value];
+                if(state.index != 0) {
+                    historyCopy[state.index-1] = [historyCopy[state.index-1][0],changedElementId];
+                    historyCopy[state.index] = [newState,null];
+                } else {
+                    historyCopy[state.index] = [newState,changedElementId];
+                
+                }
+               
+               
+                state.value = historyCopy;
             } else {
                 let length = state.value.length;
                 const updatedState = [...state.value].slice(0, state.index + 1);
@@ -52,11 +57,13 @@ export const elementSlice = createSlice({
                 // removed from the history
 
                 var set = new Set();
-                current(updatedState[updatedState.length - 1]).forEach(e => {
+                current(updatedState[updatedState.length - 1][0]).forEach(e => {
+                    
                     set.add(e);
                 });
 
-                current(latestState).forEach(e => {
+                current(latestState[0]).forEach(e => {
+             
                     if (!set.has(e)) {
 
                         if (ShapeCache.cache.has(e)) {
@@ -66,9 +73,9 @@ export const elementSlice = createSlice({
 
                     }
                 });
-
-
-                state.value = [...updatedState, newState];
+               
+                
+                state.value = [...updatedState, [newState,changedElementId]];
                 state.index = state.index + 1;
 
 
@@ -82,10 +89,17 @@ export const elementSlice = createSlice({
             if (state.index > 0) {
 
                 state.index = state.index - 1;
-                const tempNewArray = state.value[state.index];
+                if(state.value[state.index][1] === null) {
+                    return;
+                }
+                const key = state.value[state.index][1];
+                const undoElementIndex = GlobalProps.indexMap.get(GlobalProps.username + key);
+
+                const undoElement = state.value[state.index][0][undoElementIndex];
                 const roomId =   GlobalProps.room;
                 if(roomId != null) {
-                  GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+
+                  GlobalProps.socket.emit("undo-element", { roomId,undoElement,key });
                 }
               
             }
@@ -95,7 +109,7 @@ export const elementSlice = createSlice({
         redo: (state, action) => {
             if (state.index < state.value.length - 1) {
                 state.index = state.index + 1;
-                const tempNewArray = state.value[state.index];
+                const tempNewArray = state.value[state.index][0];
                 const roomId =   GlobalProps.room;
   if(roomId != null) {
     GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });

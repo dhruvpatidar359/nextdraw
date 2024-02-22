@@ -43,7 +43,7 @@ const Canvas = () => {
   // selectors 
   const tool = useSelector(state => state.tool.value);
   const index = useSelector(state => state.elements.index);
-  const elements = useSelector(state => state.elements.value[index], shallowEqual);
+  const elements = useSelector(state => state.elements.value[index][0], shallowEqual);
   const hover = useSelector(state => state.hover.value);
   const action = useSelector(state => state.action.value);
   const selectedElement = useSelector(state => state.selectedElement.value);
@@ -85,10 +85,23 @@ const Canvas = () => {
 
     const storedData = localStorage.getItem('elements');
 
+
+
     if (storedData) {
       const data = JSON.parse(storedData);
-      if (data.length != 0) {
-        dispatch(setElement([data, true]));
+      const copyData = [];
+      let index = 0;
+      data.forEach(e => {
+        if(e != null) {
+          const key = e.id.split("#")[0] + index;
+          e = {...e,id:key};
+          GlobalProps.indexMap.set(key,index);
+          index += 1;
+          copyData.push(e);
+        }
+      })
+      if (copyData.length != 0) {
+        dispatch(setElement([copyData, true,null]));
       }
 
 
@@ -238,6 +251,7 @@ const Canvas = () => {
     ctx.save();
     ctx.translate(panOffset.x * scale - scaleOffsetX, panOffset.y * scale - scaleOffsetY);
     ctx.scale(scale, scale);
+  
     renderer(ctx, elements, selectedElement, action, scale);
     ctx.restore();
 
@@ -351,24 +365,24 @@ const Canvas = () => {
         }
 
 
-
+        const { id, x1, y1, x2, y2, type } = ele;
         // logic for the creation of extra state when we just click on the element
         if (dupState === true) {
           if (changed === true) {
-            dispatch(setElement([elements]));
+            dispatch(setElement([elements,false,id.split("#")[0]]));
             dispatch(setChanged(false));
             // setChanged(false);
           } else {
-            dispatch(setElement([elements, true]));
+            dispatch(setElement([elements, true,id.split("#")[0]]));
           }
         } else {
-          dispatch(setElement([elements]));
+          dispatch(setElement([elements,false,id.split("#")[0]]));
           dispatch(setDupState(true));
           dispatch(setChanged(false));
 
         }
 
-        const { id, x1, y1, x2, y2, type } = ele;
+      
 
         let offSetX;
         let offSetY;
@@ -437,12 +451,12 @@ const Canvas = () => {
       };
       console.log(newElement);
       if (dupState === false) {
-        dispatch(setElement([[...elements, newElement]]));
+        dispatch(setElement([[...elements, newElement],false,elementId]));
       } else {
         if (changed) {
-          dispatch(setElement([[...elements, newElement]]));
+          dispatch(setElement([[...elements, newElement],false,elementId]));
         } else {
-          dispatch(setElement([[...elements, newElement], true]));
+          dispatch(setElement([[...elements, newElement], true,elementId]));
 
           dispatch(setChanged(true));
 
@@ -499,13 +513,13 @@ const Canvas = () => {
           x1: minX, y1: minY, x2: maxX, y2: maxY
         };
 
-        store.dispatch(setElement([tempNewArray, true]));
+        store.dispatch(setElement([tempNewArray, true,element.id.split("#")[0]]));
 
       }
 
 
 
-      const currentStateElement = store.getState().elements.value[index];
+      const currentStateElement = store.getState().elements.value[index][0];
 
       const key = currentStateElement[currentStateElement.length - 1];
 
@@ -546,11 +560,11 @@ const Canvas = () => {
             x1: minX, y1: minY, x2: maxX, y2: maxY
           };
 
-          store.dispatch(setElement([tempNewArray, true]));
+          store.dispatch(setElement([tempNewArray, true,newElement.id.split("#")[0]]));
         }
 
 
-        const currentStateElement = store.getState().elements.value[index];
+        const currentStateElement = store.getState().elements.value[index][0];
 
         const key = currentStateElement[parseInt(newElement.id.split("#")[1])];
         const shape = getElementObject(key);
@@ -584,10 +598,10 @@ const Canvas = () => {
             x1: minX, y1: minY, x2: maxX, y2: maxY
           };
 
-          store.dispatch(setElement([tempNewArray, true]));
+          store.dispatch(setElement([tempNewArray, true,element.id.split("#")[0]]));
         }
 
-        const currentStateElement = store.getState().elements.value[index];
+        const currentStateElement = store.getState().elements.value[index][0];
 
         const key = currentStateElement[parseInt(selectedElement.id.split("#")[1])];
 
