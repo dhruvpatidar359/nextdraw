@@ -25,17 +25,30 @@ export const exportImage = (backgroundExport, toast) => {
 
         let newCanvas = document.createElement("canvas");
         let ctx = newCanvas.getContext('2d');
-
-        let x1 = elements[0].x1,
-            x2 = elements[0].x2,
-            y1 = elements[0].y1,
-            y2 = elements[0].y2;
+        let x1;
+        let x2;
+        let y1;
+        let y2;
 
         elements.forEach(element => {
-            x1 = Math.min(x1, element.x1, element.x2);
-            x2 = Math.max(x2, element.x2, element.x1);
-            y1 = Math.min(y1, element.y1, element.y2);
-            y2 = Math.max(y2, element.y2, element.y1);
+            if (element != null) {
+                x1 = element.x1,
+                    x2 = element.x2,
+                    y1 = element.y1,
+                    y2 = element.y2;
+                return;
+            }
+        })
+
+
+        elements.forEach(element => {
+            if (element != null) {
+                x1 = Math.min(x1, element.x1, element.x2);
+                x2 = Math.max(x2, element.x2, element.x1);
+                y1 = Math.min(y1, element.y1, element.y2);
+                y2 = Math.max(y2, element.y2, element.y1);
+            }
+
         });
 
 
@@ -99,7 +112,9 @@ export const exportImage = (backgroundExport, toast) => {
         y1 = -y1 + 10;
 
         elements.forEach(element => {
+            if(element != null) {
 
+         
             switch (element.type) {
                 case "rectangle":
                 case "line":
@@ -138,7 +153,7 @@ export const exportImage = (backgroundExport, toast) => {
 
                     break;
             }
-
+        }
 
 
         })
