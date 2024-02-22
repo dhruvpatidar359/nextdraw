@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 
 const UniqueUsernameFetcher = ({ onUsernameFetched }) => {
   useEffect(() => {
-    const socket = io('https://nextdraw.onrender.com');
+    const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET);
 
     const getUsernameFromLocalStorage = () => {
       return localStorage.getItem('username');
