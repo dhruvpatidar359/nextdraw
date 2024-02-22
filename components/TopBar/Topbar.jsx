@@ -191,6 +191,7 @@ const Topbar = () => {
 
 
   const [room, setRoom] = useState(GlobalProps.room);
+  const [createClicked, setCreateClicked] = useState(false);
 
   const copyRoomId = () => {
     if (room) {
@@ -265,8 +266,12 @@ const Topbar = () => {
 
           </DialogHeader>
           {/* <text className=''>Create Your Own Room</text> */}
+          {
+            createClicked === true && room === null ? <span>{Generating}</span> : null}
+
           {room && (
             <div className="room-id-container">
+
               <span>{room}</span>
               <Button onClick={copyRoomId} variant="outline" className="m-2">
                 <CopyIcon className='h-4 w-4' />
@@ -287,6 +292,7 @@ const Topbar = () => {
             GlobalProps.socket.on('room-created', roomId => {
               GlobalProps.room = roomId;
               setRoom(roomId);
+              setCreateClicked(true);
 
 
             });
@@ -365,6 +371,21 @@ const Topbar = () => {
 
           </div>
           <DialogFooter>
+
+            <Button onClick={() => {
+
+              GlobalProps.room = null;
+              GlobalProps.socket = null;
+              setCreateClicked(false);
+              toast({
+                title: "Session has been stopped",
+                description: "Success",
+                duration: 3000
+              });
+
+            }} className='bg-red-600' type="submit">Stop</Button>
+
+
             <Button onClick={() => {
 
               if (GlobalProps.socket === null) {
@@ -373,7 +394,7 @@ const Topbar = () => {
 
               }
               const roomId = inputRoom;
-              GlobalProps.socket.emit('join-room', {roomId});
+              GlobalProps.socket.emit('join-room', { roomId });
               GlobalProps.socket.on('error', error => {
                 toast({
                   title: "Uh oh! Something went wrong.",
@@ -381,11 +402,21 @@ const Topbar = () => {
                   duration: 3000
                 });
               })
+
+              GlobalProps.socket.on('join-success', () => {
+                toast({
+                  title: "Join Success",
+                  description: "Success",
+                  duration: 3000
+                });
+              })
               GlobalProps.room = inputRoom;
 
 
+
+
               GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-                console.log("receing from the ");
+
                 let id = tempNewArray.id.split("#")[0];
                 let i = store.getState().elements.index;
                 let e = store.getState().elements.value[i][0];
@@ -428,11 +459,7 @@ const Topbar = () => {
             }} type="submit">Join Room</Button>
 
 
-            <Button onClick={() => {
-              // for just testing this is done , not for real
-              GlobalProps.username = inputRoom;
 
-            }} type="submit">Username</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -48,6 +48,7 @@ import { ShapeCache } from '@/components/Redux/ShapeCache'
 import { FaGithub } from 'react-icons/fa'
 import { ColorPicker, GradientPicker } from './ColorPicker'
 import { setCanvasBackground } from '@/components/Redux/features/canvasSlice'
+import { GlobalProps } from '@/components/Redux/GlobalProps'
 const Menu = () => {
 
     const index = useSelector(state => state.elements.index);
@@ -88,7 +89,7 @@ const Menu = () => {
                         }}>
                             <Folder className="mr-2 h-4 w-4" />
                             <span>Open</span>
-                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => {
 
@@ -96,9 +97,9 @@ const Menu = () => {
                         }}>
                             <Save className="mr-2 h-4 w-4" />
                             <span>Save</span>
-                            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                            {/* <DropdownMenuShortcut>⌘B</DropdownMenuShortcut> */}
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => {
+                        {GlobalProps.room === null ?       <DropdownMenuItem onClick={() => {
                             store.dispatch(setElement([[], false,null]));
                             ShapeCache.cache = new WeakMap();
                             store.dispatch(setCanvasBackground("#FFFFFF"))
@@ -106,14 +107,14 @@ const Menu = () => {
                         }}>
                             <Delete className="mr-2 h-4 w-4" />
                             <span>Reset The Canvas</span>
-                            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                        </DropdownMenuItem>
+                            {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
+                        </DropdownMenuItem> : null}
                         <DropdownMenuItem onClick={() => {
                             window.open("https://github.com/dhruvpatidar359/nextdraw", "_blank", "noreferrer");
                         }}>
                             <Github className="mr-2 h-4 w-4" />
                             <span>Github</span>
-                            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                            {/* <DropdownMenuShortcut>⌘K</DropdownMenuShortcut> */}
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />

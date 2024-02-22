@@ -31,6 +31,7 @@ import { Input } from './ui/input';
 import { GlobalProps } from './Redux/GlobalProps';
 
 import useFontFaceObserver from 'use-font-face-observer';
+import UniqueUsernameFetcher from './username/UniqueUsernameFetcher';
 
 
 
@@ -92,16 +93,16 @@ const Canvas = () => {
       const copyData = [];
       let index = 0;
       data.forEach(e => {
-        if(e != null) {
-          const key = e.id.split("#")[0] + index;
-          e = {...e,id:key};
-          GlobalProps.indexMap.set(key,index);
+        if (e != null) {
+          const key = e.id.split("#")[0] + "#" + index;
+          e = { ...e, id: key };
+          GlobalProps.indexMap.set(key, index);
           index += 1;
           copyData.push(e);
         }
       })
       if (copyData.length != 0) {
-        dispatch(setElement([copyData, true,null]));
+        dispatch(setElement([copyData, true, null]));
       }
 
 
@@ -251,7 +252,7 @@ const Canvas = () => {
     ctx.save();
     ctx.translate(panOffset.x * scale - scaleOffsetX, panOffset.y * scale - scaleOffsetY);
     ctx.scale(scale, scale);
-  
+
     renderer(ctx, elements, selectedElement, action, scale);
     ctx.restore();
 
@@ -369,20 +370,20 @@ const Canvas = () => {
         // logic for the creation of extra state when we just click on the element
         if (dupState === true) {
           if (changed === true) {
-            dispatch(setElement([elements,false,id.split("#")[0]]));
+            dispatch(setElement([elements, false, id.split("#")[0]]));
             dispatch(setChanged(false));
             // setChanged(false);
           } else {
-            dispatch(setElement([elements, true,id.split("#")[0]]));
+            dispatch(setElement([elements, true, id.split("#")[0]]));
           }
         } else {
-          dispatch(setElement([elements,false,id.split("#")[0]]));
+          dispatch(setElement([elements, false, id.split("#")[0]]));
           dispatch(setDupState(true));
           dispatch(setChanged(false));
 
         }
 
-      
+
 
         let offSetX;
         let offSetY;
@@ -451,12 +452,12 @@ const Canvas = () => {
       };
       console.log(newElement);
       if (dupState === false) {
-        dispatch(setElement([[...elements, newElement],false,elementId]));
+        dispatch(setElement([[...elements, newElement], false, elementId]));
       } else {
         if (changed) {
-          dispatch(setElement([[...elements, newElement],false,elementId]));
+          dispatch(setElement([[...elements, newElement], false, elementId]));
         } else {
-          dispatch(setElement([[...elements, newElement], true,elementId]));
+          dispatch(setElement([[...elements, newElement], true, elementId]));
 
           dispatch(setChanged(true));
 
@@ -467,9 +468,9 @@ const Canvas = () => {
 
 
       dispatch(setOldElement(newElement));
-  
-       dispatch(setSelectedElement(newElement));
-   
+
+      dispatch(setSelectedElement(newElement));
+
 
 
 
@@ -513,7 +514,7 @@ const Canvas = () => {
           x1: minX, y1: minY, x2: maxX, y2: maxY
         };
 
-        store.dispatch(setElement([tempNewArray, true,element.id.split("#")[0]]));
+        store.dispatch(setElement([tempNewArray, true, element.id.split("#")[0]]));
 
       }
 
@@ -560,7 +561,7 @@ const Canvas = () => {
             x1: minX, y1: minY, x2: maxX, y2: maxY
           };
 
-          store.dispatch(setElement([tempNewArray, true,newElement.id.split("#")[0]]));
+          store.dispatch(setElement([tempNewArray, true, newElement.id.split("#")[0]]));
         }
 
 
@@ -598,7 +599,7 @@ const Canvas = () => {
             x1: minX, y1: minY, x2: maxX, y2: maxY
           };
 
-          store.dispatch(setElement([tempNewArray, true,element.id.split("#")[0]]));
+          store.dispatch(setElement([tempNewArray, true, element.id.split("#")[0]]));
         }
 
         const currentStateElement = store.getState().elements.value[index][0];
@@ -692,9 +693,12 @@ const Canvas = () => {
 
   };
 
+  // testing purpose
+
+
+
   return (
     <div>
-
 
       <div className="fixed bottom-2 left-2 flex flex-row items-center">
 
@@ -746,7 +750,7 @@ const Canvas = () => {
 
         <span className='p-2'></span>
 
-        <TooltipProvider delayDuration={100}>
+        {GlobalProps.room === null ? <div> <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button onClick={() => {
@@ -768,26 +772,26 @@ const Canvas = () => {
         </TooltipProvider>
 
 
-        <TooltipProvider delayDuration={100}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button onClick={() => {
-                if (store.getState().action.value === 'writing') {
-                  return;
-                }
-                dispatch(setSelectedElement(null));
-                dispatch(redo());
-              }} variant="outline" size="icon" className="h-8 w-8">
-                <Redo className="h-4 w-4" />
-              </Button>
+          <TooltipProvider delayDuration={100}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button onClick={() => {
+                  if (store.getState().action.value === 'writing') {
+                    return;
+                  }
+                  dispatch(setSelectedElement(null));
+                  dispatch(redo());
+                }} variant="outline" size="icon" className="h-8 w-8">
+                  <Redo className="h-4 w-4" />
+                </Button>
 
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Redo</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Redo</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div> : null}
 
       </div>
 
@@ -815,6 +819,8 @@ const Canvas = () => {
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
       ></canvas>
+
+
     </div>
 
 

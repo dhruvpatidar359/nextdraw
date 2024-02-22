@@ -78,15 +78,18 @@ export const exportImage = (backgroundExport, toast) => {
         })
 
         // Set the fill style and draw a rectangle
-        if (setBackground) {
-            ctx.fillStyle = gradient;
 
-
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
 
         if (backgroundExport) {
-            ctx.fillRect(0, 0, width, height);
+            if (setBackground) {
+                ctx.fillStyle = gradient;
+
+
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            } else {
+                ctx.fillRect(0, 0, width, height);
+            }
+
         }
 
 

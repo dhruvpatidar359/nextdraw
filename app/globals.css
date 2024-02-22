@@ -117,6 +117,37 @@ body {
 
 
 
+.loadingBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadingIndicator {
+  font-size: 24px;
+  color: white;
+  /* Optional: Add animation for the loading indicator */
+  animation: loadingAnimation 1s infinite alternate;
+  /* Example animation */
+}
+
+@keyframes loadingAnimation {
+  from {
+    transform: translateY(-3px);
+  }
+
+  to {
+    transform: translateY(3px);
+  }
+}
+
 #weapon-selector-wrapper {
   width: 100%;
   height: 100%;
@@ -145,9 +176,11 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+  background-color: rgba(255, 255, 255, 0.7);
+  /* Semi-transparent white background */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Ensure loader is on top of other content */
+  z-index: 9999;
+  /* Ensure loader is on top of other content */
 }

@@ -6,6 +6,8 @@ import CircularToolBar from './TopBar/CircularToolBar/CircularToolBar';
 import ExportDialog from '@/export/ExportDialog';
 import { useEffect, useState } from 'react';
 import PropertiesBar from './PropertiesBar/PropertiesBar';
+import UniqueUsernameFetcher from './username/UniqueUsernameFetcher';
+import { GlobalProps } from './Redux/GlobalProps';
 
 
 const App = () => {
@@ -29,20 +31,29 @@ const App = () => {
     return () => clearInterval(syncInterval);
   }, [elements]);
 
+  const [username, setUsername] = useState(null);
 
+  const handleUsernameFetched = (fetchedUsername) => {
+    setUsername(fetchedUsername);
+    GlobalProps.username = fetchedUsername;
+  };
 
 
 
   return (
     <div >
-
+ 
       <Topbar></Topbar>
       {selectedElemenet != null || tool != 'selection' ? <PropertiesBar></PropertiesBar> : null}
       <Canvas ></Canvas>
 
       {open ? <ExportDialog open={open} changeOpen={setOpen} /> : null}
       {toolWheel ? <CircularToolBar changeOpen={setOpen} /> : null}
+      {!username && <div className="loadingBackdrop">
+        <div className="loadingIndicator">Loading...</div>
+      </div>}
 
+      <UniqueUsernameFetcher onUsernameFetched={handleUsernameFetched} />
 
     </div>
   )
