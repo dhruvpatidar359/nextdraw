@@ -319,7 +319,7 @@ const Topbar = () => {
                   elementCopy[index] = tempNewArray;
                 } else {
 
-                  const index = e.length;
+                  const index = store.getState().elements.value[i][0].length;
 
                   GlobalProps.indexMap.set(id, index);
                   tempNewArray = { ...tempNewArray, id: id + "#" + index };
@@ -460,13 +460,15 @@ const Topbar = () => {
                     elementCopy[index] = tempNewArray;
                   } else {
 
-                    const index = e.length;
+                    const index = store.getState().elements.value[i][0].length;
+                    
                     GlobalProps.indexMap.set(id, index);
                     tempNewArray = { ...tempNewArray, id: id + "#" + index };
                     elementCopy.push(tempNewArray);
                   }
 
                   console.log(store.getState().elements.value[i][0]);
+                  console.log(GlobalProps.indexMap);
 
                   dispatch(setElement([elementCopy, true, null]));
                 })
