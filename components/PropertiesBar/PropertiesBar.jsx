@@ -61,7 +61,7 @@ const PropertiesBar = () => {
 
         if (selectedElement != null) {
             element = elements[parseInt(selectedElement.id.split("#")[1])];
-            console.log(selectedElement.id.split("#")[1]);
+            
             const currentStroke = element.stroke
 
             if (element.type != "pencil" && element.type != "text") {
@@ -130,7 +130,7 @@ const PropertiesBar = () => {
             return;
         }
         element = elements[parseInt(selectedElement.id.split("#")[1])];
-        console.log("chingin");
+      
         if (!changedByUser) {
             return; // Exit early if stroke hasn't changed by user
         }

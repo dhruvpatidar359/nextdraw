@@ -443,14 +443,14 @@ const Canvas = () => {
 
 
       const elementId = GlobalProps.username + Date.now();
-      console.log(elementId);
+    
       GlobalProps.indexMap.set(elementId, elements.length);
 
       const newElement = {
         ...addElement(elementId + "#" + elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool), stroke: GlobalProps.stroke, fill: GlobalProps.fill,
         fillStyle: GlobalProps.fillStyle, sharp: GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle, strokeWidth: GlobalProps.strokeWidth, bowing: GlobalProps.bowing, fontSize: GlobalProps.fontSize
       };
-      console.log(newElement);
+    
       if (dupState === false) {
         dispatch(setElement([[...elements, newElement], false, elementId]));
       } else {

@@ -85,7 +85,7 @@ export const drawElements = (ctx, element) => {
 export const renderer = (ctx, elements, selectedElement, action, scale) => {
 
   let boundedElement = null;
-  console.log(elements.length);
+
   elements.forEach((element) => {
 
     if (element === null) {

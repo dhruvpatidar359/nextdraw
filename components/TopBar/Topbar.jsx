@@ -302,13 +302,13 @@ const Topbar = () => {
             });
 
             GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-              console.log(tempNewArray);
+              // console.log(tempNewArray);
               let id = tempNewArray.id.split("#")[0];
               let i = store.getState().elements.index;
               let e = store.getState().elements.value[i][0];
               let elementCopy = [...e];
 
-              console.log(GlobalProps.indexMap);
+              // console.log(GlobalProps.indexMap);
 
               indexMutex.runExclusive(async () => {
                 if (GlobalProps.indexMap.has(id)) {
@@ -341,7 +341,7 @@ const Topbar = () => {
               if (ShapeCache.cache.has(elementCopy[index])) {
                 ShapeCache.cache.delete(elementCopy[index]);
               }
-              console.log(elementCopy[index]);
+              // console.log(elementCopy[index]);
               elementCopy[index] = null;
               dispatch(setElement([elementCopy, true, null]));
             });
@@ -428,8 +428,8 @@ const Topbar = () => {
                 GlobalProps.socket = null;
 
                 setRoom(null);
-                console.log(GlobalProps.room);
-                console.log(GlobalProps.socket);
+                // console.log(GlobalProps.room);
+                // console.log(GlobalProps.socket);
               })
 
               GlobalProps.socket.on('join-success', () => {
@@ -446,7 +446,7 @@ const Topbar = () => {
 
 
               GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-                console.log(tempNewArray);
+                // console.log(tempNewArray);
                 let id = tempNewArray.id.split("#")[0];
                 let i = store.getState().elements.index;
                 let e = store.getState().elements.value[i][0];

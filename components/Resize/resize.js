@@ -463,48 +463,48 @@ export const getCurrentResizingNode = (event, element, scale) => {
       if (distance(x1, y1, cx, cy) < 12 / (scale / 2)) {
         // top left
 
-        console.log("top left");
+        // console.log("top left");
         return [1, "se-resize", 1];
 
       } else if (distance(x2, y1, cx, cy) < 12 / (scale / 2)) {
         // top right
-        console.log("top right");
+        // console.log("top right");
         return [1, "sw-resize", 3];
 
       } else if (distance(x1, y2, cx, cy) < 12 / scale) {
         // bottom left
-        console.log("bottom left");
+        // console.log("bottom left");
         return [1, "ne-resize", 7];
 
       } else if (distance(x2, y2, cx, cy) < 12 / scale) {
         // bottom right
-        console.log("bottom right");
+        // console.log("bottom right");
         return [1, "nw-resize", 5];
 
       } else if (distance(x1, y1 + (y2 - y1) / 2, cx, cy) < 12 / scale) {
         // left mid
-        console.log("left mid");
+        // console.log("left mid");
         return [1, "ew-resize", 8];
       } else if (distance(x2, y1 + (y2 - y1) / 2, cx, cy) < 12 / scale) {
         // right mid
-        console.log("right mid");
+        // console.log("right mid");
         return [1, "ew-resize", 4];
       } else if (distance(x1 + (x2 - x1) / 2, y1, cx, cy) < 12 / scale) {
         // top mid
-        console.log("top mid");
+        // console.log("top mid");
         return [1, "n-resize", 2];
       } else if (distance(x1 + (x2 - x1) / 2, y2, cx, cy) < 12 / scale) {
         // bottom mid
-        console.log("bottom mid");
+        // console.log("bottom mid");
         return [1, "s-resize", 6];
       }
     } else if (type === 'line') {
 
       if (distance(x1, y1, cx, cy) < 10 / scale) {
-        console.log("upper point of line");
+        // console.log("upper point of line");
         return [1, 'se-resize', 1];
       } else if (distance(x2, y2, cx, cy) < 10 / scale) {
-        console.log("lower point of the line");
+        // console.log("lower point of the line");
         return [1, 'se-resize', 2];
       }
     } else if (type === 'pencil') {
@@ -523,39 +523,39 @@ export const getCurrentResizingNode = (event, element, scale) => {
         if (distance(minX, minY, cx, cy) < 12 / scale) {
           // top left
 
-          console.log("top left");
+          // console.log("top left");
           return [1, "se-resize", 1];
 
         } else if (distance(maxX, minY, cx, cy) < 12 / scale) {
           // top right
-          console.log("top right");
+          // console.log("top right");
           return [1, "sw-resize", 3];
 
         } else if (distance(minX, maxY, cx, cy) < 12 / scale) {
           // bottom left
-          console.log("bottom left");
+          // console.log("bottom left");
           return [1, "ne-resize", 7];
 
         } else if (distance(maxX, maxY, cx, cy) < 12 / scale) {
           // bottom right
-          console.log("bottom right");
+          // console.log("bottom right");
           return [1, "nw-resize", 5];
 
         } else if (distance(minX, minY + (maxY - minY) / 2, cx, cy) < 12 / scale) {
           // left mid
-          console.log("left mid");
+          // console.log("left mid");
           return [1, "ew-resize", 8];
         } else if (distance(maxX, minY + (maxY - minY) / 2, cx, cy) < 12 / scale) {
           // right mid
-          console.log("right mid");
+          // console.log("right mid");
           return [1, "ew-resize", 4];
         } else if (distance(minX + (maxX - minX) / 2, minY, cx, cy) < 12 / scale) {
           // top mid
-          console.log("top mid");
+          // console.log("top mid");
           return [1, "n-resize", 2];
         } else if (distance(minX + (maxX - minX) / 2, maxY, cx, cy) < 12 / scale) {
           // bottom mid
-          console.log("bottom mid");
+          // console.log("bottom mid");
           return [1, "s-resize", 6];
         }
       }
