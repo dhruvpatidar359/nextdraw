@@ -61,7 +61,32 @@ const PropertiesBar = () => {
 
         if (selectedElement != null) {
             element = elements[parseInt(selectedElement.id.split("#")[1])];
-            
+            if(element === null){
+                
+                const currentStroke = GlobalProps.stroke
+
+
+            const currentBackground = GlobalProps.fill;
+            const currentStrokeStyle = GlobalProps.strokeStyle;
+            const currentStrokeWidth = GlobalProps.strokeWidth;
+            const currentSharp = GlobalProps.sharp;
+            const bowing = GlobalProps.bowing;
+            const currentFontSize = GlobalProps.fontSize;
+
+            setBackground(currentBackground);
+            setStrokeStyle(currentStrokeStyle);
+            setStrokeWidth(currentStrokeWidth);
+            setSharp(currentSharp);
+            setBowing(bowing);
+
+
+            setFontSize(currentFontSize);
+
+
+
+
+            setStroke(currentStroke);
+                return;}
             const currentStroke = element.stroke
 
             if (element.type != "pencil" && element.type != "text") {

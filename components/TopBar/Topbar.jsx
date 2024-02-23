@@ -453,6 +453,7 @@ const Topbar = () => {
                 let elementCopy = [...e];
 
                 indexMutex.runExclusive(async () => {
+                  console.log("running");
                   if (GlobalProps.indexMap.has(id)) {
                     const index = GlobalProps.indexMap.get(id);
                     tempNewArray = { ...tempNewArray, id: id + "#" + index };
