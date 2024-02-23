@@ -122,7 +122,10 @@ const Topbar = () => {
       }
 
       else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
+
         if (GlobalProps.room != null) return;
+
+
         if (store.getState().action.value === 'writing') {
           return;
         }
@@ -133,6 +136,7 @@ const Topbar = () => {
 
 
       } else if (event.ctrlKey && (event.key === 'z' || event.key === 'Z')) {
+        if (GlobalProps.room != null) return;
         if (store.getState().action.value === 'writing') {
           return;
         }
@@ -298,7 +302,7 @@ const Topbar = () => {
             });
 
             GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-              console.log("receing from the ");
+              console.log(tempNewArray);
               let id = tempNewArray.id.split("#")[0];
               let i = store.getState().elements.index;
               let e = store.getState().elements.value[i][0];
@@ -359,6 +363,7 @@ const Topbar = () => {
 
             <Input
               id="username"
+
               placeholder="Room-Id"
               value={inputRoom}
               onChange={(e) => {
@@ -372,11 +377,23 @@ const Topbar = () => {
           <DialogFooter>
 
             <Button onClick={() => {
+              if (GlobalProps.socket === null) {
+                toast({
+                  title: "No on going Session",
 
+                  duration: 3000
+                });
+
+                return;
+              }
               GlobalProps.room = null;
+              GlobalProps.socket.close();
               GlobalProps.socket = null;
+
               setRoom(null);
+              setInputRoom("");
               setCreateClicked(false);
+
               toast({
                 title: "Session has been stopped",
                 description: "Success",
@@ -393,14 +410,26 @@ const Topbar = () => {
                 GlobalProps.socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET);
 
               }
+
+
               const roomId = inputRoom;
+              GlobalProps.room = roomId;
               GlobalProps.socket.emit('join-room', { roomId });
+
               GlobalProps.socket.on('error', error => {
                 toast({
                   title: "Uh oh! Something went wrong.",
                   description: error,
                   duration: 3000
                 });
+
+                GlobalProps.room = null;
+                GlobalProps.socket.close();
+                GlobalProps.socket = null;
+
+                setRoom(null);
+                console.log(GlobalProps.room);
+                console.log(GlobalProps.socket);
               })
 
               GlobalProps.socket.on('join-success', () => {
@@ -409,14 +438,15 @@ const Topbar = () => {
                   description: "Success",
                   duration: 3000
                 });
+
+
               })
-              GlobalProps.room = inputRoom;
 
 
 
 
               GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-
+                console.log(tempNewArray);
                 let id = tempNewArray.id.split("#")[0];
                 let i = store.getState().elements.index;
                 let e = store.getState().elements.value[i][0];
