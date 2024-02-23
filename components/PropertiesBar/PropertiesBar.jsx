@@ -86,31 +86,34 @@ const PropertiesBar = () => {
 
 
             setStroke(currentStroke);
-                return;}
-            const currentStroke = element.stroke
+               
+            } else {
+                const currentStroke = element.stroke
 
-            if (element.type != "pencil" && element.type != "text") {
-                const currentBackground = element.fill;
-                const currentStrokeStyle = element.strokeStyle;
-                const currentStrokeWidth = element.strokeWidth;
-                const currentSharp = element.sharp;
-                const bowing = element.bowing;
-
-                setBackground(currentBackground);
-                setStrokeStyle(currentStrokeStyle);
-                setStrokeWidth(currentStrokeWidth);
-                setSharp(currentSharp);
-                setBowing(bowing);
-            } else if (element.type === 'text') {
-                const currentFontSize = element.fontSize;
-                setFontSize(currentFontSize);
-
+                if (element.type != "pencil" && element.type != "text") {
+                    const currentBackground = element.fill;
+                    const currentStrokeStyle = element.strokeStyle;
+                    const currentStrokeWidth = element.strokeWidth;
+                    const currentSharp = element.sharp;
+                    const bowing = element.bowing;
+    
+                    setBackground(currentBackground);
+                    setStrokeStyle(currentStrokeStyle);
+                    setStrokeWidth(currentStrokeWidth);
+                    setSharp(currentSharp);
+                    setBowing(bowing);
+                } else if (element.type === 'text') {
+                    const currentFontSize = element.fontSize;
+                    setFontSize(currentFontSize);
+    
+                }
+    
+    
+                setStroke(currentStroke);
+    
+    
             }
-
-
-            setStroke(currentStroke);
-
-
+           
 
 
         } else {

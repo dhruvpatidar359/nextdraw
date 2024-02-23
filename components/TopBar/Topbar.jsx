@@ -209,6 +209,41 @@ const Topbar = () => {
   };
 
 
+  const elementQueue = [];
+  let isProcessing = false;
+
+  async function processElementQueue() {
+    if (elementQueue.length === 0) {
+      return;
+    }
+    isProcessing = true;
+    let tempNewArray = elementQueue.shift();
+    try {
+      let id = tempNewArray.id.split("#")[0];
+      let i = store.getState().elements.index;
+      let e = store.getState().elements.value[i][0];
+      let elementCopy = [...e];
+      if (GlobalProps.indexMap.has(id)) {
+        const index = GlobalProps.indexMap.get(id);
+        tempNewArray = { ...tempNewArray, id: id + "#" + index };
+        elementCopy[index] = tempNewArray;
+      } else {
+        const index = store.getState().elements.value[i][0].length;
+        GlobalProps.indexMap.set(id, index);
+        tempNewArray = { ...tempNewArray, id: id + "#" + index };
+        elementCopy.push(tempNewArray);
+      }
+      console.log(store.getState().elements.value[i][0]);
+      console.log(GlobalProps.indexMap);
+      dispatch(setElement([elementCopy, true, null]));
+    } catch (error) {
+      console.error("Error processing element:", error);
+    } finally {
+      isProcessing = false;
+      processElementQueue();
+    }
+  }
+
 
 
   return (
@@ -301,35 +336,45 @@ const Topbar = () => {
 
             });
 
-            GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-              // console.log(tempNewArray);
-              let id = tempNewArray.id.split("#")[0];
-              let i = store.getState().elements.index;
-              let e = store.getState().elements.value[i][0];
-              let elementCopy = [...e];
 
-              // console.log(GlobalProps.indexMap);
-
-              indexMutex.runExclusive(async () => {
-                if (GlobalProps.indexMap.has(id)) {
-
-
-                  const index = GlobalProps.indexMap.get(id);
-                  tempNewArray = { ...tempNewArray, id: id + "#" + index };
-                  elementCopy[index] = tempNewArray;
-                } else {
-
-                  const index = store.getState().elements.value[i][0].length;
-
-                  GlobalProps.indexMap.set(id, index);
-                  tempNewArray = { ...tempNewArray, id: id + "#" + index };
-                  elementCopy.push(tempNewArray);
-                }
-
-                dispatch(setElement([elementCopy, true, null]));
-              })
-
+            GlobalProps.socket.on('render-elements', async ({ tempNewArray }) => {
+              console.log(tempNewArray);
+              elementQueue.push(tempNewArray);
+              if (!isProcessing) {
+                processElementQueue();
+              }
             });
+
+
+            // GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
+            //   // console.log(tempNewArray);
+            //   let id = tempNewArray.id.split("#")[0];
+            //   let i = store.getState().elements.index;
+            //   let e = store.getState().elements.value[i][0];
+            //   let elementCopy = [...e];
+
+            //   // console.log(GlobalProps.indexMap);
+
+            //   indexMutex.runExclusive(async () => {
+            //     if (GlobalProps.indexMap.has(id)) {
+
+
+            //       const index = GlobalProps.indexMap.get(id);
+            //       tempNewArray = { ...tempNewArray, id: id + "#" + index };
+            //       elementCopy[index] = tempNewArray;
+            //     } else {
+
+            //       const index = store.getState().elements.value[i][0].length;
+
+            //       GlobalProps.indexMap.set(id, index);
+            //       tempNewArray = { ...tempNewArray, id: id + "#" + index };
+            //       elementCopy.push(tempNewArray);
+            //     }
+
+            //     dispatch(setElement([elementCopy, true, null]));
+            //   })
+
+            // });
 
             GlobalProps.socket.on("delete-element-socket", ({ key }) => {
               const index = GlobalProps.indexMap.get(key);
@@ -445,34 +490,42 @@ const Topbar = () => {
 
 
 
-              GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
+              // GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
+              //   console.log(tempNewArray);
+              //   let id = tempNewArray.id.split("#")[0];
+              //   let i = store.getState().elements.index;
+              //   let e = store.getState().elements.value[i][0];
+              //   let elementCopy = [...e];
+
+
+
+              //   if (GlobalProps.indexMap.has(id)) {
+              //     const index = GlobalProps.indexMap.get(id);
+              //     tempNewArray = { ...tempNewArray, id: id + "#" + index };
+              //     elementCopy[index] = tempNewArray;
+              //   } else {
+
+              //     const index = store.getState().elements.value[i][0].length;
+
+              //     GlobalProps.indexMap.set(id, index);
+              //     tempNewArray = { ...tempNewArray, id: id + "#" + index };
+              //     elementCopy.push(tempNewArray);
+              //   }
+
+              //   console.log(store.getState().elements.value[i][0]);
+              //   console.log(GlobalProps.indexMap);
+
+              //   dispatch(setElement([elementCopy, true, null]));
+
+
+              // });
+
+              GlobalProps.socket.on('render-elements', async ({ tempNewArray }) => {
                 console.log(tempNewArray);
-                let id = tempNewArray.id.split("#")[0];
-                let i = store.getState().elements.index;
-                let e = store.getState().elements.value[i][0];
-                let elementCopy = [...e];
-
-                indexMutex.runExclusive(async () => {
-                
-                  if (GlobalProps.indexMap.has(id)) {
-                    const index = GlobalProps.indexMap.get(id);
-                    tempNewArray = { ...tempNewArray, id: id + "#" + index };
-                    elementCopy[index] = tempNewArray;
-                  } else {
-
-                    const index = store.getState().elements.value[i][0].length;
-                    
-                    GlobalProps.indexMap.set(id, index);
-                    tempNewArray = { ...tempNewArray, id: id + "#" + index };
-                    elementCopy.push(tempNewArray);
-                  }
-
-                  console.log(store.getState().elements.value[i][0]);
-                  console.log(GlobalProps.indexMap);
-
-                  dispatch(setElement([elementCopy, true, null]));
-                })
-
+                elementQueue.push(tempNewArray);
+                if (!isProcessing) {
+                  processElementQueue();
+                }
               });
 
 
