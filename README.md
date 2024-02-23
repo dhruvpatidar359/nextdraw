@@ -1,4 +1,4 @@
-# All right First of all it TOOK ME 2 Months to develop This . I am not bosting but yes it was huge.
+# All right First of all it TOOK ME 2 Months to develop This . I am not boasting but yes it was huge.
 ![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/26e56f64-662f-4f75-8008-3f8ff7223aec)
 
 <!--
