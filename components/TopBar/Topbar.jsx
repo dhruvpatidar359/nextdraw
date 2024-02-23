@@ -446,7 +446,7 @@ const Topbar = () => {
 
 
               GlobalProps.socket.on('render-elements', ({ tempNewArray }) => {
-                // console.log(tempNewArray);
+                console.log(tempNewArray);
                 let id = tempNewArray.id.split("#")[0];
                 let i = store.getState().elements.index;
                 let e = store.getState().elements.value[i][0];
