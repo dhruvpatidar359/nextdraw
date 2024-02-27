@@ -20,7 +20,10 @@ MIDDLE MOUSE TOOL CHANGE AND OTHERS .
 
 ## Features 🔧
 - **RECORDING ✅**  
-![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/184d6b22-9cec-4438-8364-fd336e594218)     
+![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/184d6b22-9cec-4438-8364-fd336e594218)
+- **CircularToolBar ✅⚠**
+- Click and hold the center mouse button and see the magic
+  ![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/59133987-9fcc-41f7-be42-3093c535c181)
 - **Collaboration ✅⚠**
 ![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/c80f8b31-52a6-4c7b-958c-2d07eaba37ec)     
 
