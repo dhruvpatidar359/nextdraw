@@ -2,8 +2,7 @@ import { changeTool, changeToolWheel } from '@/components/Redux/features/toolSli
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import styles from '../CircularToolBar/CircularToolBar.module.css';
-import { exportImage } from '@/export/export';
-import ExportDialog from '@/export/ExportDialog';
+
 
 const CircularToolBar = ({ changeOpen }) => {
 
@@ -22,13 +21,8 @@ const CircularToolBar = ({ changeOpen }) => {
 
   useEffect(() => {
 
-
-
     selectorModal = document.getElementById("weapon-selector-wrapper");
     currentWeapon = document.getElementById("current-weapon");
-
-
-
 
     selectorModal.classList.add("active");
     currentWeapon.style.filter = "blur(5px)";

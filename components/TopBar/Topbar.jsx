@@ -456,7 +456,6 @@ const Topbar = () => {
 
               }
 
-
               const roomId = inputRoom;
               GlobalProps.room = roomId;
               GlobalProps.socket.emit('join-room', { roomId });

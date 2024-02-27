@@ -19,17 +19,17 @@ const UniqueUsernameFetcher = ({ onUsernameFetched }) => {
     };
 
  
-    // Fetch username from local storage
+    
     let username = getUsernameFromLocalStorage();
 
     if (!username) {
-      // Request a unique username from the server
+   
       socket.emit('request-unique-username');
 
-      // Listen for response from the server
+   
       socket.on('unique-username', (uniqueUsername) => {
         console.log(`Assigned unique username ${uniqueUsername}`);
-        // Save username to local storage
+     
         saveUsernameToLocalStorage(uniqueUsername);
       
         closeSocket();
@@ -39,19 +39,19 @@ const UniqueUsernameFetcher = ({ onUsernameFetched }) => {
       });
     } else {
       console.log(`Using existing username ${username}`);
-      // Close socket connection
+  
       closeSocket();
     
       onUsernameFetched(username);
     }
 
-    // Clean up function to close the socket connection
+  
     return () => {
       closeSocket();
     };
   }, []);
 
-  return null; // This component doesn't render anything visible
+  return null; 
 };
 
 export default UniqueUsernameFetcher;

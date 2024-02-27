@@ -11,22 +11,22 @@ import App from '@/components/app';
 
 export default function Home() {
 
-  
+
 
 
   return (
     <main>
-      <Provider store = {store}>
+      <Provider store={store}>
 
 
-      <App>
+        <App>
 
 
 
-      </App>
-     
+        </App>
+
       </Provider>
-    
+
     </main>
   )
 }

@@ -3,7 +3,6 @@ import getStroke from "perfect-freehand";
 import { onLine } from "../Mouse/mouse";
 import { setElement } from "../Redux/features/elementSlice";
 import { setSelectedElement } from "../Redux/features/selectedElementSlice";
-import { io } from 'socket.io-client';
 import { GlobalProps } from "../Redux/GlobalProps";
 
 

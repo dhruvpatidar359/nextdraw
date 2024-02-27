@@ -3,7 +3,7 @@ import store from "@/app/store";
 import { drawBounds } from "../ElementManipulation/Bounds";
 import { getElementObject, updateElement } from "../ElementManipulation/Element";
 import { ShapeCache } from "../Redux/ShapeCache";
-import { GlobalProps } from "../Redux/GlobalProps";
+
 
 
 
@@ -21,10 +21,6 @@ export const draw = (event) => {
 
     updateElement(id, x1, y1, event.clientX, event.clientY, type)
   }
-
-
-
-
 }
 
 // the main function that is responsilbe for rendering
@@ -41,7 +37,7 @@ export const drawElements = (ctx, element) => {
     case "ellipse":
     case "diamond":
       if (ShapeCache.cache.has(element)) {
-        // console.log(`using cache ${element.id}`);
+
 
         roughCanvasRef.draw(ShapeCache.cache.get(element));
       } else {

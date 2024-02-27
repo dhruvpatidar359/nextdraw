@@ -61,33 +61,34 @@ const PropertiesBar = () => {
 
         if (selectedElement != null) {
             element = elements[parseInt(selectedElement.id.split("#")[1])];
-            if(element === null){
-                
+            if (element === null || element === undefined) {
+
                 const currentStroke = GlobalProps.stroke
 
 
-            const currentBackground = GlobalProps.fill;
-            const currentStrokeStyle = GlobalProps.strokeStyle;
-            const currentStrokeWidth = GlobalProps.strokeWidth;
-            const currentSharp = GlobalProps.sharp;
-            const bowing = GlobalProps.bowing;
-            const currentFontSize = GlobalProps.fontSize;
+                const currentBackground = GlobalProps.fill;
+                const currentStrokeStyle = GlobalProps.strokeStyle;
+                const currentStrokeWidth = GlobalProps.strokeWidth;
+                const currentSharp = GlobalProps.sharp;
+                const bowing = GlobalProps.bowing;
+                const currentFontSize = GlobalProps.fontSize;
 
-            setBackground(currentBackground);
-            setStrokeStyle(currentStrokeStyle);
-            setStrokeWidth(currentStrokeWidth);
-            setSharp(currentSharp);
-            setBowing(bowing);
-
-
-            setFontSize(currentFontSize);
+                setBackground(currentBackground);
+                setStrokeStyle(currentStrokeStyle);
+                setStrokeWidth(currentStrokeWidth);
+                setSharp(currentSharp);
+                setBowing(bowing);
 
 
+                setFontSize(currentFontSize);
 
 
-            setStroke(currentStroke);
-               
+
+
+                setStroke(currentStroke);
+
             } else {
+                console.log(element);
                 const currentStroke = element.stroke
 
                 if (element.type != "pencil" && element.type != "text") {
@@ -96,7 +97,7 @@ const PropertiesBar = () => {
                     const currentStrokeWidth = element.strokeWidth;
                     const currentSharp = element.sharp;
                     const bowing = element.bowing;
-    
+
                     setBackground(currentBackground);
                     setStrokeStyle(currentStrokeStyle);
                     setStrokeWidth(currentStrokeWidth);
@@ -105,15 +106,15 @@ const PropertiesBar = () => {
                 } else if (element.type === 'text') {
                     const currentFontSize = element.fontSize;
                     setFontSize(currentFontSize);
-    
+
                 }
-    
-    
+
+
                 setStroke(currentStroke);
-    
-    
+
+
             }
-           
+
 
 
         } else {
@@ -158,7 +159,7 @@ const PropertiesBar = () => {
             return;
         }
         element = elements[parseInt(selectedElement.id.split("#")[1])];
-      
+
         if (!changedByUser) {
             return; // Exit early if stroke hasn't changed by user
         }

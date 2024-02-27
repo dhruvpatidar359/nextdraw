@@ -11,26 +11,25 @@ export const save = (elements) => {
     });
     return;
   }
-  // Serialize elements to JSON
+  
   const elementsJSON = JSON.stringify(elements);
 
-  // Create a Blob with the JSON data
   const blob = new Blob([elementsJSON], { type: 'application/json' });
 
-  // Create a link element
+
   const a = document.createElement('a');
   a.href = window.URL.createObjectURL(blob);
 
-  // Specify the filename with custom extension
+  
   a.download = 'elements_list.nextdraw';
 
-  // Append the link to the body
+
   document.body.appendChild(a);
 
-  // Trigger a click event to download the file
+ 
   a.click();
 
-  // Clean up
+ 
   window.URL.revokeObjectURL(a.href);
   document.body.removeChild(a);
 
@@ -59,12 +58,9 @@ export const open = async () => {
       try {
 
         const fileContent = await readFileAsync(file);
-        // console.log();
+   
         store.dispatch(setElement([JSON.parse(fileContent), true,null]))
-        // josnObj.map(val => {
-        //   console.log(val)
-        // })
-        // store.dispatch()
+      
       } catch (error) {
         toast({
           title: "Error Importing File",
