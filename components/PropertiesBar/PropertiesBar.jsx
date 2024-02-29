@@ -35,6 +35,9 @@ const PropertiesBar = () => {
     let element;
     const elements = useSelector(state => state.elements.value[index][0], shallowEqual);
     const [changedByUser, setChangedByUser] = useState(false);
+
+    // used to ensure that the inital first useEffect to prefetch the properties
+    // should work first than the other useEffect.
     const [firstEffectCompleted, setFirstEffectCompleted] = useState(false);
 
 
@@ -48,6 +51,7 @@ const PropertiesBar = () => {
         '#09203f',
     ]
 
+    // useEffect used to preload the already applied properties on the elements
     useEffect(() => {
 
         if (selectedElement != null) {
@@ -117,7 +121,7 @@ const PropertiesBar = () => {
         setFirstEffectCompleted(true);
     }, [selectedElement, tool]);
 
-
+    // to update the properties of elements
     useEffect(() => {
 
 

@@ -69,7 +69,7 @@ export const exportImage = (backgroundExport, toast) => {
         // ctx.fillStyle = canvasBackground;
 
 
-        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        const gradient = ctx.createLinearGradient(0, 0, newCanvas.width, newCanvas.height);
         let gradientColorsList = [];
 
         for (let i = 0; i < canvasBackground.length; i++) {
@@ -79,29 +79,27 @@ export const exportImage = (backgroundExport, toast) => {
             }
         }
         let stop = 0;
-        let setBackground = true;
-        const incremnet = 1 / gradientColorsList.length;
+
+        const increment = 1 / gradientColorsList.length;
         gradientColorsList.forEach(value => {
             if (value.length != 7) {
-                setBackground = false;
+
                 return;
             }
             gradient.addColorStop(stop, value);
-            stop += incremnet;
+            stop += increment;
         })
 
         // Set the fill style and draw a rectangle
 
 
         if (backgroundExport) {
-            if (setBackground) {
-                ctx.fillStyle = gradient;
+
+            ctx.fillStyle = gradient;
 
 
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-            } else {
-                ctx.fillRect(0, 0, width, height);
-            }
+            ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+
 
         }
 
@@ -112,48 +110,48 @@ export const exportImage = (backgroundExport, toast) => {
         y1 = -y1 + 10;
 
         elements.forEach(element => {
-            if(element != null) {
+            if (element != null) {
 
-         
-            switch (element.type) {
-                case "rectangle":
-                case "line":
-                case "diamond":
-                case "ellipse":
 
-                    const drawElement = { ...element, x1: element.x1 + x1, y1: element.y1 + y1, x2: x1 + element.x2, y2: y1 + element.y2 };
-                    rC.draw(getElementObject(drawElement));
-                    break;
-                case "pencil":
+                switch (element.type) {
+                    case "rectangle":
+                    case "line":
+                    case "diamond":
+                    case "ellipse":
 
-                    let elementCopy = { ...element };
-                    let points = [];
+                        const drawElement = { ...element, x1: element.x1 + x1, y1: element.y1 + y1, x2: x1 + element.x2, y2: y1 + element.y2 };
+                        rC.draw(getElementObject(drawElement));
+                        break;
+                    case "pencil":
 
-                    element.points.forEach((value) => {
-                        points.push({ x: value.x + x1, y: value.y + y1 })
-                    })
+                        let elementCopy = { ...element };
+                        let points = [];
 
-                    elementCopy.points = points;
-                    ctx.fillStyle = element.stroke;
-                    ctx.fill(getElementObject(elementCopy));
+                        element.points.forEach((value) => {
+                            points.push({ x: value.x + x1, y: value.y + y1 })
+                        })
 
-                    break;
+                        elementCopy.points = points;
+                        ctx.fillStyle = element.stroke;
+                        ctx.fill(getElementObject(elementCopy));
 
-                case "text":
-                    ctx.textBaseline = "top";
-                    ctx.font = "24px Virgil";
+                        break;
 
-                    var txt = element.text;
+                    case "text":
+                        ctx.textBaseline = "top";
+                        ctx.font = "24px Virgil";
 
-                    var lineheight = 30;
-                    var lines = txt.split('\n');
-                    ctx.fillStyle = element.stroke;
-                    for (var i = 0; i < lines.length; i++)
-                        ctx.fillText(lines[i], element.x1 + x1, element.y1 + y1 + 6 + (i * lineheight));
+                        var txt = element.text;
 
-                    break;
+                        var lineheight = 30;
+                        var lines = txt.split('\n');
+                        ctx.fillStyle = element.stroke;
+                        for (var i = 0; i < lines.length; i++)
+                            ctx.fillText(lines[i], element.x1 + x1, element.y1 + y1 + 6 + (i * lineheight));
+
+                        break;
+                }
             }
-        }
 
 
         })
