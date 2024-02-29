@@ -63,6 +63,7 @@ const Menu = () => {
         const recorder = new Recorder(ctx, {
             name: "ART",
             duration: Infinity,
+            frameRate: 60,
             encoderOptions: {
                 codec: AVC.getCodec({ profile: "Main", level: "5.2" }),
             },
@@ -116,7 +117,7 @@ const Menu = () => {
                         }}>
                             <Folder className="mr-2 h-4 w-4" />
                             <span>Open</span>
-                        
+
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => {
 
@@ -124,7 +125,7 @@ const Menu = () => {
                         }}>
                             <Save className="mr-2 h-4 w-4" />
                             <span>Save</span>
-                     
+
                         </DropdownMenuItem>
                         {GlobalProps.room === null ? <DropdownMenuItem onClick={() => {
                             store.dispatch(setElement([[], false, null]));
@@ -135,7 +136,7 @@ const Menu = () => {
                         }}>
                             <Delete className="mr-2 h-4 w-4" />
                             <span>Reset The Canvas</span>
-                       
+
                         </DropdownMenuItem> : null}
 
                         {recording === false ? <DropdownMenuItem onClick={async () => {
@@ -148,7 +149,7 @@ const Menu = () => {
                         }}>
                             <Video className="mr-2 h-4 w-4" />
                             <span>Record</span>
-                        
+
                         </DropdownMenuItem>
                             : null}
                         {recording === true ? <DropdownMenuItem onClick={async () => {
@@ -167,7 +168,7 @@ const Menu = () => {
                         }}>
                             <Github className="mr-2 h-4 w-4" />
                             <span>Github</span>
-                          
+
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
