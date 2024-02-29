@@ -1,5 +1,5 @@
 import { changeTool, changeToolWheel } from '@/components/Redux/features/toolSlice';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from '../CircularToolBar/CircularToolBar.module.css';
 

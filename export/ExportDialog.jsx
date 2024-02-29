@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 
@@ -10,11 +10,10 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
-import { exportImage } from './export';
-import { Switch } from "@/components/ui/switch"
+} from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from '@/components/ui/use-toast';
-import { Loader2 } from 'lucide-react';
+import { exportImage } from './export';
 
 
 const ExportDialog = ({ open, changeOpen }) => {

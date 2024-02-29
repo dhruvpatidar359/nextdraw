@@ -1,13 +1,13 @@
 "use client"
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import Canvas from './Canvas';
-import Topbar from './TopBar/Topbar';
-import CircularToolBar from './TopBar/CircularToolBar/CircularToolBar';
 import ExportDialog from '@/export/ExportDialog';
 import { useEffect, useState } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import Canvas from './Canvas';
 import PropertiesBar from './PropertiesBar/PropertiesBar';
-import UniqueUsernameFetcher from './username/UniqueUsernameFetcher';
 import { GlobalProps } from './Redux/GlobalProps';
+import CircularToolBar from './TopBar/CircularToolBar/CircularToolBar';
+import Topbar from './TopBar/Topbar';
+import UniqueUsernameFetcher from './username/UniqueUsernameFetcher';
 
 
 const App = () => {

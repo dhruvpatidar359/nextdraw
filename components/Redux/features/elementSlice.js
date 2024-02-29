@@ -1,6 +1,6 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import { ShapeCache } from "../ShapeCache";
 import { GlobalProps } from "../GlobalProps";
+import { ShapeCache } from "../ShapeCache";
 
 export const elementSlice = createSlice({
     name: 'elements',

@@ -1,44 +1,39 @@
 
 import store from '@/app/store';
+import { Button } from "@/components/ui/button";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import ExportDialog from '@/export/ExportDialog';
+import { Circle, CopyIcon, Diamond, LucideImageDown, Minus, Move, Pencil, Square, Type } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { FaCircle, FaImage, FaPencilAlt, FaRedo, FaSlash, FaSquare, FaUndo } from "react-icons/fa";
-import { FaDiamond } from "react-icons/fa6";
-import { IoMove, IoText } from "react-icons/io5";
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { getElementObject, updateElement } from '../ElementManipulation/Element';
+import { updateElement } from '../ElementManipulation/Element';
+import { GlobalProps } from '../Redux/GlobalProps';
+import { ShapeCache } from '../Redux/ShapeCache';
 import { setAction } from '../Redux/features/actionSlice';
 import { redo, setChanged, setElement, undo } from '../Redux/features/elementSlice';
+import { setHover } from '../Redux/features/hoverSlice';
 import { setSelectedElement } from '../Redux/features/selectedElementSlice';
 import { changeTool } from '../Redux/features/toolSlice';
 import ButtonComponent from './ButtonComponent';
-import { ShapeCache } from '../Redux/ShapeCache';
-import { Button } from "@/components/ui/button"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { exportImage } from '@/export/export';
-import ExportDialog from '@/export/ExportDialog';
 import Menu from './Menu/Menu';
-import { setHover } from '../Redux/features/hoverSlice';
-import { Circle, Copy, CopyCheck, CopyIcon, Diamond, ImageDown, LucideImageDown, Minus, Move, Pencil, Square, Type } from 'lucide-react';
-import { GlobalProps } from '../Redux/GlobalProps';
 
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "@/components/ui/dialog";
+import { Mutex } from 'async-mutex';
+import { io } from 'socket.io-client';
 import { Input } from '../ui/input';
 import { toast } from '../ui/use-toast';
-import { io } from 'socket.io-client';
-import { Mutex } from 'async-mutex';
 
 
 const buttons = [

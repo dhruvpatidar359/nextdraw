@@ -1,31 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import {
-    AppWindow,
-    Circle,
-    Cloud,
-    CreditCard,
-    Delete,
-    Folder,
-    Github,
-    Keyboard,
-    LifeBuoy,
-    LogOut,
-    Mail,
-    MenuIcon,
-    MenuSquareIcon,
-    MessageSquare,
-    Plus,
-    PlusCircle,
-    Save,
-    Settings,
-    User,
-    UserPlus,
-    Users,
-    Video,
-} from "lucide-react"
-import { Recorder, RecorderStatus, Encoders } from "canvas-record";
-import { AVC } from "media-codecs";
-import { Button } from "@/components/ui/button"
+import store from '@/app/store';
+import { GlobalProps } from '@/components/Redux/GlobalProps';
+import { ShapeCache } from '@/components/Redux/ShapeCache';
+import { setCanvasBackground } from '@/components/Redux/features/canvasSlice';
+import { setElement } from '@/components/Redux/features/elementSlice';
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -34,24 +12,27 @@ import {
     DropdownMenuLabel,
     DropdownMenuPortal,
     DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuSub,
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { IoLogoGithub, IoMenu, IoMenuSharp } from 'react-icons/io5'
-import store from '@/app/store'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { toast } from '@/components/ui/use-toast'
-import { open, save } from './menuActions'
-import { exportImage } from '@/export/export'
-import { setElement } from '@/components/Redux/features/elementSlice'
-import { ShapeCache } from '@/components/Redux/ShapeCache'
-import { FaGithub } from 'react-icons/fa'
-import { ColorPicker, GradientPicker } from './ColorPicker'
-import { setCanvasBackground } from '@/components/Redux/features/canvasSlice'
-import { GlobalProps } from '@/components/Redux/GlobalProps'
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { Recorder, RecorderStatus } from "canvas-record";
+import {
+    AppWindow,
+    Circle,
+    Delete,
+    Folder,
+    Github,
+    Save,
+    Video
+} from "lucide-react";
+import { AVC } from "media-codecs";
+import { useEffect, useState } from 'react';
+import { IoMenuSharp } from 'react-icons/io5';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { ColorPicker } from './ColorPicker';
+import { open, save } from './menuActions';
 const Menu = () => {
 
     const index = useSelector(state => state.elements.index);

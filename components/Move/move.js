@@ -1,7 +1,7 @@
 import store from "@/app/store";
 import { updateElement } from "../ElementManipulation/Element";
-import { setElement } from "../Redux/features/elementSlice";
 import { GlobalProps } from "../Redux/GlobalProps";
+import { setElement } from "../Redux/features/elementSlice";
 
 export const move = (event, elements) => {
 

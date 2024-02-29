@@ -1,12 +1,11 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useSelector } from 'react-redux';
 
 
 const ButtonComponent = ({ button }) => {

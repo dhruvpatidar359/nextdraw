@@ -1,15 +1,15 @@
 import actionSlice from '@/components/Redux/features/actionSlice';
 
 import canvasSlice from '@/components/Redux/features/canvasSlice';
-import elementSlice from '@/components/Redux/features/elementSlice'
+import elementSlice from '@/components/Redux/features/elementSlice';
 import hoverSlice from '@/components/Redux/features/hoverSlice';
-import oldSelectedElementSlice, { oldElement } from '@/components/Redux/features/oldSelectedElementSlice';
+import oldSelectedElementSlice from '@/components/Redux/features/oldSelectedElementSlice';
 
 import resizeSlice from '@/components/Redux/features/resizeSlice';
 import selectedElementSlice from '@/components/Redux/features/selectedElementSlice';
-import toolSlice from '@/components/Redux/features/toolSlice'
+import toolSlice from '@/components/Redux/features/toolSlice';
 
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
 
 const store = configureStore({
 

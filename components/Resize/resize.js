@@ -1,7 +1,7 @@
 import store from "@/app/store";
 import { distance } from "@/utils/common";
-import { setElement } from "../Redux/features/elementSlice";
 import { GlobalProps } from "../Redux/GlobalProps";
+import { setElement } from "../Redux/features/elementSlice";
 
 let threshold = 6;
 

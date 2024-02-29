@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from 'react'
 import {
     Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+    CardContent
 } from "@/components/ui/card"
-import SimpleColorPicker from '../TopBar/Menu/SimpleColorPicker'
 import { Separator } from "@/components/ui/separator"
+import { AlignCenter, AlignLeft, AlignRight, Dot, Minus, Spline } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import SimpleColorPicker from '../TopBar/Menu/SimpleColorPicker'
 import { Button } from '../ui/button'
-import { AlignCenter, AlignLeft, AlignRight, Dot, Minus, MoreHorizontal, RectangleVertical, Spline, Square } from 'lucide-react'
-import { Slider } from '../ui/slider'
-import { ScrollArea } from '../ui/scroll-area'
+
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { addElement, updateElement } from '../ElementManipulation/Element'
+import { ScrollArea } from '../ui/scroll-area'
+
 import { setElement } from '../Redux/features/elementSlice'
-import { FaRegSquareFull } from 'react-icons/fa6'
-import { MdRoundedCorner } from "react-icons/md";
+
+import { MdRoundedCorner } from "react-icons/md"
 import { GlobalProps } from '../Redux/GlobalProps'
 
 
@@ -30,7 +26,7 @@ const PropertiesBar = () => {
     const [strokeStyle, setStrokeStyle] = useState([]);
     const [strokeWidth, setStrokeWidth] = useState(2);
     const [sharp, setSharp] = useState(false);
-    const [bowing, setBowing] = useState(1);
+    const [bowing, setBowing] = useState(2);
     const [fontSize, setFontSize] = useState(24);
 
     const selectedElement = useSelector(state => state.selectedElement.value);
@@ -39,6 +35,7 @@ const PropertiesBar = () => {
     let element;
     const elements = useSelector(state => state.elements.value[index][0], shallowEqual);
     const [changedByUser, setChangedByUser] = useState(false);
+    const [firstEffectCompleted, setFirstEffectCompleted] = useState(false);
 
 
     const dispatch = useDispatch();
@@ -51,13 +48,7 @@ const PropertiesBar = () => {
         '#09203f',
     ]
 
-
-
-
-
     useEffect(() => {
-
-
 
         if (selectedElement != null) {
             element = elements[parseInt(selectedElement.id.split("#")[1])];
@@ -78,20 +69,14 @@ const PropertiesBar = () => {
                 setStrokeWidth(currentStrokeWidth);
                 setSharp(currentSharp);
                 setBowing(bowing);
-
-
                 setFontSize(currentFontSize);
-
-
-
-
                 setStroke(currentStroke);
 
             } else {
-                console.log(element);
+
                 const currentStroke = element.stroke
 
-                if (element.type != "pencil" && element.type != "text") {
+                if (element.type != "text") {
                     const currentBackground = element.fill;
                     const currentStrokeStyle = element.strokeStyle;
                     const currentStrokeWidth = element.strokeWidth;
@@ -108,20 +93,11 @@ const PropertiesBar = () => {
                     setFontSize(currentFontSize);
 
                 }
-
-
                 setStroke(currentStroke);
-
-
             }
-
-
-
         } else {
 
             const currentStroke = GlobalProps.stroke
-
-
             const currentBackground = GlobalProps.fill;
             const currentStrokeStyle = GlobalProps.strokeStyle;
             const currentStrokeWidth = GlobalProps.strokeWidth;
@@ -134,21 +110,22 @@ const PropertiesBar = () => {
             setStrokeWidth(currentStrokeWidth);
             setSharp(currentSharp);
             setBowing(bowing);
-
-
             setFontSize(currentFontSize);
-
-
-
-
             setStroke(currentStroke);
+
         }
+        setFirstEffectCompleted(true);
     }, [selectedElement, tool]);
 
 
     useEffect(() => {
 
-        if (selectedElement === null) {
+
+        if (!firstEffectCompleted) {
+            return; // Exit early if the first useEffect hasn't completed
+        }
+
+        if (selectedElement === null || tool != 'selection') {
             GlobalProps.stroke = stroke;
             GlobalProps.fill = background;
             GlobalProps.strokeStyle = strokeStyle;
@@ -158,6 +135,8 @@ const PropertiesBar = () => {
             GlobalProps.fontSize = fontSize;
             return;
         }
+
+
         element = elements[parseInt(selectedElement.id.split("#")[1])];
 
         if (!changedByUser) {
@@ -245,7 +224,7 @@ const PropertiesBar = () => {
 
 
         setChangedByUser(false);
-    }, [stroke, background, strokeStyle, strokeWidth, sharp, bowing, fontSize])
+    }, [firstEffectCompleted, stroke, background, strokeStyle, strokeWidth, sharp, bowing, fontSize])
 
 
     return (

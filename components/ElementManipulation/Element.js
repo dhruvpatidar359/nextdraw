@@ -1,9 +1,9 @@
 import store from "@/app/store";
 import getStroke from "perfect-freehand";
 import { onLine } from "../Mouse/mouse";
+import { GlobalProps } from "../Redux/GlobalProps";
 import { setElement } from "../Redux/features/elementSlice";
 import { setSelectedElement } from "../Redux/features/selectedElementSlice";
-import { GlobalProps } from "../Redux/GlobalProps";
 
 
 
