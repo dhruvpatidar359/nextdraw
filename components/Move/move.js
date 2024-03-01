@@ -50,9 +50,6 @@ export const move = (event, elements) => {
     const key = id.split("#")[0];
     GlobalProps.socket.emit("render-elements", { tempNewArray, roomId,key });
   }
-
-        
-       
     }
 
 }

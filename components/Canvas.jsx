@@ -1,10 +1,10 @@
 'use client';
 import store from '@/app/store';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { getminMax } from '@/utils/common';
 import { ChevronLeft, ChevronRight, Redo, Undo } from 'lucide-react';
@@ -12,7 +12,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import rough from 'roughjs/bundled/rough.esm';
 import { draw, renderer } from './Drawing/Drawing';
-import { addElement, adjustElementCoordinates, getElementBelow, getElementObject, updateElement } from './ElementManipulation/Element';
+import { addElement, addElementToInventory, adjustElementCoordinates, getElementBelow, getElementObject, updateElement } from './ElementManipulation/Element';
 import { mouseCursorChange } from './Mouse/mouse';
 import { move } from './Move/move';
 import { GlobalProps } from './Redux/GlobalProps';
@@ -28,6 +28,7 @@ import { resizeElement } from './Resize/resize';
 import { Button } from './ui/button';
 
 import useFontFaceObserver from 'use-font-face-observer';
+import Shortcuts from './Shortcuts/Shortcuts';
 
 
 
@@ -60,6 +61,7 @@ const Canvas = () => {
   const [scaleOffset, setscaleOffset] = useState({ x: 0, y: 0 });
   const [scale, setscale] = useState(1);
   const textAreaRef = useRef();
+  const [mouseEvent,setMouseEvent] = useState(null);
 
 
   const isFontLoaded = useFontFaceObserver([
@@ -437,40 +439,7 @@ const Canvas = () => {
         dispatch(setAction("drawing"));
       }
 
-
-      const elementId = GlobalProps.username + Date.now();
-    
-      GlobalProps.indexMap.set(elementId, elements.length);
-
-      const newElement = {
-        ...addElement(elementId + "#" + elements.length, event.clientX, event.clientY, event.clientX, event.clientY, tool), stroke: GlobalProps.stroke, fill: GlobalProps.fill,
-        fillStyle: GlobalProps.fillStyle, sharp: GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle, strokeWidth: GlobalProps.strokeWidth, bowing: GlobalProps.bowing, fontSize: GlobalProps.fontSize
-      };
-    
-      if (dupState === false) {
-        dispatch(setElement([[...elements, newElement], false, elementId]));
-      } else {
-        if (changed) {
-          dispatch(setElement([[...elements, newElement], false, elementId]));
-        } else {
-          dispatch(setElement([[...elements, newElement], true, elementId]));
-
-          dispatch(setChanged(true));
-
-        }
-
-        dispatch(setDupState(false));
-      }
-
-
-      dispatch(setOldElement(newElement));
-
-      dispatch(setSelectedElement(newElement));
-
-
-
-
-
+      addElementToInventory(elements,  event.clientX, event.clientY, event.clientX, event.clientY);
     }
 
   };
@@ -623,6 +592,7 @@ const Canvas = () => {
 
   const handleMouseMove = (event) => {
     modifyClient(event);
+    setMouseEvent(event);
     if (tool === 'selection') {
 
       mouseCursorChange(event, elements, selectedElement, scale);
@@ -696,7 +666,7 @@ const Canvas = () => {
 
   return (
     <div>
-
+      <Shortcuts mouseEvent={mouseEvent} ></Shortcuts>
       <div className="fixed bottom-2 left-2 flex flex-row items-center">
 
         <TooltipProvider delayDuration={100}>
@@ -813,6 +783,7 @@ const Canvas = () => {
         width={width}
         style={{ height: height, width: width, zIndex: 1 }}
         onMouseDown={handleMouseDown}
+        
         onMouseUp={handleMouseUp}
         onMouseMove={handleMouseMove}
       ></canvas>

@@ -10,6 +10,7 @@ import Topbar from './TopBar/Topbar';
 import UniqueUsernameFetcher from './username/UniqueUsernameFetcher';
 
 
+
 const App = () => {
 
   const toolWheel = useSelector(state => state.tool.toolWheel);
@@ -42,7 +43,7 @@ const App = () => {
 
   return (
     <div >
- 
+    
       <Topbar></Topbar>
       {selectedElemenet != null || tool != 'selection' ? <PropertiesBar></PropertiesBar> : null}
       <Canvas ></Canvas>
@@ -50,9 +51,13 @@ const App = () => {
       {open ? <ExportDialog open={open} changeOpen={setOpen} /> : null}
       {toolWheel ? <CircularToolBar changeOpen={setOpen} /> : null}
       {!username && <div className="loadingBackdrop">
-      <svg className="spinner" viewBox="0 0 50 50">
-  <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="5"></circle>
-</svg>
+        <div className='flex flex-col align-bottom'>
+          <svg className="spinner" viewBox="0 0 50 50">
+            <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="5"></circle>
+
+          </svg>
+        </div>
+
       </div>
       }
 

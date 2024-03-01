@@ -2,8 +2,10 @@ import store from "@/app/store";
 import getStroke from "perfect-freehand";
 import { onLine } from "../Mouse/mouse";
 import { GlobalProps } from "../Redux/GlobalProps";
-import { setElement } from "../Redux/features/elementSlice";
-import { setSelectedElement } from "../Redux/features/selectedElementSlice";
+import { setChanged, setDupState, setElement } from "../Redux/features/elementSlice";
+import { setCopyElement, setSelectedElement } from "../Redux/features/selectedElementSlice";
+import { setOldElement } from "../Redux/features/oldSelectedElementSlice";
+import { forEach } from "lodash";
 
 
 
@@ -183,26 +185,26 @@ export const getElementBelow = (event, selectedElement, scale) => {
 
     let found = false;
 
-    
+
 
     if (selectedElement != null && selectedElement.type != 'line') {
       const elementID = parseInt(selectedElement.id.split("#")[1]);
       const selectedElementFromElements = elements[elementID];
-      if(selectedElementFromElements != null) {
+      if (selectedElementFromElements != null) {
         const { x1, y1, x2, y2 } = elements[elementID];
 
         const minX = Math.min(x1, x2);
         const maxX = Math.max(x1, x2);
         const minY = Math.min(y1, y2);
         const maxY = Math.max(y1, y2);
-  
+
         if (event.clientX > minX - 15 && event.clientX < maxX + 15 && event.clientY > minY - 15 && event.clientY < maxY + 15) {
-  
+
           return elements[elementID];
         }
-  
+
       }
- 
+
 
     }
 
@@ -351,18 +353,125 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
     default:
       break;
   }
-  store.dispatch(setElement([tempNewArray, true,id.split("#")[0]]));
+  store.dispatch(setElement([tempNewArray, true, id.split("#")[0]]));
   const roomId = GlobalProps.room;
   if (roomId != null) {
     const toSend = tempNewArray[integerId];
     tempNewArray = toSend;
     const key = id.split("#")[0];
-    GlobalProps.socket.emit("render-elements", { tempNewArray, roomId ,key});
+    GlobalProps.socket.emit("render-elements", { tempNewArray, roomId, key });
   }
 
 
 
 
+
+
+}
+
+
+export const addElementToInventory = (elements, x1, y1, x2, y2, copyElement, mouseEvent) => {
+
+  const dupState = store.getState().elements.dupState;
+  const changed = store.getState().elements.changed;
+  const tool = store.getState().tool.value;
+  const elementId = GlobalProps.username + Date.now();
+
+  GlobalProps.indexMap.set(elementId, elements.length);
+  let newElement;
+  if (copyElement != null) {
+
+    let tempNewElement = { ...copyElement };
+    tempNewElement.id = elementId + "#" + elements.length;
+    const width = tempNewElement.x2 - tempNewElement.x1;
+    const height = tempNewElement.y2 - tempNewElement.y1
+    const x1 = tempNewElement.x1;
+    const y1 = tempNewElement.y1;
+    if (tempNewElement.type != "pencil") {
+      if (mouseEvent != null) {
+
+        tempNewElement.x1 = mouseEvent.clientX - width / 2;
+        tempNewElement.y1 = mouseEvent.clientY - height / 2;
+        tempNewElement.x2 = width + tempNewElement.x1;
+        tempNewElement.y2 = height + tempNewElement.y1;
+      } else {
+        tempNewElement.x1 = tempNewElement.x1 + 10;
+        tempNewElement.y1 = tempNewElement.y1 + 10;
+        tempNewElement.x2 = tempNewElement.x2 + 10;
+        tempNewElement.y2 = tempNewElement.y2 + 10;
+
+      }
+    } else {
+      if (mouseEvent != null) {
+
+        tempNewElement.x1 = mouseEvent.clientX - width / 2;
+        tempNewElement.y1 = mouseEvent.clientY - height / 2;
+        tempNewElement.x2 = width + tempNewElement.x1;
+        tempNewElement.y2 = height + tempNewElement.y1;
+
+        let points = [];
+        tempNewElement.points.forEach(element => {
+          points.push({ x:tempNewElement.x1 -  x1 + element.x, y: tempNewElement.y1 - y1 + element.y });
+        })
+
+        tempNewElement.points = points;
+
+
+      } else {
+        tempNewElement.x1 = tempNewElement.x1 + 10;
+        tempNewElement.y1 = tempNewElement.y1 + 10;
+        tempNewElement.x2 = tempNewElement.x2 + 10;
+        tempNewElement.y2 = tempNewElement.y2 + 10;
+        let points = [];
+        tempNewElement.points.forEach(element => {
+          points.push({ x:tempNewElement.x1 -  x1 + element.x, y: tempNewElement.y1 - y1 + element.y });
+        })
+
+        tempNewElement.points = points;
+      }
+    }
+
+
+
+    newElement = tempNewElement;
+
+  }
+  else {
+    newElement = {
+      ...addElement(elementId + "#" + elements.length, x1, y1, x2, y2, tool), stroke: GlobalProps.stroke, fill: GlobalProps.fill,
+      fillStyle: GlobalProps.fillStyle, sharp: GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle, strokeWidth: GlobalProps.strokeWidth, bowing: GlobalProps.bowing, fontSize: GlobalProps.fontSize
+    };
+  }
+
+
+
+  if (dupState === false) {
+    store.dispatch(setElement([[...elements, newElement], false, elementId]));
+  } else {
+    if (changed) {
+      store.dispatch(setElement([[...elements, newElement], false, elementId]));
+    } else {
+      store.dispatch(setElement([[...elements, newElement], true, elementId]));
+
+      store.dispatch(setChanged(true));
+
+    }
+
+    store.dispatch(setDupState(false));
+  }
+
+  // webscokets
+  const roomId = GlobalProps.room;
+  
+  if (roomId != null) {
+   
+    let tempNewArray = newElement;
+    const key = elementId.split("#")[0];
+    GlobalProps.socket.emit("render-elements", { tempNewArray, roomId, key });
+  }
+
+  store.dispatch(setOldElement(newElement));
+  store.dispatch(setSelectedElement(newElement));
 
 
 }
