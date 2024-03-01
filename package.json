@@ -22,6 +22,7 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@reduxjs/toolkit": "^2.0.1",
+    "@vercel/analytics": "^1.2.2",
     "async-mutex": "^0.4.1",
     "canvas-record": "^5.0.0",
     "canvas2svg": "^1.0.16",

@@ -300,7 +300,7 @@ const Topbar = () => {
 
 
           </DialogHeader>
-          {/* <text className=''>Create Your Own Room</text> */}
+         
           {
             createClicked === true && room === null ? <span>Generating...</span> : null}
 
@@ -333,7 +333,7 @@ const Topbar = () => {
 
 
             GlobalProps.socket.on('render-elements', async ({ tempNewArray }) => {
-              console.log(tempNewArray);
+            
               elementQueue.push(tempNewArray);
               if (!isProcessing) {
                 processElementQueue();
@@ -467,8 +467,6 @@ const Topbar = () => {
                 GlobalProps.socket = null;
 
                 setRoom(null);
-                // console.log(GlobalProps.room);
-                // console.log(GlobalProps.socket);
               })
 
               GlobalProps.socket.on('join-success', () => {
@@ -515,7 +513,7 @@ const Topbar = () => {
               // });
 
               GlobalProps.socket.on('render-elements', async ({ tempNewArray }) => {
-                console.log(tempNewArray);
+              
                 elementQueue.push(tempNewArray);
                 if (!isProcessing) {
                   processElementQueue();
