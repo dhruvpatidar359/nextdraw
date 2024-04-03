@@ -1,32 +1,31 @@
 
-![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/26e56f64-662f-4f75-8008-3f8ff7223aec)
+# NextDraw
 
-<!--
-repo name: nextdraw
-description: An awesome Prototyping and Drawing Tool 😎
-github name:  dhruvpatidar359
-logo path: ![NextDRAW](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/b8298a71-70d3-4c26-bd83-071b8f19e2cb)
+A Next.js based whiteboard application using Rough.js under the hood . 
+- Supports websockets
+- Supports shapes like : rectangle || square || ellipse || freehand etc
+- Record feature
+- Pan | zoom and lot more . Just click on the hosted link.
 
-email: dhruvpatidar35@gmail.com
--->
 
-![NextDRAW (1)](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/8ec52e11-834a-426e-ae2a-cd86e3da77a0)
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
 
-There are many great prototyping tools available , but why not create your own one with extra functionalities like RECORDING,
-MIDDLE MOUSE TOOL CHANGE AND OTHERS .
 
-## Features 🔧
-- **RECORDING ✅**  
-![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/184d6b22-9cec-4438-8364-fd336e594218)
-- **CircularToolBar ✅⚠**
-- Click and hold the center mouse button and see the magic
-  ![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/59133987-9fcc-41f7-be42-3093c535c181)
-- **Collaboration ✅⚠**
-![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/c80f8b31-52a6-4c7b-958c-2d07eaba37ec)     
 
+## Screenshots
+
+![App Screenshot](https://private-user-images.githubusercontent.com/103873587/307239034-26e56f64-662f-4f75-8008-3f8ff7223aec.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTIxNjE5ODMsIm5iZiI6MTcxMjE2MTY4MywicGF0aCI6Ii8xMDM4NzM1ODcvMzA3MjM5MDM0LTI2ZTU2ZjY0LTY2MmYtNGY3NS04MDA4LTNmOGZmNzIyM2FlYy5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNDAzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDQwM1QxNjI4MDNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT04Mjc3N2JjZDdhZjg1OWZmYjIzY2MwZGI4MWU0NDFiZDI1ODRmNTkwNjczNmQ4ZmZmNjQ0YzU5NDM3NzJiMDI5JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.a8plxx9tv90rc5Pw1-K4ubgk-hw2b3PduSuUJTJXB10)
+
+## Features
+
+- RECORDING ✅
+![App Screenshot](https://private-user-images.githubusercontent.com/103873587/307243132-184d6b22-9cec-4438-8364-fd336e594218.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTIxNjE5ODMsIm5iZiI6MTcxMjE2MTY4MywicGF0aCI6Ii8xMDM4NzM1ODcvMzA3MjQzMTMyLTE4NGQ2YjIyLTljZWMtNDQzOC04MzY0LWZkMzM2ZTU5NDIxOC5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNDAzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDQwM1QxNjI4MDNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1mMzJhNTg4MmJlNTAxYmFhOTk5NzEzZDI1YWU2NjY2MTM5ZjA2Zjk0MTAyZTgwNDFkMjgzMmM0NTIzM2I3NDllJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.oE8zjmIPA67q8ZN5LvSGoxhStpceCS9qRgtXmJLroog)
+
+- Middle Mouse Click ToolBar
+![App Screenshot](https://private-user-images.githubusercontent.com/103873587/308264167-59133987-9fcc-41f7-be42-3093c535c181.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTIxNjI0MjIsIm5iZiI6MTcxMjE2MjEyMiwicGF0aCI6Ii8xMDM4NzM1ODcvMzA4MjY0MTY3LTU5MTMzOTg3LTlmY2MtNDFmNy1iZTQyLTMwOTNjNTM1YzE4MS5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNDAzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDQwM1QxNjM1MjJaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT03ZjI1MDY3ZTNmNTc2YTc1MmY1MzJhMjA3ODE3NGY3Y2QyNGFmNjMxODVmMzlkNzJhMGJjZmJkZWU0MmQ1NGMzJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.2RRwwjtHGUAnry0DFq2pO2cB0KjgZXwiCDb_ovwXg2Y)
+
+- Collaboration(Websockets)
+![App Screenshot](https://private-user-images.githubusercontent.com/103873587/307243202-c80f8b31-52a6-4c7b-958c-2d07eaba37ec.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTIxNjE5ODMsIm5iZiI6MTcxMjE2MTY4MywicGF0aCI6Ii8xMDM4NzM1ODcvMzA3MjQzMjAyLWM4MGY4YjMxLTUyYTYtNGM3Yi05NThjLTJkMDdlYWJhMzdlYy5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNDAzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDQwM1QxNjI4MDNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT05NzM3M2Y4YTRlNTcyM2I1YjFkMTIzMmNhYjlmNzI4N2U2ZDA5ZTc1NTYzMGMwZGMzZWE2YjEwN2ZiMjhkMTQ5JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.K-7IjXrhSrYK5nK8tZTXfgPSqS9CMVw_qlHSQ12A0wk)
 
 
 ### Built With
@@ -46,7 +45,7 @@ https://github.com/dhruvpatidar359/nextDrawBackend
 
 
 
-<!-- CONTRIBUTING -->
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -60,22 +59,14 @@ Contributions are what make the open source community such an amazing place to b
 **Remember that this project uses .env for both the backend and frontend part**
 
 
-<!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 
 
-<!-- CONTACT -->
+
 ## Contact
 
 dhruvpatidar - dhruvpatidar35@gmail.com
-
-
-
-
-
-
-
-
