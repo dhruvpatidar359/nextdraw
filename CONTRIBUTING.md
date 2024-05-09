@@ -15,7 +15,10 @@ https://github.com/dhruvpatidar359/nextDrawBackend
 ```
 2. Create a .env.local file in the directory and create the below field: Put the url of the locally  hosted server that we have created before
 
-NEXT_PUBLIC_WEB_SOCKET= url of the server
+```bash
+ NEXT_PUBLIC_WEB_SOCKET= url of the server
+```
+
 
 3. Install DependenciesNavigate to the project directory in your terminal and run:
 
