@@ -14,7 +14,8 @@ A Next.js based whiteboard application using Rough.js under the hood .
 
 ## Screenshots
 
-![App Screenshot](https://private-user-images.githubusercontent.com/103873587/307239034-26e56f64-662f-4f75-8008-3f8ff7223aec.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTIxNjE5ODMsIm5iZiI6MTcxMjE2MTY4MywicGF0aCI6Ii8xMDM4NzM1ODcvMzA3MjM5MDM0LTI2ZTU2ZjY0LTY2MmYtNGY3NS04MDA4LTNmOGZmNzIyM2FlYy5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwNDAzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDQwM1QxNjI4MDNaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT04Mjc3N2JjZDdhZjg1OWZmYjIzY2MwZGI4MWU0NDFiZDI1ODRmNTkwNjczNmQ4ZmZmNjQ0YzU5NDM3NzJiMDI5JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.a8plxx9tv90rc5Pw1-K4ubgk-hw2b3PduSuUJTJXB10)
+![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/19f1fa93-8b93-4713-adc5-306605bb8a6f)
+
 
 ## Features
 
@@ -61,6 +62,48 @@ Contributions are what make the open source community such an amazing place to b
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+   
+## Installation(LOCAL SETUP)
+
+WARNING : First install the backend through this repository 
+https://github.com/dhruvpatidar359/nextDrawBackend
+
+
+
+**FrontEnd Installation**
+
+1. Fork the Project
+
+```bash
+  use the github fork button
+```
+2. Create a .env.local file in the directory and create the below field: Put the url of the locally  hosted server that we have created before
+
+```bash
+ NEXT_PUBLIC_WEB_SOCKET= url of the server
+```
+
+
+3. Install DependenciesNavigate to the project directory in your terminal and run:
+
+
+```bash
+  npm install
+  # or
+  yarn install
+```
+
+4. Start the Development ServerAfter installing dependencies, run:
+
+```bash
+ npm run dev
+ # or
+ yarn dev
+ 
+```
+
+
 
 **Remember that this project uses .env for both the backend and frontend part**
 
