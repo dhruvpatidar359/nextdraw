@@ -45,8 +45,8 @@ const App = () => {
     <div >
     
       <Topbar></Topbar>
-      {selectedElemenet != null || tool != 'selection' ? <PropertiesBar></PropertiesBar> : null}
-      <Canvas ></Canvas>
+      {selectedElemenet != null || (tool !== 'selection' && tool !== 'eraser') ? <PropertiesBar></PropertiesBar> : null}
+      <Canvas></Canvas>
 
       {open ? <ExportDialog open={open} changeOpen={setOpen} /> : null}
       {toolWheel ? <CircularToolBar changeOpen={setOpen} /> : null}

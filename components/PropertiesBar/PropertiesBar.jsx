@@ -129,7 +129,7 @@ const PropertiesBar = () => {
             return; // Exit early if the first useEffect hasn't completed
         }
 
-        if (selectedElement === null || tool != 'selection') {
+        if (selectedElement === null || tool !== 'selection' || tool !== 'eraser') {
             GlobalProps.stroke = stroke;
             GlobalProps.fill = background;
             GlobalProps.strokeStyle = strokeStyle;
