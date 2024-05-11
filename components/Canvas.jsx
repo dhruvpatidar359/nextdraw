@@ -672,7 +672,7 @@ const Canvas = () => {
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button onClick={() => setscale(scale - 0.1)} variant="outline" size="icon" className="h-8 w-8" >
+              <Button onClick={() => setscale((prev)=>(prev - 0.1 < 0.1 ? 0.1 : prev-0.1))} variant="outline" size="icon" className="h-8 w-8" >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
 
