@@ -1,5 +1,5 @@
 # Use the official Node.js image as the base  
-FROM node:latest 
+FROM node:20-alpine
 
 # Set the working directory inside the container  
 WORKDIR /nextdraw
