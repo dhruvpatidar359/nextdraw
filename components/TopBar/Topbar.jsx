@@ -2,15 +2,16 @@
 import store from '@/app/store';
 import { Button } from "@/components/ui/button";
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ExportDialog from '@/export/ExportDialog';
 import { Circle, CopyIcon, Diamond, LucideImageDown, Minus, Move, Pencil, Square, Type } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { setOpen, toggleClose } from '../Redux/Close/closeSlice';
 import { updateElement } from '../ElementManipulation/Element';
 import { GlobalProps } from '../Redux/GlobalProps';
 import { ShapeCache } from '../Redux/ShapeCache';
@@ -23,17 +24,18 @@ import ButtonComponent from './ButtonComponent';
 import Menu from './Menu/Menu';
 
 import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import { Mutex } from 'async-mutex';
 import { io } from 'socket.io-client';
 import { Input } from '../ui/input';
 import { toast } from '../ui/use-toast';
+
 
 
 const buttons = [
@@ -62,7 +64,8 @@ const Topbar = () => {
   const [inputRoom, setInputRoom] = useState("");
   const indexMutex = new Mutex();
 
-
+  const isOpen = useSelector(state => state.close.isOpen
+  );
 
 
 
@@ -239,7 +242,7 @@ const Topbar = () => {
 
         (
           <div key={index} onClick={() => {
-
+            dispatch(toggleClose())
             dispatch(changeTool(buttons[index].tool))
           }}>  <ButtonComponent button={button} /> </div>
 
@@ -289,7 +292,7 @@ const Topbar = () => {
 
 
           </DialogHeader>
-         
+
           {
             createClicked === true && room === null ? <span>Generating...</span> : null}
 
@@ -322,7 +325,7 @@ const Topbar = () => {
 
 
             GlobalProps.socket.on('render-elements', async ({ tempNewArray }) => {
-            
+
               elementQueue.push(tempNewArray);
               if (!isProcessing) {
                 processElementQueue();
@@ -502,7 +505,7 @@ const Topbar = () => {
               // });
 
               GlobalProps.socket.on('render-elements', async ({ tempNewArray }) => {
-              
+
                 elementQueue.push(tempNewArray);
                 if (!isProcessing) {
                   processElementQueue();
