@@ -2,9 +2,11 @@ import store from "@/app/store";
 import getStroke from "perfect-freehand";
 import { onLine } from "../Mouse/mouse";
 import { GlobalProps } from "../Redux/GlobalProps";
+import { ShapeCache } from "../Redux/ShapeCache";
 import { setChanged, setDupState, setElement } from "../Redux/features/elementSlice";
 import { setCopyElement, setSelectedElement } from "../Redux/features/selectedElementSlice";
 import { setOldElement } from "../Redux/features/oldSelectedElementSlice";
+import { setHover } from "../Redux/features/hoverSlice";
 import { forEach } from "lodash";
 
 
@@ -367,6 +369,39 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
 
 
 
+}
+
+export const eraseElement = (element) => {
+  const index = store.getState().elements.index;
+  const elements = store.getState().elements.value[index][0];
+  const changed = store.getState().elements.changed;
+
+  let elementsCopy = [...elements];
+  const key = element.id.split("#")[0];
+  const id = parseInt(element.id.split("#")[1]);
+
+  if (ShapeCache.cache.has(elements[id])) {
+    ShapeCache.cache.delete(elements[id]);
+  }
+
+  elementsCopy[id] = null;
+
+  if (!changed) {
+    store.dispatch(setElement([elementsCopy, true, key]));
+    store.dispatch(setChanged(true));
+  } else {
+    store.dispatch(setElement([elementsCopy, false, key]));
+  }
+
+  const roomId = GlobalProps.room;
+  if (roomId != null) {
+    GlobalProps.socket.emit("delete-element", { roomId, key });
+
+  }
+
+
+  store.dispatch(setSelectedElement(null));
+  store.dispatch(setHover("none"));
 }
 
 

@@ -12,7 +12,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import rough from 'roughjs/bundled/rough.esm';
 import { draw, renderer } from './Drawing/Drawing';
-import { addElement, addElementToInventory, adjustElementCoordinates, getElementBelow, getElementObject, updateElement } from './ElementManipulation/Element';
+import { addElement, addElementToInventory, adjustElementCoordinates, eraseElement, getElementBelow, getElementObject, updateElement } from './ElementManipulation/Element';
 import { mouseCursorChange } from './Mouse/mouse';
 import { move } from './Move/move';
 import { GlobalProps } from './Redux/GlobalProps';
@@ -156,6 +156,10 @@ const Canvas = () => {
 
         dispatch(setSelectedElement(null));
       }
+
+    } else if (tool === "eraser") {
+
+      document.body.style.cursor = `url('eraser.svg'), auto`;
 
     } else {
 
@@ -325,6 +329,28 @@ const Canvas = () => {
     if (action === 'writing') {
       return;
     }
+
+    if (tool === "eraser") {
+      const ele = getElementBelow(event, selectedElement, scale);
+
+      if (ele != null) {
+        //Remove element below
+        eraseElement(ele)
+        // to remove the bounds if they are on a element somewhere else
+        if (selectedElement != null && selectedElement.id != ele.id) {
+          dispatch(setSelectedElement(null));
+        }
+      } else {
+        // to remove the bounds if they are on a element somewhere else
+        if (selectedElement !== null) {
+          dispatch(setSelectedElement(null));
+        }
+      }
+
+      return;
+    }
+
+
 
     if (tool === "selection") {
 

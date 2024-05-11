@@ -38,6 +38,10 @@ export const toolSlice = createSlice({
                 case "text":
                     state.index = 7;
                     break;
+
+                case "eraser":
+                    state.index = 8;
+                    break;
             }
         },
         changeToolWheel : (state,action) => {

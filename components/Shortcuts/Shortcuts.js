@@ -71,6 +71,9 @@ const Shortcuts = ({ mouseEvent }) => {
       } else if (event.key === '7') {
         dispatch(changeTool('text'))
         updateText();
+      } else if (event.key === '8') {
+        dispatch(changeTool('eraser'))
+        updateText();
       }
 
       else if ((event.key === 'z' || event.key === 'Z') && (event.ctrlKey || event.metaKey) && event.shiftKey) {
