@@ -1,3 +1,11 @@
+# GSSOC'24 Guidelines
+- Issues Level
+  - Level 1: 10 points  
+  - Level 2: 25 points
+  - Level 3: 45 points
+ 
+- Issue Assignment
+  - Remember assigning an issue to someone does not means that he is the only person to contribute on that particular issue . Other persons can also make PR to that particular issue .
 
 # NextDraw
 
