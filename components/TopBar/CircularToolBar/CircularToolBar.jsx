@@ -112,24 +112,24 @@ const CircularToolBar = ({ changeOpen }) => {
     <image xlinkHref="/text.svg" x="-40" y="210" height="50px" width="50px" />
     </g>
 
-    <g onMouseUp={mouseOut} onMouseMoveCapture={onMouseHover} className={styles.g} data-tool-name="pencil">
-    <path d="M 97.8679656440357 97.86796564403576 A 300 300 0 0 1 309.99999999999994 10 L 309.99999999999994 110 A 200 200 0 0 0 168.57864376269046 168.57864376269052 z" fill={tool === "pencil" ? "#CDFADB" : "#FFFFFF"} />
-    <image xlinkHref="/pencil.svg" x="145" y="130" height="46px" width="46px" />
+    <g onMouseUp={mouseOut} onMouseMoveCapture={onMouseHover} className={styles.g} data-tool-name="eraser">
+    <path d="M 97.8679656440357 97.86796564403576 A 300 300 0 0 1 309.99999999999994 10 L 309.99999999999994 110 A 200 200 0 0 0 168.57864376269046 168.57864376269052 z" fill={tool === "eraser" ? "#CDFADB" : "#FFFFFF"} />
+    <image xlinkHref="/eraser.svg" x="145" y="130" height="50px" width="50px" />
     </g>
 
-    <g onMouseUp={mouseOut} onMouseMoveCapture={onMouseHover} className={styles.g} data-tool-name="eraser">
-    <path d="M 309.99999999999994 10 A 300 300 0 0 1 522.1320343559642 97.8679656440357 L 451.4213562373095 168.57864376269046 A 200 200 0 0 0 309.99999999999994 110 z" fill={tool === "eraser" ? "#CDFADB" : "#FFFFFF"} />
-    <image xlinkHref="/eraser.svg" x="320" y="190" height="50px" width="50px" />
+    <g onMouseUp={mouseOut} onMouseMoveCapture={onMouseHover} className={styles.g} data-tool-name="pencil">
+    <path d="M 309.99999999999994 10 A 300 300 0 0 1 522.1320343559642 97.8679656440357 L 451.4213562373095 168.57864376269046 A 200 200 0 0 0 309.99999999999994 110 z" fill={tool === "pencil" ? "#CDFADB" : "#FFFFFF"} />
+    <image xlinkHref="/pencil.svg" x="320" y="190" height="50px" width="50px" />
     </g>
 
     <g onMouseUp={mouseOut} onMouseMoveCapture={onMouseHover} className={styles.g} data-tool-name="diamond">
     <path d="M 522.1320343559642 97.8679656440357 A 300 300 0 0 1 610 309.99999999999994 L 510 309.99999999999994 A 200 200 0 0 0 451.4213562373095 168.57864376269046 z" fill={tool === "diamond" ? "#CDFADB" : "#FFFFFF"} />
-    <image xlinkHref="/diamond.svg" x="390" y="370" height="55px" width="55px" />
+    <image xlinkHref="/diamond.svg" x="390" y="370" height="50px" width="50px" />
     </g>
 
     <g onMouseUp={mouseOut} onMouseMoveCapture={onMouseHover} className={styles.g} data-tool-name="line">
     <path d="M 610 309.99999999999994 A 300 300 0 0 1 522.1320343559643 522.1320343559643 L 451.4213562373095 451.4213562373095 A 200 200 0 0 0 510 309.99999999999994 z" fill={tool === "line" ? "#CDFADB" : "#FFFFFF"} />
-    <image xlinkHref="/line.svg" x="315" y="550" height="60px" width="60px" />
+    <image xlinkHref="/line.svg" x="315" y="550" height="50px" width="50px" />
     </g>
 
     </svg>

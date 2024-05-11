@@ -129,7 +129,7 @@ const PropertiesBar = () => {
             return; // Exit early if the first useEffect hasn't completed
         }
 
-        if (selectedElement === null || tool !== 'selection' || tool !== 'eraser') {
+        if (selectedElement === null || tool !== 'selection') {
             GlobalProps.stroke = stroke;
             GlobalProps.fill = background;
             GlobalProps.strokeStyle = strokeStyle;
@@ -230,6 +230,10 @@ const PropertiesBar = () => {
         setChangedByUser(false);
     }, [firstEffectCompleted, stroke, background, strokeStyle, strokeWidth, sharp, bowing, fontSize])
 
+
+  if (tool === "eraser") {
+    return null;
+  }
 
     return (
         <div className='absolute left-2 top-20'>

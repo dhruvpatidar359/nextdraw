@@ -145,7 +145,7 @@ const Canvas = () => {
       tool === 'line' ||
       tool === 'pencil' ||
       tool === 'ellipse' ||
-      tool === 'diamond' || tool === 'text' || tool === 'eraser') {
+      tool === 'diamond' || tool === 'text') {
 
 
       document.body.style.cursor = 'crosshair';
@@ -156,6 +156,10 @@ const Canvas = () => {
 
         dispatch(setSelectedElement(null));
       }
+
+    } else if (tool === "eraser") {
+
+      document.body.style.cursor = `url('eraser.svg'), auto`;
 
     } else {
 
@@ -328,8 +332,6 @@ const Canvas = () => {
 
     if (tool === "eraser") {
       const ele = getElementBelow(event, selectedElement, scale);
-      console.log(ele)
-
 
       if (ele != null) {
         //Remove element below

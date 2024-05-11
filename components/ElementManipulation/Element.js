@@ -375,7 +375,6 @@ export const eraseElement = (element) => {
   const index = store.getState().elements.index;
   const elements = store.getState().elements.value[index][0];
   const changed = store.getState().elements.changed;
-  console.log(elements)
 
   let elementsCopy = [...elements];
   const key = element.id.split("#")[0];
