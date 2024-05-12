@@ -10,7 +10,8 @@
     "test": "jest",
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check .",
-    "check-lint": "npx eslint ."
+    "check-lint": "npx eslint .",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
