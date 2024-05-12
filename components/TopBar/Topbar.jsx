@@ -242,7 +242,7 @@ const Topbar = () => {
 
         (
           <div key={index} onClick={() => {
-            dispatch(toggleClose())
+            dispatch(setOpen())
             dispatch(changeTool(buttons[index].tool))
           }}>  <ButtonComponent button={button} /> </div>
 
