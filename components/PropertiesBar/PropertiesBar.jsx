@@ -23,7 +23,7 @@ const PropertiesBar = () => {
 
     const [stroke, setStroke] = useState("#000000");
     const [background, setBackground] = useState(null);
-    const [fillStyle, setFillStyle] = useState('solid');
+    const [fillStyle, setFillStyle] = useState('');
     const [strokeStyle, setStrokeStyle] = useState([]);
     const [strokeWidth, setStrokeWidth] = useState(2);
     const [sharp, setSharp] = useState(false);
@@ -56,7 +56,7 @@ const PropertiesBar = () => {
         'solid',
         'zigzag',
         'cross-hatch',
-        'dots',
+        // 'dots',
         'sunburst',
         'dashed',
         'zigzag-line'
@@ -78,8 +78,10 @@ const PropertiesBar = () => {
                 const currentSharp = GlobalProps.sharp;
                 const bowing = GlobalProps.bowing;
                 const currentFontSize = GlobalProps.fontSize;
+                const currentFillStyle = GlobalProps.fillStyle;
 
                 setBackground(currentBackground);
+                setFillStyle(currentFillStyle);
                 setStrokeStyle(currentStrokeStyle);
                 setStrokeWidth(currentStrokeWidth);
                 setSharp(currentSharp);
@@ -93,12 +95,14 @@ const PropertiesBar = () => {
 
                 if (element.type != "text") {
                     const currentBackground = element.fill;
+                    const currentFillStyle = element.fillStyle;
                     const currentStrokeStyle = element.strokeStyle;
                     const currentStrokeWidth = element.strokeWidth;
                     const currentSharp = element.sharp;
                     const bowing = element.bowing;
 
                     setBackground(currentBackground);
+                    setFillStyle(currentFillStyle);
                     setStrokeStyle(currentStrokeStyle);
                     setStrokeWidth(currentStrokeWidth);
                     setSharp(currentSharp);
@@ -114,6 +118,7 @@ const PropertiesBar = () => {
 
             const currentStroke = GlobalProps.stroke
             const currentBackground = GlobalProps.fill;
+            const currentFillStyle = GlobalProps.fillStyle;
             const currentStrokeStyle = GlobalProps.strokeStyle;
             const currentStrokeWidth = GlobalProps.strokeWidth;
             const currentSharp = GlobalProps.sharp;
@@ -121,6 +126,7 @@ const PropertiesBar = () => {
             const currentFontSize = GlobalProps.fontSize;
 
             setBackground(currentBackground);
+            setFillStyle(currentFillStyle);
             setStrokeStyle(currentStrokeStyle);
             setStrokeWidth(currentStrokeWidth);
             setSharp(currentSharp);
