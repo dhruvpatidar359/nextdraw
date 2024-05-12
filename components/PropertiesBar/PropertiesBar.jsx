@@ -357,7 +357,7 @@ const PropertiesBar = () => {
                     </CardContent>
                         : null}
                 {/*FontStyle start */}
-                    <FontSelector/>
+                    <FontSelector />
                 {/*FontStyle end*/}
 
                     {(tool != 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type != 'text') ? <CardContent>
