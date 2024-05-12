@@ -48,16 +48,27 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.17",
-    "eslint": "^8",
+    "eslint": "^8.57.0",
     "eslint-config-next": "14.0.4",
+    "eslint-plugin-react": "^7.34.1",
+    "globals": "^15.2.0",
     "husky": "^9.0.11",
     "jest": "^29.7.0",
+    "lint-staged": "^15.2.2",
     "postcss": "^8.4.35",
+    "prettier": "^3.2.5",
     "tailwindcss": "^3.4.1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test"
+      "pre-commit": "lint-staged && npm test",
+      "pre-push": "npm test"
     }
   }
 }

@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+echo 'Testing and Building project before commiting'
+
+# check tsconfig standards
+npm run check-types ||
+(
+    echo 'Failed Type check.'
+    false;
+)
+#check jest 
+npm run test ||
+(
+    echo 'Failed Jest test.'
+    false;
+)
+
+#check prettier standards
+npm run check-format ||
+(
+    echo 'Prettier check Failed,Run npm run format, add changes and try commit again.'
+    false; 
+)
+#check ESLint standards
+npm run check-lint ||
+(
+    echo 'eslint check failed. '
+    false;
+)
+echo 'All Done I am committing this now'
