@@ -234,9 +234,9 @@ const Topbar = () => {
 
 
   return (
-    <div className='flex flex-row '>
+    <div className='flex flex-col'>
       <Menu ></Menu>
-      <div className='flex flex-row absolute left-1/2 transform -translate-x-1/2 rounded-md bg-white  my-1 shadow-md'>
+      <div className='flex flex-row absolute md:left-1/2 left-[50vw] md:mt-0  mt-[90vh] transform -translate-x-1/2 md:-translate-y-0 -translate-y-1/2 rounded-md bg-white  my-1 shadow-md'>
 
         {buttons.map((button, index) =>
 
