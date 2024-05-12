@@ -19,7 +19,7 @@ const App = () => {
   const elements = useSelector(state => state.elements.value[index][0], shallowEqual);
   const tool = useSelector(state => state.tool.value);
   const [open, setOpen] = useState(false);
-
+  const dispatch = useDispatch()
 
   const isOpen = useSelector((state) => state.close.isOpen);
 
