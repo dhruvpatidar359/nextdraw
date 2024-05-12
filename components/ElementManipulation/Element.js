@@ -6,6 +6,8 @@ import { setChanged, setDupState, setElement } from "../Redux/features/elementSl
 import { setCopyElement, setSelectedElement } from "../Redux/features/selectedElementSlice";
 import { setOldElement } from "../Redux/features/oldSelectedElementSlice";
 import { forEach } from "lodash";
+import { setOpen } from "../Redux/Close/closeSlice";
+import { useDispatch } from "react-redux";
 
 
 
@@ -279,9 +281,9 @@ export const updateElement = (id, x1, y1, x2, y2, type, options) => {
   let tempNewArray = [...elements];
 
   const integerId = parseInt(id.split("#")[1]);
+  
 
-
-
+  store.dispatch(setOpen())
   switch (type) {
     case "line":
     case "rectangle":
@@ -411,7 +413,7 @@ export const addElementToInventory = (elements, x1, y1, x2, y2, copyElement, mou
 
         let points = [];
         tempNewElement.points.forEach(element => {
-          points.push({ x:tempNewElement.x1 -  x1 + element.x, y: tempNewElement.y1 - y1 + element.y });
+          points.push({ x: tempNewElement.x1 - x1 + element.x, y: tempNewElement.y1 - y1 + element.y });
         })
 
         tempNewElement.points = points;
@@ -424,7 +426,7 @@ export const addElementToInventory = (elements, x1, y1, x2, y2, copyElement, mou
         tempNewElement.y2 = tempNewElement.y2 + 10;
         let points = [];
         tempNewElement.points.forEach(element => {
-          points.push({ x:tempNewElement.x1 -  x1 + element.x, y: tempNewElement.y1 - y1 + element.y });
+          points.push({ x: tempNewElement.x1 - x1 + element.x, y: tempNewElement.y1 - y1 + element.y });
         })
 
         tempNewElement.points = points;
@@ -462,9 +464,9 @@ export const addElementToInventory = (elements, x1, y1, x2, y2, copyElement, mou
 
   // webscokets
   const roomId = GlobalProps.room;
-  
+
   if (roomId != null) {
-   
+
     let tempNewArray = newElement;
     const key = elementId.split("#")[0];
     GlobalProps.socket.emit("render-elements", { tempNewArray, roomId, key });
