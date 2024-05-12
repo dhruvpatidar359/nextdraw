@@ -8,7 +8,7 @@ const FontSelector = () => {
     const fetchFonts = async () => {
       try {
         const response = await fetch(
-          'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDyKSpUQnj3o9fSPh8LCCN4rY9PoBV7TJ4'
+          'https://www.googleapis.com/webfonts/v1/webfonts?key=API key'
         );
         const data = await response.json();
         setFonts(data.items.map((item) => item.family));
