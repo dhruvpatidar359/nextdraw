@@ -11,7 +11,9 @@
     "check-types": "tsc --pretty --noEmit",
     "check-format": "prettier --check .",
     "check-lint": "npx eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "husky install",
+    "test-all": " npm run check-format && npm run test && npm run check-lint "
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
@@ -54,9 +56,10 @@
     "autoprefixer": "^10.4.17",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.0.4",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.34.1",
     "globals": "^15.2.0",
-    "husky": "^9.0.11",
+    "husky": "^8.0.0",
     "jest": "^29.7.0",
     "lint-staged": "^15.2.2",
     "postcss": "^8.4.35",

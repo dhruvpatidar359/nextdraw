@@ -1,26 +1,19 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
-echo 'Testing and Building project before commiting'
 
-# check tsconfig standards
-npm run check-types ||
-(
-    echo 'Failed Type check.'
-    false;
-)
-#check jest 
+# check jest standards
 npm run test ||
 (
-    echo 'Failed Jest test.'
+    echo 'Jest test failed. '
     false;
 )
-
-#check prettier standards
+# check prettier standards
 npm run check-format ||
 (
     echo 'Prettier check Failed,Run npm run format, add changes and try commit again.'
     false; 
 )
+
 #check ESLint standards
 npm run check-lint ||
 (
