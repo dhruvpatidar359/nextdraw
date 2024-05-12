@@ -15,6 +15,7 @@ import { setElement } from '../Redux/features/elementSlice'
 
 import { MdRoundedCorner } from "react-icons/md"
 import { GlobalProps } from '../Redux/GlobalProps'
+import FontSelector from "../fonts"
 
 
 const PropertiesBar = () => {
@@ -355,6 +356,9 @@ const PropertiesBar = () => {
 
                     </CardContent>
                         : null}
+                {/*FontStyle start */}
+                    <FontSelector/>
+                {/*FontStyle end*/}
 
                     {(tool != 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type != 'text') ? <CardContent>
                         <span className='text-xs'>Stroke width</span>
