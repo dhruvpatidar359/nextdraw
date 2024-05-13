@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import ExportDialog from '@/export/ExportDialog';
-import { Circle, CopyIcon, Diamond, LucideImageDown, Minus, Move, Pencil, Square, Type } from 'lucide-react';
+import { Circle, CopyIcon, Diamond, LucideImageDown, Minus, Move, Pencil, Square, Type, Eraser } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { setOpen, toggleClose } from '../Redux/Close/closeSlice';
@@ -46,6 +46,7 @@ const buttons = [
   { tooltip: 'Ellipse', icon: Circle, shortcut: 'Ellipse - 5', tool: 'ellipse' },
   { tooltip: 'Diamond', icon: Diamond, shortcut: 'Diamond - 6', tool: 'diamond' },
   { tooltip: 'Text', icon: Type, shortcut: 'Text - 7', tool: 'text' },
+  { tooltip: 'Eraser', icon: Eraser, shortcut: 'Eraser - 8', tool: 'eraser' },
 
 
 ];
