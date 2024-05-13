@@ -23,6 +23,7 @@ const PropertiesBar = () => {
 
     const [stroke, setStroke] = useState("#000000");
     const [background, setBackground] = useState(null);
+    const [fillStyle, setFillStyle] = useState('solid');
     const [strokeStyle, setStrokeStyle] = useState([]);
     const [strokeWidth, setStrokeWidth] = useState(2);
     const [sharp, setSharp] = useState(false);
@@ -51,10 +52,20 @@ const PropertiesBar = () => {
         '#09203f',
     ]
 
+    const fillStyles = [
+        'solid',
+        'zigzag',
+        'cross-hatch',
+        // 'dots',
+        'sunburst',
+        'dashed',
+        'zigzag-line'
+    ]
+
     // useEffect used to preload the already applied properties on the elements
     useEffect(() => {
 
-        if (selectedElement != null) {
+        if (selectedElement !== null) {
             element = elements[parseInt(selectedElement.id.split("#")[1])];
             if (element === null || element === undefined) {
 
@@ -67,8 +78,10 @@ const PropertiesBar = () => {
                 const currentSharp = GlobalProps.sharp;
                 const bowing = GlobalProps.bowing;
                 const currentFontSize = GlobalProps.fontSize;
+                const currentFillStyle = GlobalProps.fillStyle;
 
                 setBackground(currentBackground);
+                setFillStyle(currentFillStyle);
                 setStrokeStyle(currentStrokeStyle);
                 setStrokeWidth(currentStrokeWidth);
                 setSharp(currentSharp);
@@ -80,14 +93,16 @@ const PropertiesBar = () => {
 
                 const currentStroke = element.stroke
 
-                if (element.type != "text") {
+                if (element.type !== "text") {
                     const currentBackground = element.fill;
+                    const currentFillStyle = element.fillStyle;
                     const currentStrokeStyle = element.strokeStyle;
                     const currentStrokeWidth = element.strokeWidth;
                     const currentSharp = element.sharp;
                     const bowing = element.bowing;
 
                     setBackground(currentBackground);
+                    setFillStyle(currentFillStyle);
                     setStrokeStyle(currentStrokeStyle);
                     setStrokeWidth(currentStrokeWidth);
                     setSharp(currentSharp);
@@ -103,6 +118,7 @@ const PropertiesBar = () => {
 
             const currentStroke = GlobalProps.stroke
             const currentBackground = GlobalProps.fill;
+            const currentFillStyle = GlobalProps.fillStyle;
             const currentStrokeStyle = GlobalProps.strokeStyle;
             const currentStrokeWidth = GlobalProps.strokeWidth;
             const currentSharp = GlobalProps.sharp;
@@ -110,6 +126,7 @@ const PropertiesBar = () => {
             const currentFontSize = GlobalProps.fontSize;
 
             setBackground(currentBackground);
+            setFillStyle(currentFillStyle);
             setStrokeStyle(currentStrokeStyle);
             setStrokeWidth(currentStrokeWidth);
             setSharp(currentSharp);
@@ -132,6 +149,7 @@ const PropertiesBar = () => {
         if (selectedElement === null || tool !== 'selection') {
             GlobalProps.stroke = stroke;
             GlobalProps.fill = background;
+            GlobalProps.fillStyle = fillStyle;
             GlobalProps.strokeStyle = strokeStyle;
             GlobalProps.strokeWidth = strokeWidth;
             GlobalProps.sharp = sharp;
@@ -163,7 +181,7 @@ const PropertiesBar = () => {
             case "rectangle":
             case "diamond":
             case "ellipse":
-                options = { stroke: stroke, fill: background, strokeStyle: strokeStyle, strokeWidth: strokeWidth, sharp: sharp, bowing: bowing };
+                options = { stroke: stroke, fill: background, fillStyle: fillStyle, strokeStyle: strokeStyle, strokeWidth: strokeWidth, sharp: sharp, bowing: bowing };
                 break;
             case "text":
                 options = { stroke: stroke, fontSize: fontSize };
@@ -228,7 +246,7 @@ const PropertiesBar = () => {
 
 
         setChangedByUser(false);
-    }, [firstEffectCompleted, stroke, background, strokeStyle, strokeWidth, sharp, bowing, fontSize])
+    }, [firstEffectCompleted, stroke, background,fillStyle, strokeStyle, strokeWidth, sharp, bowing, fontSize])
 
 
   if (tool === "eraser") {
@@ -298,6 +316,26 @@ const PropertiesBar = () => {
                             </div>
 
                             <SimpleColorPicker stroke={background} setStroke={setBackground} setChangedByUser={setChangedByUser}></SimpleColorPicker></div>
+
+                    </CardContent>
+
+                        : null}
+                    
+                        {(tool != 'pencil' && tool != 'text' && tool != 'line' && selectedElement === null) || (selectedElement != null && selectedElement.type != "pencil" && selectedElement.type != 'text' && selectedElement.type != "line" === true) ? <CardContent >
+                        <span className='text-xs'>Fill style</span>
+                        <div className="flex flex-wrap max-w-[230px] gap-2 mt-1">
+                            {fillStyles.map((style) => (
+                                <div key={style} className={`border border-1 cursor-pointer active:scale-105 inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10  ${fillStyle === style ? 'border-2 border-black ' : null}`}
+                                onClick={() => {
+                                    setChangedByUser(true);
+                                    setFillStyle(style);
+                                }}>
+                                <p className="text-xs rounded-md ">
+                                    {style}
+                                </p>  
+                            </div>
+                        ))}
+                        </div>
 
                     </CardContent>
 
