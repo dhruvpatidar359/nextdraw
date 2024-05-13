@@ -11,7 +11,7 @@ module.exports = {
     "next",
     "prettier",
   ],
-  file: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+  files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
