@@ -23,7 +23,7 @@ const PropertiesBar = () => {
 
     const [stroke, setStroke] = useState("#000000");
     const [background, setBackground] = useState(null);
-    const [fillStyle, setFillStyle] = useState('');
+    const [fillStyle, setFillStyle] = useState('solid');
     const [strokeStyle, setStrokeStyle] = useState([]);
     const [strokeWidth, setStrokeWidth] = useState(2);
     const [sharp, setSharp] = useState(false);
@@ -65,7 +65,7 @@ const PropertiesBar = () => {
     // useEffect used to preload the already applied properties on the elements
     useEffect(() => {
 
-        if (selectedElement != null) {
+        if (selectedElement !== null) {
             element = elements[parseInt(selectedElement.id.split("#")[1])];
             if (element === null || element === undefined) {
 
@@ -93,7 +93,7 @@ const PropertiesBar = () => {
 
                 const currentStroke = element.stroke
 
-                if (element.type != "text") {
+                if (element.type !== "text") {
                     const currentBackground = element.fill;
                     const currentFillStyle = element.fillStyle;
                     const currentStrokeStyle = element.strokeStyle;
@@ -149,6 +149,7 @@ const PropertiesBar = () => {
         if (selectedElement === null || tool !== 'selection') {
             GlobalProps.stroke = stroke;
             GlobalProps.fill = background;
+            GlobalProps.fillStyle = fillStyle;
             GlobalProps.strokeStyle = strokeStyle;
             GlobalProps.strokeWidth = strokeWidth;
             GlobalProps.sharp = sharp;
