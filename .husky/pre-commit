@@ -2,11 +2,15 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 # check jest standards
-npm run test ||
-(
-    echo 'Jest test failed. '
-    false;
-)
+#uncomment when writting test cases in __test__ file
+# npm run test ||
+# (
+#     echo 'Jest test failed. '
+#     false;
+# )
+
+
+
 # check prettier standards
 npm run check-format ||
 (
