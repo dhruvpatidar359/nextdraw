@@ -3,104 +3,125 @@ import { GlobalProps } from "../GlobalProps";
 import { ShapeCache } from "../ShapeCache";
 
 export const elementSlice = createSlice({
-  name: "elements",
-  initialState: {
-    value: [[[], null]],
-    index: 0,
-    changed: false,
-    dupState: false,
-  },
-
-  reducers: {
-    setIndex: (state, action) => {
-      state.index = state.index - 1;
+    name: 'elements',
+    initialState: {
+        value: [[[],null]],
+        index: 0,
+        changed: false,
+        dupState: false
     },
 
-    setChanged: (state, action) => {
-      state.changed = action.payload;
-    },
+    reducers: {
 
-    setDupState: (state, action) => {
-      state.dupState = action.payload;
-    },
 
-    setElement: (state, action) => {
-      const newState = action.payload[0];
+        setIndex: (state, action) => {
+            state.index = state.index - 1;
+        },
 
-      let overwrite = action.payload[1];
+        setChanged: (state, action) => {
+            state.changed = action.payload;
+        },
 
-      let changedElementId = action.payload[2];
+        setDupState: (state, action) => {
+            state.dupState = action.payload;
+        },
 
-      if (overwrite) {
-        const historyCopy = [...state.value];
-        if (state.index != 0) {
-          historyCopy[state.index - 1] = [
-            historyCopy[state.index - 1][0],
-            changedElementId,
-          ];
-          historyCopy[state.index] = [newState, null];
-        } else {
-          historyCopy[state.index] = [newState, changedElementId];
-        }
+        setElement: (state, action) => {
+           
+            const newState = action.payload[0];
 
-        state.value = historyCopy;
-      } else {
-        let length = state.value.length;
-        const updatedState = [...state.value].slice(0, state.index + 1);
-        const latestState = [...state.value][length - 1];
+            let overwrite = action.payload[1];
 
-        // we are deleteing those elements from the weakmap that are
-        // removed from the history
+            let changedElementId = action.payload[2];
+         
+            if (overwrite) {
+                const historyCopy = [...state.value];
+                if(state.index != 0) {
+                    historyCopy[state.index-1] = [historyCopy[state.index-1][0],changedElementId];
+                    historyCopy[state.index] = [newState,null];
+                } else {
+                    historyCopy[state.index] = [newState,changedElementId];
+                
+                }
+               
+               
+                state.value = historyCopy;
+            } else {
+                let length = state.value.length;
+                const updatedState = [...state.value].slice(0, state.index + 1);
+                const latestState = [...state.value][length - 1];
 
-        var set = new Set();
-        current(updatedState[updatedState.length - 1][0]).forEach((e) => {
-          set.add(e);
-        });
 
-        current(latestState[0]).forEach((e) => {
-          if (!set.has(e)) {
-            if (ShapeCache.cache.has(e)) {
-              // console.log("we are deleteing elements");
-              ShapeCache.cache.delete(e);
+
+                // we are deleteing those elements from the weakmap that are 
+                // removed from the history
+
+                var set = new Set();
+                current(updatedState[updatedState.length - 1][0]).forEach(e => {
+                    
+                    set.add(e);
+                });
+
+                current(latestState[0]).forEach(e => {
+             
+                    if (!set.has(e)) {
+
+                        if (ShapeCache.cache.has(e)) {
+                            // console.log("we are deleteing elements");
+                            ShapeCache.cache.delete(e);
+                        }
+
+                    }
+                });
+               
+                
+                state.value = [...updatedState, [newState,changedElementId]];
+                state.index = state.index + 1;
+
+
+
+
+
+
             }
-          }
-        });
+        },
+        undo: (state, action) => {
+            if (state.index > 0) {
 
-        state.value = [...updatedState, [newState, changedElementId]];
-        state.index = state.index + 1;
-      }
-    },
-    undo: (state, action) => {
-      if (state.index > 0) {
-        state.index = state.index - 1;
-        if (state.value[state.index][1] === null) {
-          return;
-        }
-        const key = state.value[state.index][1];
-        const undoElementIndex = GlobalProps.indexMap.get(
-          GlobalProps.username + key
-        );
+                state.index = state.index - 1;
+                if(state.value[state.index][1] === null) {
+                    return;
+                }
+                const key = state.value[state.index][1];
+                const undoElementIndex = GlobalProps.indexMap.get(GlobalProps.username + key);
 
-        const undoElement = state.value[state.index][0][undoElementIndex];
-        const roomId = GlobalProps.room;
-        if (roomId != null) {
-          GlobalProps.socket.emit("undo-element", { roomId, undoElement, key });
-        }
-      }
-    },
-    redo: (state, action) => {
-      if (state.index < state.value.length - 1) {
-        state.index = state.index + 1;
-        const tempNewArray = state.value[state.index][0];
-        const roomId = GlobalProps.room;
-        if (roomId != null) {
-          GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
-        }
-      }
-    },
-  },
-});
+                const undoElement = state.value[state.index][0][undoElementIndex];
+                const roomId =   GlobalProps.room;
+                if(roomId != null) {
 
-export const { setElement, undo, redo, setIndex, setChanged, setDupState } =
-  elementSlice.actions;
+                  GlobalProps.socket.emit("undo-element", { roomId,undoElement,key });
+                }
+              
+            }
+
+        }
+        ,
+        redo: (state, action) => {
+            if (state.index < state.value.length - 1) {
+                state.index = state.index + 1;
+                const tempNewArray = state.value[state.index][0];
+                const roomId =   GlobalProps.room;
+  if(roomId != null) {
+    GlobalProps.socket.emit("render-elements", { tempNewArray, roomId });
+  }
+
+            }
+
+        }
+
+    }
+})
+
+
+export const { setElement, undo, redo, setIndex, setChanged, setDupState } = elementSlice.actions;
 export default elementSlice.reducer;
