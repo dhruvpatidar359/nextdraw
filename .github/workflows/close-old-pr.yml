@@ -34,7 +34,7 @@ jobs:
                 owner,
                 repo,
                 issue_number: pr.number,
-                body: "This pull request has been closed because it does not mention the issue that it solves. Please refer to the [Contributing files](https://github.com/Sulagna-Dutta-Roy/GGExtensions/blob/master/CONTRIBUTING.md) to help you add this information. Then, tag the maintainers so your PR can be reopened."
+                body: "This pull request has been closed because it does not mention the issue that it solves. Please refer to the [Contributing files](https://github.com/dhruvpatidar359/nextdraw/blob/master/CONTRIBUTING.md) to help you add this information. Then, tag the maintainers so your PR can be reopened."
               });
             }
           }
