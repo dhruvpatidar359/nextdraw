@@ -62,6 +62,9 @@ const Canvas = () => {
   const [scale, setscale] = useState(1);
   const textAreaRef = useRef();
   const [mouseEvent,setMouseEvent] = useState(null);
+  const [keys, setKeys] = useState(new Set());
+  const [IsPanning, setIsPanning] = useState("");;
+  const [startPanning, setStartPanning] = useState({ x:0, y:0 });
 
 
   const isFontLoaded = useFontFaceObserver([
@@ -109,7 +112,28 @@ const Canvas = () => {
   }, [roughCanvasRef]);
 
 
+  useEffect(()=>{
+    const canvas = document.getElementById("canvas")
+    const handleKeyDown = (event) => {
+      setKeys(keys => new Set(keys).add(event.key));
+    }
 
+    const handleKeyUp = event => {
+      setKeys(keys => {
+        const updatedKeys = new Set(keys);
+        updatedKeys.delete(event.key);
+        return updatedKeys;
+      });
+    };
+
+    // console.log(keys)
+    canvas.addEventListener("keydown", handleKeyDown);
+    canvas.addEventListener("keyup", handleKeyUp);
+    return () => {
+      canvas.removeEventListener("keydown", handleKeyDown);
+      canvas.removeEventListener("keyup", handleKeyUp);
+    };
+  },[keys])
 
 
 
@@ -315,17 +339,23 @@ const Canvas = () => {
   const modifyClient = (event) => {
     event.clientX = (event.clientX - panOffset.x * scale + scaleOffset.x) / scale;
     event.clientY = (event.clientY - panOffset.y * scale + scaleOffset.y) / scale;
-
-  }
+    
+  } 
 
   const handleMouseDown = (event) => {
-
+    const canvas = document.getElementById("canvas");
     if (event.button == 1) {
       dispatch(changeToolWheel(true));
       return;
     }
 
     modifyClient(event);
+    if(keys.has(" ")){
+      canvas.style.cursor = "grabbing"
+      setIsPanning("panning");
+      setStartPanning({ x: event.clientX, y: event.clientY })
+      return;
+    }
     if (action === 'writing') {
       return;
     }
@@ -472,7 +502,9 @@ const Canvas = () => {
 
   const handleMouseUp = (event) => {
     // according to scale and traslation , we have to modify indexes
-
+    setIsPanning("");
+    const canvas = document.getElementById("canvas");
+    canvas.style.cursor = ""
     modifyClient(event);
 
     if (action === 'writing') {
@@ -618,6 +650,14 @@ const Canvas = () => {
 
   const handleMouseMove = (event) => {
     modifyClient(event);
+    if(IsPanning === 'panning'){
+      const deltaX = event.clientX - startPanning.x;
+      const deltaY = event.clientY - startPanning.y;
+      setpanOffset(prevState => ({
+        x: prevState.x + deltaX / 2,
+        y: prevState.y + deltaY / 2 
+      }))
+    }
     setMouseEvent(event);
     if (tool === 'selection') {
 
@@ -814,7 +854,7 @@ const Canvas = () => {
         onMouseMove={handleMouseMove}
       ></canvas>
 
-
+ 
     </div>
 
 
