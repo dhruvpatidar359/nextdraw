@@ -127,7 +127,7 @@ export const exportImage = (backgroundExport, toast) => {
           case "text":
             ctx.textBaseline = "top";
 
-            ctx.font = `${element.fontSize}px Virgil`;
+            ctx.font = `${element.fontStyle} ${element.fontWeight} ${element.fontSize}px Virgil`;
 
             var txt = element.text;
 
