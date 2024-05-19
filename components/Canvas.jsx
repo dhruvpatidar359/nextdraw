@@ -113,7 +113,10 @@ const Canvas = () => {
 
 
   useEffect(()=>{
-    const canvas = document.getElementById("canvas")
+    const canvas = document.getElementById("canvas");
+    canvas.tabIndex = 0;
+    canvas.focus();
+
     const handleKeyDown = (event) => {
       setKeys(keys => new Set(keys).add(event.key));
     }
@@ -126,15 +129,13 @@ const Canvas = () => {
       });
     };
 
-    // console.log(keys)
     canvas.addEventListener("keydown", handleKeyDown);
     canvas.addEventListener("keyup", handleKeyUp);
     return () => {
       canvas.removeEventListener("keydown", handleKeyDown);
       canvas.removeEventListener("keyup", handleKeyUp);
     };
-  },[keys])
-
+  },[])
 
 
   useEffect(() => {
