@@ -39,7 +39,7 @@ const Close = React.forwardRef(({ className, ...props }, ref) => {
   return (
     <div
       ref={ref}
-      className={cn("absolute top-2 right-2", className)}
+      className={cn("flex justify-end w-full", className)}
       {...props}
     >
       <button
@@ -47,7 +47,7 @@ const Close = React.forwardRef(({ className, ...props }, ref) => {
         onClick={handleClose}
       >
         <svg
-          className="w-6 h-6"
+          className="w-5 h-5  "
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
