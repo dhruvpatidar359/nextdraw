@@ -45,7 +45,7 @@ const App = () => {
     <div >
 
       <Topbar></Topbar>
-      {selectedElemenet != null || tool != 'selection' ? <PropertiesBar></PropertiesBar> : null}
+      {isOpen && (selectedElemenet != null || tool != 'selection') && <PropertiesBar />}
       <Canvas ></Canvas>
 
       {open ? <ExportDialog open={open} changeOpen={setOpen} /> : null}

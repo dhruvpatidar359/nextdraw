@@ -30,10 +30,12 @@ const Close = React.forwardRef(({ className, ...props }, ref) => {
 
   const handleClose = () => {
     if (!isOpen) {
+
       dispatch(setOpen());
     } else {
       dispatch(setClose());
     }
+    console.log(isOpen);
   };
 
   return (
