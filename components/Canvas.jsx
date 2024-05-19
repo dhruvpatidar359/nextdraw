@@ -135,7 +135,7 @@ const Canvas = () => {
       canvas.removeEventListener("keydown", handleKeyDown);
       canvas.removeEventListener("keyup", handleKeyUp);
     };
-  },[])
+  },[keys])
 
 
   useEffect(() => {
