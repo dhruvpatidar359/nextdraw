@@ -7,7 +7,7 @@ import PropertiesBar from "./PropertiesBar/PropertiesBar";
 import { GlobalProps } from "./Redux/GlobalProps";
 import CircularToolBar from "./TopBar/CircularToolBar/CircularToolBar";
 import Topbar from "./TopBar/Topbar";
-import UniqueUsernameFetcher from "./username/UniqueUsernameFetcher";
+// import UniqueUsernameFetcher from "./username/UniqueUsernameFetcher";
 
 const App = () => {
   const toolWheel = useSelector((state) => state.tool.toolWheel);
@@ -29,12 +29,12 @@ const App = () => {
     return () => clearInterval(syncInterval);
   }, [elements]);
 
-  const [username, setUsername] = useState(null);
+  // const [username, setUsername] = useState(null);
 
-  const handleUsernameFetched = (fetchedUsername) => {
-    setUsername(fetchedUsername);
-    GlobalProps.username = fetchedUsername;
-  };
+  // const handleUsernameFetched = (fetchedUsername) => {
+  //   setUsername(fetchedUsername);
+  //   GlobalProps.username = fetchedUsername;
+  // };
 
   return (
     <div>
@@ -47,7 +47,7 @@ const App = () => {
 
       {open ? <ExportDialog open={open} changeOpen={setOpen} /> : null}
       {toolWheel ? <CircularToolBar changeOpen={setOpen} /> : null}
-      {!username && (
+      {/* {!username && (
         <div className="loadingBackdrop">
           <div className="flex flex-col align-bottom">
             <svg className="spinner" viewBox="0 0 50 50">
@@ -62,9 +62,9 @@ const App = () => {
             </svg>
           </div>
         </div>
-      )}
+      )} */}
 
-      <UniqueUsernameFetcher onUsernameFetched={handleUsernameFetched} />
+      {/* <UniqueUsernameFetcher onUsernameFetched={handleUsernameFetched} /> */}
     </div>
   );
 };
