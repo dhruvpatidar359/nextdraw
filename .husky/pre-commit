@@ -2,7 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 # check jest standards
-
 npm run test ||
 (
     echo 'Jest test failed. '
