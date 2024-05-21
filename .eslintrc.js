@@ -19,10 +19,10 @@ module.exports = {
 
       rules: {
         "react/no-direct-mutation-state": [
-          "error", // Keep the default as error
+          "error",
           {
-            ignoreCallbacks: true, // Allow mutation within callbacks (optional)
-            mutators: ["this.setState"], // Allow mutation using this.setState (optional)
+            ignoreCallbacks: true,
+            mutators: ["this.setState"],
           },
         ],
         "react/no-unescaped-entities": "off",
@@ -38,4 +38,3 @@ module.exports = {
     sourceType: "module",
   },
 };
-// eslint-disable-next-line no-undef
