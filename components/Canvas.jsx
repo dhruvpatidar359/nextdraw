@@ -113,6 +113,7 @@ const Canvas = () => {
 
 
   useEffect(()=>{
+    const canvas = document.getElementById("canvas")
     const handleKeyDown = (event) => {
       setKeys(keys => new Set(keys).add(event.key));
     }
@@ -126,11 +127,11 @@ const Canvas = () => {
     };
 
     // console.log(keys)
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    canvas.addEventListener("keydown", handleKeyDown);
+    canvas.addEventListener("keyup", handleKeyUp);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
+      canvas.removeEventListener("keydown", handleKeyDown);
+      canvas.removeEventListener("keyup", handleKeyUp);
     };
   },[keys])
 
@@ -835,7 +836,7 @@ const Canvas = () => {
           position: "fixed", top: (selectedElement.y1 + panOffset.y) * scale - scaleOffset.y,
           left: (selectedElement.x1 + panOffset.x) * scale - scaleOffset.x
 
-          , font: `${selectedElement.fontSize * scale}px Virgil`, color: selectedElement.stroke, margin: 0, padding: 0, border: 0, outline: 0, resize: 'auto', overflow: 'hidden',
+          , font: `${selectedElement.fontSize * scale}px Virgil`,fontStyle:selectedElement.fontStyle,fontWeight:selectedElement.fontWeight, color: selectedElement.stroke, margin: 0, padding: 0, border: 0, outline: 0, resize: 'auto', overflow: 'hidden',
           background: 'transparent', whiteSpace: 'pre'
           , resize: 'none', maxHeight: height - (selectedElement.y1 + panOffset.y) * scale + scaleOffset.y, maxWidth: width - (selectedElement.x1 + panOffset.x) * scale + scaleOffset.x
 

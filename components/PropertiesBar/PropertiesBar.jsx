@@ -30,6 +30,8 @@ const PropertiesBar = () => {
     const [sharp, setSharp] = useState(false);
     const [bowing, setBowing] = useState(2);
     const [fontSize, setFontSize] = useState(24);
+    const [fontStyle, setFontStyle] = useState("normal");
+    const [fontWeight, setFontWeight] = useState("lighter");
 
     const selectedElement = useSelector(state => state.selectedElement.value);
     const index = useSelector(state => state.elements.index);
@@ -79,6 +81,8 @@ const PropertiesBar = () => {
                 const currentSharp = GlobalProps.sharp;
                 const bowing = GlobalProps.bowing;
                 const currentFontSize = GlobalProps.fontSize;
+                const currentFontStyle = GlobalProps.fontStyle;
+                const currentFontWeight = GlobalProps.fontWeight;
                 const currentFillStyle = GlobalProps.fillStyle;
 
                 setBackground(currentBackground);
@@ -88,6 +92,8 @@ const PropertiesBar = () => {
                 setSharp(currentSharp);
                 setBowing(bowing);
                 setFontSize(currentFontSize);
+                setFontStyle(currentFontStyle);
+                setFontWeight(currentFontWeight);
                 setStroke(currentStroke);
 
             } else {
@@ -110,7 +116,11 @@ const PropertiesBar = () => {
                     setBowing(bowing);
                 } else if (element.type === 'text') {
                     const currentFontSize = element.fontSize;
+                    const currentFontStyle = element.fontStyle;
+                    const currentFontWeight = element.fontWeight;
                     setFontSize(currentFontSize);
+                    setFontStyle(currentFontStyle);
+                    setFontWeight(currentFontWeight);
 
                 }
                 setStroke(currentStroke);
@@ -125,6 +135,8 @@ const PropertiesBar = () => {
             const currentSharp = GlobalProps.sharp;
             const bowing = GlobalProps.bowing;
             const currentFontSize = GlobalProps.fontSize;
+            const currentFontStyle = GlobalProps.fontStyle;
+            const currentFontWeight = GlobalProps.fontWeight;
 
             setBackground(currentBackground);
             setFillStyle(currentFillStyle);
@@ -133,6 +145,8 @@ const PropertiesBar = () => {
             setSharp(currentSharp);
             setBowing(bowing);
             setFontSize(currentFontSize);
+            setFontStyle(currentFontStyle);
+            setFontWeight(currentFontWeight);
             setStroke(currentStroke);
 
         }
@@ -156,6 +170,8 @@ const PropertiesBar = () => {
             GlobalProps.sharp = sharp;
             GlobalProps.bowing = bowing;
             GlobalProps.fontSize = fontSize;
+            GlobalProps.fontStyle = fontStyle;
+            GlobalProps.fontWeight = fontWeight;
             return;
         }
 
@@ -185,7 +201,7 @@ const PropertiesBar = () => {
                 options = { stroke: stroke, fill: background, fillStyle: fillStyle, strokeStyle: strokeStyle, strokeWidth: strokeWidth, sharp: sharp, bowing: bowing };
                 break;
             case "text":
-                options = { stroke: stroke, fontSize: fontSize };
+                options = { stroke: stroke, fontStyle:fontStyle, fontWeight:fontWeight, fontSize: fontSize};
                 break;
             case "pencil":
                 options = { stroke: stroke, strokeWidth: strokeWidth };
@@ -207,7 +223,7 @@ const PropertiesBar = () => {
 
         if (type === "text") {
             const context = document.getElementById("canvas").getContext('2d');
-            context.font = `${fontSize}px Virgil`;
+            context.font = `${fontStyle} ${fontWeight} ${fontSize}px Virgil`;
 
 
 
@@ -247,7 +263,7 @@ const PropertiesBar = () => {
 
 
         setChangedByUser(false);
-    }, [firstEffectCompleted, stroke, background,fillStyle, strokeStyle, strokeWidth, sharp, bowing, fontSize])
+    }, [firstEffectCompleted, stroke, background,fillStyle, strokeStyle, strokeWidth, sharp, bowing, fontSize, fontStyle, fontWeight])
 
 
   if (tool === "eraser") {
@@ -343,6 +359,52 @@ const PropertiesBar = () => {
                         : null}
 
                     {(tool === 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type === 'text') ? <CardContent>
+                        <span className='text-xs'>Font style</span>
+                        <div className='flex flex-row'>
+                           <Button onClick={() => {
+                                setChangedByUser(true);
+                                setFontStyle("normal");
+                            }} variant={"ghost"} className={`rounded-md h-6 w-auto m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontStyle == "normal" ? "bg-[#d4d9d6]" : null} `}>
+                                <span className='text-sm font-normal'>Normal</span>
+                            </Button>
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setFontStyle("italic");
+                            }} variant={"ghost"} className={`rounded-md h-6 w-auto m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontStyle == "italic" ? "bg-[#d4d9d6]" : null} `}>
+                                <span className='text-sm italic font-normal'>Italic</span>
+                            </Button>
+                        </div>
+
+                    </CardContent>
+                        : null}
+                    
+                        {(tool === 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type === 'text') ? <CardContent>
+                        <span className='text-xs'>Font weight</span>
+                        <div className='flex flex-row'>
+                            {/* <Button onClick={() => {
+                                setChangedByUser(true);
+                                setFontWeight("normal");
+                            }} variant={"ghost"} className={`rounded-md h-6 w-auto m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontWeight === "normal" ? "bg-[#d4d9d6]" : null} `}>
+                                <span className='text-sm font-normal'>Normal</span>
+                            </Button> */}
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setFontWeight("lighter");
+                            }} variant={"ghost"} className={`rounded-md h-6 w-auto m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontWeight === "lighter" ? "bg-[#d4d9d6]" : null} `}>
+                                <span className='text-sm font-thin'>Lighter</span>
+                            </Button>
+                            <Button onClick={() => {
+                                setChangedByUser(true);
+                                setFontWeight("bold");
+                            }} variant={"ghost"} className={`rounded-md h-6 w-auto m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontWeight === "bold" ? "bg-[#d4d9d6]" : null} `}>
+                                <span className='text-sm font-bold'>Bold</span>
+                            </Button>
+                        </div>
+
+                    </CardContent>
+                        : null}
+                    
+                        {(tool === 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type === 'text') ? <CardContent>
                         <span className='text-xs'>Font size</span>
                         <div className='flex flex-row'>
                             <Button onClick={() => {
