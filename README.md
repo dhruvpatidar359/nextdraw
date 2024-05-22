@@ -1,4 +1,4 @@
-#  Welcom to NextDraw🎨
+#  Welcome to NextDraw🎨
 
 A Next.js based whiteboard application using Rough.js under the hood .
 
