@@ -16,6 +16,10 @@ import { setElement } from '../Redux/features/elementSlice'
 import { MdRoundedCorner } from "react-icons/md"
 import { GlobalProps } from '../Redux/GlobalProps'
 
+import { FaItalic } from "react-icons/fa";
+import { RiFontFamily } from "react-icons/ri";
+import { ImBold } from "react-icons/im";;
+
 
 const PropertiesBar = () => {
 
@@ -341,14 +345,15 @@ const PropertiesBar = () => {
                         <span className='text-xs'>Fill style</span>
                         <div className="flex flex-wrap max-w-[230px] gap-2 mt-1">
                             {fillStyles.map((style) => (
-                                <div key={style} className={`border border-1 cursor-pointer active:scale-105 inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10  ${fillStyle === style ? 'border-2 border-black ' : null}`}
+                                <div key={style} className={`border border-1 cursor-pointer active:scale-105 inline-flex items-center rounded-md bg-gray-50  text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10  ${fillStyle === style ? 'border-2 border-black ' : null}`}
                                 onClick={() => {
                                     setChangedByUser(true);
                                     setFillStyle(style);
-                                }}>
+                                }} title={style}>
                                 <p className="text-xs rounded-md ">
-                                    {style}
-                                </p>  
+                                    <img src={`/${style}.png`} className="w-[1.5rem] h-[1.5rem] rounded-md" alt="" />
+                                    
+                                    </p>  
                             </div>
                         ))}
                         </div>
@@ -360,17 +365,17 @@ const PropertiesBar = () => {
                     {(tool === 'text' && selectedElement === null) || (selectedElement != null && selectedElement.type === 'text') ? <CardContent>
                         <span className='text-xs'>Font style</span>
                         <div className='flex flex-row'>
-                           <Button onClick={() => {
+                           <Button  title="Normal"  onClick={() => {
                                 setChangedByUser(true);
                                 setFontStyle("normal");
                             }} variant={"ghost"} className={`rounded-md h-6 w-auto m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontStyle == "normal" ? "bg-[#d4d9d6]" : null} `}>
-                                <span className='text-sm font-normal'>Normal</span>
+                                <span className='text-sm font-normal'><RiFontFamily /></span>
                             </Button>
-                            <Button onClick={() => {
+                            <Button  title="Italic"  onClick={() => {
                                 setChangedByUser(true);
                                 setFontStyle("italic");
                             }} variant={"ghost"} className={`rounded-md h-6 w-auto m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontStyle == "italic" ? "bg-[#d4d9d6]" : null} `}>
-                                <span className='text-sm italic font-normal'>Italic</span>
+                                <span className='text-sm italic font-normal'><FaItalic/></span>
                             </Button>
                         </div>
 
@@ -386,17 +391,17 @@ const PropertiesBar = () => {
                             }} variant={"ghost"} className={`rounded-md h-6 w-auto m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontWeight === "normal" ? "bg-[#d4d9d6]" : null} `}>
                                 <span className='text-sm font-normal'>Normal</span>
                             </Button> */}
-                            <Button onClick={() => {
+                            <Button title="Lighter" onClick={() => {
                                 setChangedByUser(true);
                                 setFontWeight("lighter");
                             }} variant={"ghost"} className={`rounded-md h-6 w-auto m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontWeight === "lighter" ? "bg-[#d4d9d6]" : null} `}>
-                                <span className='text-sm font-thin'>Lighter</span>
+                                <span className='text-sm font-thin'>L</span>
                             </Button>
-                            <Button onClick={() => {
+                            <Button title="Bold" onClick={() => {
                                 setChangedByUser(true);
                                 setFontWeight("bold");
                             }} variant={"ghost"} className={`rounded-md h-6 w-auto m-1 cursor-pointer active:scale-105 bg-indigo-100 ${fontWeight === "bold" ? "bg-[#d4d9d6]" : null} `}>
-                                <span className='text-sm font-bold'>Bold</span>
+                                <span className='text-sm font-bold' ><ImBold /></span>
                             </Button>
                         </div>
 
