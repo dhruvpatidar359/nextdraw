@@ -183,7 +183,7 @@ const Canvas = () => {
 
     } else if (tool === "eraser") {
 
-      document.body.style.cursor = `url('eraser.svg'), auto`;
+      document.body.style.cursor = `url('eraser.png'), auto`;
 
     } else {
 
