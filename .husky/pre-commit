@@ -7,6 +7,9 @@ npm run test ||
     echo 'Jest test failed. '
     false;
 )
+
+
+
 # check prettier standards
 npm run check-format ||
 (

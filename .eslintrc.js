@@ -11,23 +11,25 @@ module.exports = {
     "next",
     "prettier",
   ],
-  overrides : [
-  { plugins: ["react", "@typescript-eslint"],
-  files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
-  parser: "@typescript-eslint/parser",
+  overrides: [
+    {
+      plugins: ["react", "@typescript-eslint"],
+      files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+      parser: "@typescript-eslint/parser",
 
- 
-  rules: {
-    "react/no-direct-mutation-state": [
-      "error", // Keep the default as error
-      {
-        ignoreCallbacks: true, // Allow mutation within callbacks (optional)
-        mutators: ["this.setState"], // Allow mutation using this.setState (optional)
+      rules: {
+        "react/no-direct-mutation-state": [
+          "error",
+          {
+            ignoreCallbacks: true,
+            mutators: ["this.setState"],
+          },
+        ],
+        "react/no-unescaped-entities": "off",
+        "@next/next/no-page-custom-font": "off",
       },
-    ],
-    "react/no-unescaped-entities": "off",
-    "@next/next/no-page-custom-font": "off",
-  },}],
+    },
+  ],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -36,4 +38,3 @@ module.exports = {
     sourceType: "module",
   },
 };
-// eslint-disable-next-line no-undef

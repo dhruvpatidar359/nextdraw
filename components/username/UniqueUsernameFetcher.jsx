@@ -1,51 +1,51 @@
-// components/UniqueUsernameFetcher.js
-import { useEffect } from "react";
-import io from "socket.io-client";
+// // components/UniqueUsernameFetcher.js
+// import { useEffect } from "react";
+// import io from "socket.io-client";
 
-const UniqueUsernameFetcher = ({ onUsernameFetched }) => {
-  useEffect(() => {
-    const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET);
+// const UniqueUsernameFetcher = ({ onUsernameFetched }) => {
+//   useEffect(() => {
+//     const socket = io(process.env.NEXT_PUBLIC_WEB_SOCKET);
 
-    const getUsernameFromLocalStorage = () => {
-      return localStorage.getItem("username");
-    };
+//     const getUsernameFromLocalStorage = () => {
+//       return localStorage.getItem("username");
+//     };
 
-    const saveUsernameToLocalStorage = (username) => {
-      localStorage.setItem("username", username);
-    };
+//     const saveUsernameToLocalStorage = (username) => {
+//       localStorage.setItem("username", username);
+//     };
 
-    const closeSocket = () => {
-      socket.close();
-    };
+//     const closeSocket = () => {
+//       socket.close();
+//     };
 
-    let username = getUsernameFromLocalStorage();
+//     let username = getUsernameFromLocalStorage();
 
-    if (!username) {
-      socket.emit("request-unique-username");
+//     if (!username) {
+//       socket.emit("request-unique-username");
 
-      socket.on("unique-username", (uniqueUsername) => {
-        console.log(`Assigned unique username ${uniqueUsername}`);
+//       socket.on("unique-username", (uniqueUsername) => {
+//         console.log(`Assigned unique username ${uniqueUsername}`);
 
-        saveUsernameToLocalStorage(uniqueUsername);
+//         saveUsernameToLocalStorage(uniqueUsername);
 
-        closeSocket();
+//         closeSocket();
 
-        onUsernameFetched(uniqueUsername);
-      });
-    } else {
-      console.log(`Using existing username ${username}`);
+//         onUsernameFetched(uniqueUsername);
+//       });
+//     } else {
+//       console.log(`Using existing username ${username}`);
 
-      closeSocket();
+//       closeSocket();
 
-      onUsernameFetched(username);
-    }
+//       onUsernameFetched(username);
+//     }
 
-    return () => {
-      closeSocket();
-    };
-  }, []);
+//     return () => {
+//       closeSocket();
+//     };
+//   }, []);
 
-  return null;
-};
+//   return null;
+// };
 
-export default UniqueUsernameFetcher;
+// export default UniqueUsernameFetcher;
