@@ -1,4 +1,61 @@
-# GSSOC'24 Guidelines
+#  Welcome to NextDraw🎨
+
+A Next.js based whiteboard application using Rough.js under the hood .
+
+- Supports websockets
+- Supports shapes like : rectangle || square || ellipse || freehand etc
+- Record feature
+- Pan | zoom and lot more . Just click on the hosted link.
+
+## Table of Contents 
+ - Project Introduction
+ - Features
+ - Built with
+ - Contributing
+  - GSSOC'24 Guidelines 
+ - Local Setup
+ - License 
+ - Contact 
+
+
+## Screenshots
+
+![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/19f1fa93-8b93-4713-adc5-306605bb8a6f)
+
+## Features🎨
+
+- RECORDING ✅
+
+<img width="182" alt="image" src="https://github.com/dhruvpatidar359/nextdraw/assets/103873587/64637de6-60e6-4192-99a5-054864edb6e2">
+
+- Middle Mouse Click ToolBar 🖱️
+- ![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/9ba4a9e8-3397-4c89-91da-0932d2012d90)
+
+- Collaboration(Websockets) 🤝
+
+![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/b33557e4-c205-4785-b3f8-4c6f1be50951)
+
+- Supports various shapes: Rectangle , square , ellipse , freehand , etc .
+
+### Built With 🛠️
+
+- [Next.js]()
+- [Canvas API]()
+- [MongoDb]()
+- [Node.js]()
+- [Websockets]()
+
+## Contributing 🚀
+
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## GSSOC'24 Guidelines
 
 - Issues Level
 
@@ -9,57 +66,15 @@
 - Issue Assignment
   - Remember assigning an issue to someone does not means that he is the only person to contribute on that particular issue . Other persons can also make PR to that particular issue .
 
-# NextDraw
 
-A Next.js based whiteboard application using Rough.js under the hood .
+## Repositories 📂
+  -  Frontend
+    https://github.com/dhruvpatidar359/nextdraw
 
-- Supports websockets
-- Supports shapes like : rectangle || square || ellipse || freehand etc
-- Record feature
-- Pan | zoom and lot more . Just click on the hosted link.
-
-## Screenshots
-
-![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/19f1fa93-8b93-4713-adc5-306605bb8a6f)
-
-## Features
-
-- RECORDING ✅
-
-<img width="182" alt="image" src="https://github.com/dhruvpatidar359/nextdraw/assets/103873587/64637de6-60e6-4192-99a5-054864edb6e2">
-
-- Middle Mouse Click ToolBar
-- ![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/9ba4a9e8-3397-4c89-91da-0932d2012d90)
-
-- Collaboration(Websockets)
-
-![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/b33557e4-c205-4785-b3f8-4c6f1be50951)
-
-### Built With
-
-- [Next.js]()
-- [Canvas API]()
-- [MongoDb]()
-- [Node.js]()
-- [Websockets]()
-
-## Frontend
-
-https://github.com/dhruvpatidar359/nextdraw
-
-## Backend
+  - Backend
 
 https://github.com/dhruvpatidar359/nextDrawBackend
 
-## Contributing
-
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## Installation(LOCAL SETUP)
 
@@ -99,10 +114,14 @@ https://github.com/dhruvpatidar359/nextDrawBackend
 
 **Remember that this project uses .env for both the backend and frontend part**
 
-## License
+
+
+## License 📜
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-## Contact
-
+## Contact  📧
 dhruvpatidar - dhruvpatidar35@gmail.com
+
+We appreciate your contributions and look forward to collaborating with you!!
+Thank you for contributing . Happy Coding💖.
