@@ -8,9 +8,8 @@ import oldSelectedElementSlice from "@/components/Redux/features/oldSelectedElem
 import resizeSlice from "@/components/Redux/features/resizeSlice";
 import selectedElementSlice from "@/components/Redux/features/selectedElementSlice";
 import toolSlice from "@/components/Redux/features/toolSlice";
-
 import { configureStore } from "@reduxjs/toolkit";
-
+import closeSlice from '@/components/Redux/Close/closeSlice';
 const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -33,7 +32,7 @@ const store = configureStore({
     selectedElement: selectedElementSlice,
     resizeDirection: resizeSlice,
     oldElement: oldSelectedElementSlice,
+    close: closeSlice,
   },
 });
-
 export default store;

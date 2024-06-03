@@ -1,6 +1,7 @@
-import {
+import Close, {
     Card,
-    CardContent
+    CardContent,
+
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { AlignCenter, AlignLeft, AlignRight, Dot, Minus, Spline } from 'lucide-react'
@@ -273,7 +274,7 @@ const PropertiesBar = () => {
         <div className='absolute left-2 top-20'>
             <ScrollArea className="h-[400px] rounded-md border p-2 bg-white">
                 <Card >
-
+                    <Close />
                     <CardContent >
                         <span className='text-xs'>Stroke</span>
                         <div className="flex flex-row">  {solids.map((s) => (
