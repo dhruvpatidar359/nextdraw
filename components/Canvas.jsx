@@ -65,7 +65,7 @@ const Canvas = () => {
   const [keys, setKeys] = useState(new Set());
   const [IsPanning, setIsPanning] = useState("");;
   const [startPanning, setStartPanning] = useState({ x:0, y:0 });
-
+  
 
   const isFontLoaded = useFontFaceObserver([
     { family: 'Virgil' }, // Same name you have in your CSS
@@ -88,7 +88,6 @@ const Canvas = () => {
     const storedData = localStorage.getItem('elements');
 
 
-
     if (storedData) {
       const data = JSON.parse(storedData);
       const copyData = [];
@@ -109,11 +108,14 @@ const Canvas = () => {
 
 
     }
-  }, [roughCanvasRef]);
+  }, [roughCanvasRef, dispatch]);
 
 
   useEffect(()=>{
-    const canvas = document.getElementById("canvas")
+    const canvas = document.getElementById("canvas");
+    canvas.tabIndex = 0;
+    canvas.focus();
+
     const handleKeyDown = (event) => {
       setKeys(keys => new Set(keys).add(event.key));
     }
@@ -126,7 +128,6 @@ const Canvas = () => {
       });
     };
 
-    // console.log(keys)
     canvas.addEventListener("keydown", handleKeyDown);
     canvas.addEventListener("keyup", handleKeyUp);
     return () => {
@@ -134,7 +135,6 @@ const Canvas = () => {
       canvas.removeEventListener("keyup", handleKeyUp);
     };
   },[keys])
-
 
 
   useEffect(() => {

@@ -11,10 +11,11 @@ import { Button } from '../ui/button'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { ScrollArea } from '../ui/scroll-area'
 
-import { setElement } from '../Redux/features/elementSlice'
+import elementSlice, { setChanged, setElement } from '../Redux/features/elementSlice'
 
 import { MdRoundedCorner } from "react-icons/md"
 import { GlobalProps } from '../Redux/GlobalProps'
+import { ShapeCache } from "../Redux/ShapeCache"
 
 
 const PropertiesBar = () => {
@@ -42,6 +43,7 @@ const PropertiesBar = () => {
     // used to ensure that the inital first useEffect to prefetch the properties
     // should work first than the other useEffect.
     const [firstEffectCompleted, setFirstEffectCompleted] = useState(false);
+
 
 
     const dispatch = useDispatch();
@@ -265,9 +267,101 @@ const PropertiesBar = () => {
     }, [firstEffectCompleted, stroke, background,fillStyle, strokeStyle, strokeWidth, sharp, bowing, fontSize, fontStyle, fontWeight])
 
 
-  if (tool === "eraser") {
-    return null;
-  }
+    if (tool === "eraser") {
+        return null;
+    }
+
+    const modifiedElements = (elementsCopy) => {
+        return elementsCopy.filter(element => element.id !== selectedElement.id);
+    }
+
+    function sendToBack() {
+        const elementsCopy = elements.map((element) => {
+            return {...element};
+        });
+
+        const key = selectedElement.id.split("#")[0];
+        let temp = { ...selectedElement };
+        let filteredElements = modifiedElements(elementsCopy);
+        temp.id = key + "#0";
+        filteredElements.unshift(temp);
+
+        for(let i = 1; i < filteredElements.length; i ++) {
+            const elemId = filteredElements[i].id.split("#");
+            filteredElements[i].id = elemId[0] + `#${i}`;
+        }
+
+        dispatch(setElement([filteredElements, true, null]));
+    }
+
+    function bringToFront() {
+        const elementsCopy = elements.map((element) => {
+            return {...element};
+        });
+
+        const key = selectedElement.id.split("#")[0];
+        let temp = { ...selectedElement };
+        let filteredElements = modifiedElements(elementsCopy);
+        temp.id = key + `#${filteredElements.length}`;
+        filteredElements.push(temp);
+
+        for(let i = 0; i < filteredElements.length - 1; i ++) {
+            const elemId = filteredElements[i].id.split("#");
+            filteredElements[i].id = elemId[0] + `#${i}`;
+        }
+
+        dispatch(setElement([filteredElements, true, null]));
+    }
+
+    function sendBackward() {
+        const elementsCopy = elements.map((element) => {
+            return {...element};
+        });
+
+        let i = 0;
+        while(elementsCopy[i].id != selectedElement.id) {
+            i ++;
+        }
+
+        if(elementsCopy[i - 1] != undefined) {
+            const t = elementsCopy[i];
+            elementsCopy[i] = elementsCopy[i - 1];
+            elementsCopy[i - 1] = t;
+
+            let key = elementsCopy[i].id.split("#")[0];
+            elementsCopy[i].id = key + `#${i}`;
+
+            key = elementsCopy[i - 1].id.split("#")[0];
+            elementsCopy[i - 1].id = key + `#${i - 1}`;
+        }
+
+        dispatch(setElement([elementsCopy, true, null]));
+    }
+
+    function bringForward() {
+        const elementsCopy = elements.map((element) => {
+            return {...element};
+        });
+
+        let i = 0;
+        while(elementsCopy[i].id != selectedElement.id) {
+            i ++;
+        }
+
+        if(elementsCopy[i + 1] != undefined) {
+            const t = elementsCopy[i];
+            elementsCopy[i] = elementsCopy[i + 1];
+            elementsCopy[i + 1] = t;
+
+            let key = elementsCopy[i].id.split("#")[0];
+            elementsCopy[i].id = key + `#${i}`;
+
+            key = elementsCopy[i + 1].id.split("#")[0];
+            elementsCopy[i + 1].id = key + `#${i + 1}`;
+        }
+
+        dispatch(setElement([elementsCopy, true, null]));
+    }
 
     return (
         <div className='absolute left-2 top-20'>
@@ -611,7 +705,47 @@ const PropertiesBar = () => {
 
                     </CardContent>
                         : null}
-
+                    <CardContent>
+                        <span className='text-xs'>Layers</span>
+                        <div className="flex flex-row">
+                            <div onClick={sendToBack}>
+                                <Button variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${sharp === true ? "bg-[#d4d9d6]" : null} `}>
+                                    <div className="w-5 h-5 flex justify-center items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                        </svg>
+                                    </div>
+                                </Button>
+                            </div>
+                            <div onClick={sendBackward}>
+                                <Button variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${sharp === true ? "bg-[#d4d9d6]" : null} `}>
+                                    <div className="w-5 h-5 flex justify-center items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3" />
+                                        </svg>
+                                    </div>
+                                </Button>
+                            </div>
+                            <div onClick={bringForward}>
+                                <Button variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${sharp === true ? "bg-[#d4d9d6]" : null} `}>
+                                    <div className="w-5 h-5 flex justify-center items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18" />
+                                        </svg>
+                                    </div>
+                                </Button>
+                            </div>
+                            <div onClick={bringToFront}>
+                                <Button variant={"ghost"} className={`rounded-md h-8 w-6 m-1 cursor-pointer active:scale-105 bg-indigo-100 ${sharp === true ? "bg-[#d4d9d6]" : null} `}>
+                                    <div className="w-5 h-5 flex justify-center items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                                        </svg>
+                                    </div>
+                                </Button>
+                            </div>
+                        </div>
+                    </CardContent>
 
                 </Card>
 
