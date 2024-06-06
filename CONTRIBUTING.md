@@ -1,10 +1,7 @@
-
 ## Installation(LOCAL SETUP)
 
-WARNING : First install the backend through this repository 
+WARNING : First install the backend through this repository
 https://github.com/dhruvpatidar359/nextDrawBackend
-
-
 
 **FrontEnd Installation**
 
@@ -13,15 +10,14 @@ https://github.com/dhruvpatidar359/nextDrawBackend
 ```bash
   use the github fork button
 ```
-2. Create a .env.local file in the directory and create the below field: Put the url of the locally  hosted server that we have created before
+
+2. Create a .env.local file in the directory and create the below field: Put the url of the locally hosted server that we have created before
 
 ```bash
  NEXT_PUBLIC_WEB_SOCKET= url of the server
 ```
 
-
 3. Install DependenciesNavigate to the project directory in your terminal and run:
-
 
 ```bash
   npm install
@@ -35,7 +31,5 @@ https://github.com/dhruvpatidar359/nextDrawBackend
  npm run dev
  # or
  yarn dev
- 
+
 ```
-
-

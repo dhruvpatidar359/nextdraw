@@ -6,7 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest",
+    "check-types": "tsc --pretty --noEmit",
+    "check-format": "prettier --check .",
+    "check-lint": "npx eslint .",
+    "format": "prettier --write .",
+    "prepare": "husky install",
+    "test-all": " npm run check-format && npm run test && npm run check-lint "
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
@@ -22,6 +29,8 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@reduxjs/toolkit": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/parser": "^7.9.0",
     "@vercel/analytics": "^1.2.2",
     "async-mutex": "^0.4.1",
     "canvas-record": "^5.0.0",
@@ -47,9 +56,28 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.17",
-    "eslint": "^8",
+    "eslint": "^8.57.0",
     "eslint-config-next": "14.0.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.34.1",
+    "globals": "^15.2.0",
+    "husky": "^8.0.0",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.2",
     "postcss": "^8.4.35",
+    "prettier": "^3.2.5",
     "tailwindcss": "^3.4.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm test",
+      "pre-push": "npm test"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }

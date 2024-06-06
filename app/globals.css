@@ -76,16 +76,14 @@
   }
 }
 
-
-
 body {
-
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom,
+  background: linear-gradient(
+      to bottom,
       transparent,
-      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-
-
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
 
   -webkit-user-select: none;
   -ms-user-select: none;
@@ -95,17 +93,15 @@ body {
 
 html,
 body {
-
-
   user-zoom: fixed;
-
 }
 
-
 @font-face {
-  font-family: 'Virgil';
+  font-family: "Virgil";
 
-  src: local('Virgil'), url(../public/fonts/Virgil.woff2) format('woff2');
+  src:
+    local("Virgil"),
+    url(../public/fonts/Virgil.woff2) format("woff2");
   font-weight: normal;
   font-style: normal;
 }
@@ -113,7 +109,6 @@ body {
 ::-webkit-resizer {
   display: none;
 }
-
 
 .spinner {
   animation: rotate 2s linear infinite;
@@ -152,17 +147,6 @@ body {
     stroke-dashoffset: -124;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 .loadingBackdrop {
   position: fixed;
