@@ -1,6 +1,8 @@
 import { createSlice, current } from "@reduxjs/toolkit";
 import { GlobalProps } from "../GlobalProps";
 import { ShapeCache } from "../ShapeCache";
+import { useSelector } from "react-redux";
+
 
 export const elementSlice = createSlice({
     name: 'elements',
@@ -87,19 +89,15 @@ export const elementSlice = createSlice({
         },
         undo: (state, action) => {
             if (state.index > 0) {
-
                 state.index = state.index - 1;
                 if(state.value[state.index][1] === null) {
                     return;
                 }
                 const key = state.value[state.index][1];
-                const undoElementIndex = GlobalProps.indexMap.get(GlobalProps.username + key);
-
-                const undoElement = state.value[state.index][0][undoElementIndex];
                 const roomId =   GlobalProps.room;
                 if(roomId != null) {
 
-                  GlobalProps.socket.emit("undo-element", { roomId,undoElement,key });
+                  GlobalProps.socket.emit("undo-element", { roomId,key,key });
                 }
               
             }

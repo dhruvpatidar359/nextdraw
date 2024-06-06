@@ -65,7 +65,7 @@ const Canvas = () => {
   const [keys, setKeys] = useState(new Set());
   const [IsPanning, setIsPanning] = useState("");;
   const [startPanning, setStartPanning] = useState({ x:0, y:0 });
-
+  
 
   const isFontLoaded = useFontFaceObserver([
     { family: 'Virgil' }, // Same name you have in your CSS
@@ -88,7 +88,6 @@ const Canvas = () => {
     const storedData = localStorage.getItem('elements');
 
 
-
     if (storedData) {
       const data = JSON.parse(storedData);
       const copyData = [];
@@ -109,7 +108,7 @@ const Canvas = () => {
 
 
     }
-  }, [roughCanvasRef]);
+  }, [roughCanvasRef, dispatch]);
 
 
   useEffect(()=>{
