@@ -474,7 +474,8 @@ export const addElementToInventory = (elements, x1, y1, x2, y2, copyElement, mou
   else {
     newElement = {
       ...addElement(elementId + "#" + elements.length, x1, y1, x2, y2, tool), stroke: GlobalProps.stroke, fill: GlobalProps.fill,
-      fillStyle: GlobalProps.fillStyle, sharp: GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle, strokeWidth: GlobalProps.strokeWidth, bowing: GlobalProps.bowing, fontSize: GlobalProps.fontSize
+      fillStyle: GlobalProps.fillStyle, sharp: GlobalProps.sharp, strokeStyle: GlobalProps.strokeStyle, strokeWidth: GlobalProps.strokeWidth, bowing: GlobalProps.bowing, fontSize: GlobalProps.fontSize,
+      fontWeight: GlobalProps.fontWeight, fontStyle: GlobalProps.fontStyle
     };
   }
 
@@ -559,4 +560,3 @@ function getSvgPathFromStroke(points) {
 
   return result
 }
-

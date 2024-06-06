@@ -1,67 +1,51 @@
-# GSSOC'24 Guidelines
-- Issues Level
-  - Level 1: 10 points  
-  - Level 2: 25 points
-  - Level 3: 45 points
- 
-- Issue Assignment
-  - Remember assigning an issue to someone does not means that he is the only person to contribute on that particular issue . Other persons can also make PR to that particular issue .
+#  Welcome to NextDraw🎨
 
-# NextDraw
+A Next.js based whiteboard application using Rough.js under the hood .
 
-A Next.js based whiteboard application using Rough.js under the hood . 
 - Supports websockets
 - Supports shapes like : rectangle || square || ellipse || freehand etc
 - Record feature
 - Pan | zoom and lot more . Just click on the hosted link.
 
-
-
-
+## Table of Contents 
+ - Project Introduction
+ - Features
+ - Built with
+ - Contributing
+  - GSSOC'24 Guidelines 
+ - Local Setup
+ - License 
+ - Contact 
 
 
 ## Screenshots
 
 ![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/19f1fa93-8b93-4713-adc5-306605bb8a6f)
 
-
-## Features
+## Features🎨
 
 - RECORDING ✅
-  
+
 <img width="182" alt="image" src="https://github.com/dhruvpatidar359/nextdraw/assets/103873587/64637de6-60e6-4192-99a5-054864edb6e2">
 
+- Middle Mouse Click ToolBar 🖱️
+- ![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/9ba4a9e8-3397-4c89-91da-0932d2012d90)
 
-- Middle Mouse Click ToolBar
-- 
- ![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/9ba4a9e8-3397-4c89-91da-0932d2012d90)
+- Collaboration(Websockets) 🤝
 
-
-- Collaboration(Websockets)
-  
 ![image](https://github.com/dhruvpatidar359/nextdraw/assets/103873587/b33557e4-c205-4785-b3f8-4c6f1be50951)
 
+- Supports various shapes: Rectangle , square , ellipse , freehand , etc .
 
+### Built With 🛠️
 
-### Built With
-* [Next.js]()
-* [Canvas API]()
-* [MongoDb]()
-* [Node.js]()
-* [Websockets]()
+- [Next.js]()
+- [Canvas API]()
+- [MongoDb]()
+- [Node.js]()
+- [Websockets]()
 
-
-
-## Frontend
-https://github.com/dhruvpatidar359/nextdraw
-## Backend 
-https://github.com/dhruvpatidar359/nextDrawBackend
-
-
-
-
-
-## Contributing
+## Contributing 🚀
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -71,13 +55,31 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-   
-## Installation(LOCAL SETUP)
+## GSSOC'24 Guidelines
 
-WARNING : First install the backend through this repository 
+- Issues Level
+
+  - Level 1: 10 points
+  - Level 2: 25 points
+  - Level 3: 45 points
+
+- Issue Assignment
+  - Remember assigning an issue to someone does not means that he is the only person to contribute on that particular issue . Other persons can also make PR to that particular issue .
+
+
+## Repositories 📂
+  -  Frontend
+    https://github.com/dhruvpatidar359/nextdraw
+
+  - Backend
+
 https://github.com/dhruvpatidar359/nextDrawBackend
 
 
+## Installation(LOCAL SETUP)
+
+WARNING : First install the backend through this repository
+https://github.com/dhruvpatidar359/nextDrawBackend
 
 **FrontEnd Installation**
 
@@ -86,15 +88,14 @@ https://github.com/dhruvpatidar359/nextDrawBackend
 ```bash
   use the github fork button
 ```
-2. Create a .env.local file in the directory and create the below field: Put the url of the locally  hosted server that we have created before
+
+2. Create a .env.local file in the directory and create the below field: Put the url of the locally hosted server that we have created before
 
 ```bash
  NEXT_PUBLIC_WEB_SOCKET= url of the server
 ```
 
-
 3. Install DependenciesNavigate to the project directory in your terminal and run:
-
 
 ```bash
   npm install
@@ -108,22 +109,19 @@ https://github.com/dhruvpatidar359/nextDrawBackend
  npm run dev
  # or
  yarn dev
- 
+
 ```
-
-
 
 **Remember that this project uses .env for both the backend and frontend part**
 
 
 
-## License
+## License 📜
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-
-
-
-## Contact
-
+## Contact  📧
 dhruvpatidar - dhruvpatidar35@gmail.com
+
+We appreciate your contributions and look forward to collaborating with you!!
+Thank you for contributing . Happy Coding💖.

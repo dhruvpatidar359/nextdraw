@@ -183,7 +183,7 @@ const Canvas = () => {
 
     } else if (tool === "eraser") {
 
-      document.body.style.cursor = `url('eraser.svg'), auto`;
+      document.body.style.cursor = `url('eraser.png'), auto`;
 
     } else {
 
@@ -836,7 +836,7 @@ const Canvas = () => {
           position: "fixed", top: (selectedElement.y1 + panOffset.y) * scale - scaleOffset.y,
           left: (selectedElement.x1 + panOffset.x) * scale - scaleOffset.x
 
-          , font: `${selectedElement.fontSize * scale}px Virgil`, color: selectedElement.stroke, margin: 0, padding: 0, border: 0, outline: 0, resize: 'auto', overflow: 'hidden',
+          , font: `${selectedElement.fontSize * scale}px Virgil`,fontStyle:selectedElement.fontStyle,fontWeight:selectedElement.fontWeight, color: selectedElement.stroke, margin: 0, padding: 0, border: 0, outline: 0, resize: 'auto', overflow: 'hidden',
           background: 'transparent', whiteSpace: 'pre'
           , resize: 'none', maxHeight: height - (selectedElement.y1 + panOffset.y) * scale + scaleOffset.y, maxWidth: width - (selectedElement.x1 + panOffset.x) * scale + scaleOffset.x
 

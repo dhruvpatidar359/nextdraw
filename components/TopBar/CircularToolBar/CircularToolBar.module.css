@@ -1,8 +1,5 @@
 .svg {
   transform: rotate(22deg);
-
-
-
 }
 
 .svg text,
@@ -13,12 +10,9 @@
 
 .g {
   transform: scale(0.5);
-
-
 }
 
 .g path {
-
   stroke-width: 5px;
   stroke-dasharray: 235.5 440;
   transform-origin: center center;
@@ -31,7 +25,7 @@
 }
 
 .g:hover path {
-  fill: #FFCF96;
+  fill: #ffcf96;
 
   transition: all 0.2s ease-in-out;
   stroke-width: 0;

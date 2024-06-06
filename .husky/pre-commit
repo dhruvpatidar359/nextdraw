@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# check jest standards
+npm run test ||
+(
+    echo 'Jest test failed. '
+    false;
+)
+# check prettier standards
+npm run check-format ||
+(
+    echo 'Prettier check Failed,Run npm run format, add changes and try commit again.'
+    false; 
+)
+
+#check ESLint standards
+npm run check-lint ||
+(
+    echo 'eslint check failed. '
+    false;
+)
+echo 'All Done I am committing this now'
