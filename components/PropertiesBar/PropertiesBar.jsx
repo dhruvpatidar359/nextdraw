@@ -272,14 +272,15 @@ const PropertiesBar = () => {
     }
 
     const modifiedElements = (elementsCopy) => {
-        return elementsCopy.filter(element => element.id !== selectedElement.id);
+        return elementsCopy.filter(element => (element.id !== selectedElement.id));
     }
 
     function sendToBack() {
-        const elementsCopy = elements.map((element) => {
-            return {...element};
-        });
+        if(elements.length == 1 || elements.length == 0) {
+            return;
+        }
 
+        const elementsCopy = elements.filter(element => element !== null && element !== undefined && Object.keys(element).length > 0).map(element => ({ ...element }));
         const key = selectedElement.id.split("#")[0];
         let temp = { ...selectedElement };
         let filteredElements = modifiedElements(elementsCopy);
@@ -287,18 +288,21 @@ const PropertiesBar = () => {
         filteredElements.unshift(temp);
 
         for(let i = 1; i < filteredElements.length; i ++) {
-            const elemId = filteredElements[i].id.split("#");
-            filteredElements[i].id = elemId[0] + `#${i}`;
+            if(filteredElements[i] !== null && filteredElements[i] !== undefined) {
+                const elemId = filteredElements[i].id.split("#");
+                filteredElements[i].id = elemId[0] + `#${i}`;
+            }
         }
 
         dispatch(setElement([filteredElements, true, null]));
     }
 
     function bringToFront() {
-        const elementsCopy = elements.map((element) => {
-            return {...element};
-        });
+        if(elements.length == 1 || elements.length == 0) {
+            return;
+        }
 
+        const elementsCopy = elements.filter(element => element !== null && element !== undefined && Object.keys(element).length > 0).map(element => ({ ...element }));
         const key = selectedElement.id.split("#")[0];
         let temp = { ...selectedElement };
         let filteredElements = modifiedElements(elementsCopy);
@@ -306,17 +310,21 @@ const PropertiesBar = () => {
         filteredElements.push(temp);
 
         for(let i = 0; i < filteredElements.length - 1; i ++) {
-            const elemId = filteredElements[i].id.split("#");
-            filteredElements[i].id = elemId[0] + `#${i}`;
+            if(filteredElements[i] !== null && filteredElements[i] !== undefined) {
+                const elemId = filteredElements[i].id.split("#");
+                filteredElements[i].id = elemId[0] + `#${i}`;
+            }   
         }
 
         dispatch(setElement([filteredElements, true, null]));
     }
 
     function sendBackward() {
-        const elementsCopy = elements.map((element) => {
-            return {...element};
-        });
+        if(elements.length == 1 || elements.length == 0) {
+            return;
+        }
+
+        const elementsCopy = elements.filter(element => element !== null && element !== undefined && Object.keys(element).length > 0).map(element => ({ ...element }));
 
         let i = 0;
         while(elementsCopy[i].id != selectedElement.id) {
@@ -339,9 +347,11 @@ const PropertiesBar = () => {
     }
 
     function bringForward() {
-        const elementsCopy = elements.map((element) => {
-            return {...element};
-        });
+        if(elements.length == 1 || elements.length == 0) {
+            return;
+        }
+
+        const elementsCopy = elements.filter(element => element !== null && element !== undefined && Object.keys(element).length > 0).map(element => ({ ...element }));
 
         let i = 0;
         while(elementsCopy[i].id != selectedElement.id) {
